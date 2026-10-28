@@ -168,7 +168,10 @@ async function handleNotify(request, env) {
     const message = String(body.body || body.message || "").trim().slice(0, 240);
     const url = String(body.url || body.link || "https://multimedia.lumiberstudio.workers.dev/").slice(0, 300);
     if (!title || !message) return json(400, { error: "Title and message are required" });
-    if (env.DB) await env.DB.prepare("INSERT INTO alerts (title, body, created_at, link, category) VALUES (?, ?, ?, ?, ?)").bind(title, message, new Date().toISOString(), url, body.segment || "Subscribed Users").run();
+    if (env.DB) {
+      try { await env.DB.prepare("INSERT INTO alerts (title, body, created_at, link, category) VALUES (?, ?, ?, ?, ?)").bind(title, message, new Date().toISOString(), url, body.segment || "Subscribed Users").run(); }
+      catch (e) {}
+    }
     if (!env.ONESIGNAL_REST_API_KEY || !env.ONESIGNAL_APP_ID || env.ONESIGNAL_APP_ID.includes("YOUR_")) return json(503, { error: "OneSignal is not configured" });
     const res = await fetch("https://api.onesignal.com/notifications", {
       method: "POST",

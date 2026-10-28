@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verify membership</title>
+<style>
+body { margin:0; font-family:Inter,system-ui,sans-serif; background:#0a0803; color:#fffbea; }
+.card { max-width:520px; margin:8vh auto; padding:1.5rem; border:1px solid rgba(251,191,36,.35); border-radius:24px; background:#17130c; text-align:center; }
+.valid { color:#34d399; } .bad { color:#f87171; } .warn { color:#fbbf24; }
+</style>
+</head>
+<body>
+<main class="card" id="result"><h1>Checking membership…</h1></main>
+<script>
+const token = new URLSearchParams(location.search).get("t") || "";
+const box = document.getElementById("result");
+function esc(value) { return String(value || "").replace(/[&<>"]/g, function (c) { return { "&":"&", "<":"<", ">":">", '"':""" }[c]; }); }
+fetch("/api/members/verify?t=" + encodeURIComponent(token))
+  .then(function (res) { return res.json(); })
+  .then(function (data) {
+    const result = data.result || "INVALID";
+    const cls = result === "VALID" ? "valid" : result === "SUSPENDED" ? "warn" : "bad";
+    box.innerHTML = '<p>MULTIMEDIA CLUB</p><h1 class="' + cls + '">' + (result === "VALID" ? "OFFICIAL MEMBER — VERIFIED" : result) + '</h1><p>Member number: ' + esc(data.member_number || "Not found") + '</p><p>Name: ' + esc(data.display_name || "Not shown") + '</p><p>Role: ' + esc(data.club_role || "—") + '</p><p>Status: ' + esc(data.status || result) + '</p><p>This QR confirms the record. It does not prove the person holding it is the member.</p>';
+  })
+  .catch(function () { box.innerHTML = "<h1 class='bad'>INVALID</h1>"; });
+</script>
+</body>
+</html>

@@ -1118,8 +1118,8 @@
             <div id="membership-list" class="space-y-3"></div>
         </div>
     </div>
-    <div id="profile-window" class="hidden fixed inset-0 z-[80] flex items-center justify-center bg-black/70 p-4">
-        <div class="glass w-full max-w-md rounded-3xl p-6">
+    <div id="profile-window" class="hidden fixed inset-0 z-[80] flex items-start justify-center bg-black/70 p-4 overflow-y-auto">
+        <div class="glass w-full max-w-md rounded-3xl p-6 my-4 max-h-[92dvh] overflow-y-auto">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-2xl font-semibold">Member profile</h3>
                 <button onclick="hideProfileWindow()" class="px-3 py-1 rounded-full border border-white/20">Close</button>
@@ -2774,17 +2774,20 @@
         async function notifyAgain(type, title) {
             if (!canEditPosts()) return;
             const heading = type === "event" ? "Event reminder" : "Announcement reminder";
+            const token = safeStorage.getItem("mm_api_token") || "";
+            if (!token) return showToast("Log out and log in again as Admin or Developer.", "error");
             try {
                 const res = await fetch("/api/notify", {
                     method: "POST",
-                    headers: { "Content-Type": "application/json", Authorization: "Bearer " + (safeStorage.getItem("mm_api_token") || "") },
+                    headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
                     body: JSON.stringify({ title: heading, body: title, url: location.origin })
                 });
-                if (!res.ok) throw new Error((await res.json().catch(function () { return {}; })).error || "push failed");
+                const data = await res.json().catch(function () { return {}; });
+                if (!res.ok) throw new Error(data.error || "push failed");
                 showToast("Push notification sent.");
                 playNotificationSound();
             } catch (e) {
-                showToast("Push is not ready yet. Check the Worker setup.", "error");
+                showToast(e.message || "Push is not ready yet. Check the Worker setup.", "error");
             }
         }
         function showCreateEventModal() { showPostModal("event"); }

@@ -160,17 +160,23 @@ async function handleSubscribe(request, env) {
 async function handleNotify(request, env) {
   if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders });
   if (request.method !== "POST") return json(405, { error: "Method not allowed" });
+  const admin = await requireAdmin(request, env);
+  if (admin.error) return json(401, { error: admin.error });
   const body = await request.json().catch(function () { return {}; });
-  const alert = { title: body.title || "Multimedia", body: body.body || "New club update" };
-  if (env.DB) await env.DB.prepare("INSERT INTO alerts (title, body, created_at, link, category) VALUES (?, ?, ?, ?, ?)").bind(alert.title, alert.body, new Date().toISOString(), body.link || "/", body.category || "general").run();
-  let sent = 0;
-  if (env.DB && env.VAPID_PUBLIC_KEY && env.VAPID_PRIVATE_JWK) {
-    const rows = await env.DB.prepare("SELECT subscription FROM push_subs").all();
-    for (const row of rows.results || []) {
-      try { await sendWebPush(JSON.parse(row.subscription), env); sent += 1; } catch (e) {}
-    }
-  }
-  return json(200, { sent: sent, title: alert.title, body: alert.body });
+  const title = String(body.title || "").trim().slice(0, 80);
+  const message = String(body.body || body.message || "").trim().slice(0, 240);
+  const url = String(body.url || body.link || "https://multimedia.lumiberstudio.workers.dev/").slice(0, 300);
+  if (!title || !message) return json(400, { error: "Title and message are required" });
+  if (env.DB) await env.DB.prepare("INSERT INTO alerts (title, body, created_at, link, category) VALUES (?, ?, ?, ?, ?)").bind(title, message, new Date().toISOString(), url, body.segment || "Subscribed Users").run();
+  if (!env.ONESIGNAL_REST_API_KEY || !env.ONESIGNAL_APP_ID || env.ONESIGNAL_APP_ID.includes("YOUR_")) return json(503, { error: "OneSignal is not configured" });
+  const res = await fetch("https://api.onesignal.com/notifications", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: "Key " + env.ONESIGNAL_REST_API_KEY },
+    body: JSON.stringify({ app_id: env.ONESIGNAL_APP_ID, target_channel: "push", included_segments: [body.segment || "Subscribed Users"], headings: { en: title }, contents: { en: message }, url: url })
+  });
+  const data = await res.json().catch(function () { return {}; });
+  if (!res.ok) return json(res.status, { error: data.errors || "OneSignal request failed" });
+  return json(200, { ok: true, id: data.id || "" });
 }
 async function handleLatestAlert(request, env) {
   if (!env.DB) return json(200, { title: "Multimedia Club", body: "New club update." });
@@ -459,6 +465,7 @@ export default {
     if (url.pathname === "/api/live") return handleLive(request, env);
     if (url.pathname === "/api/events") return handleSaveEvent(request, env);
     if (url.pathname === "/api/announcements") return handleSaveAnnouncement(request, env);
+    if (url.pathname === "/api/onesignal") return json(200, { appId: env.ONESIGNAL_APP_ID || "" });
     if (url.pathname === "/api/notify") return handleNotify(request, env);
     if (url.pathname === "/api/member-chat") return handleMemberChat(request, env);
     if (url.pathname === "/api/latest-alert") return handleLatestAlert(request, env);

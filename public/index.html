@@ -773,7 +773,7 @@
                         <span>Verity</span>
                     </a>
                     <a href="#about" onclick="document.getElementById('about').scrollIntoView({ behavior: 'smooth' })" class="hover:text-[#FFD700] transition-colors">About</a>
-                    <a href="#" onclick="showRequestsPage(); return false;" class="hover:text-[#FFD700] transition-colors">Requests</a>
+                    <a href="#" onclick="enableClubNotifications(); return false;" class="hover:text-[#FFD700] transition-colors">Notifications</a>
                     <a href="#" onclick="openMembersOrSignup(); return false;" class="hover:text-[#FFD700] transition-colors" id="members-nav-link">Members</a>
                 </div>
 
@@ -1102,7 +1102,13 @@
     <div id="membership-admin" class="hidden fixed inset-0 z-[86] bg-black/95 overflow-y-auto p-4">
         <div class="max-w-5xl mx-auto">
             <div class="flex justify-between items-center mb-4"><h2 class="text-3xl font-semibold">Membership QR</h2><button onclick="document.getElementById('membership-admin').classList.add('hidden')" class="px-4 py-2 rounded-2xl border border-white/20">Close</button></div>
-            <form onsubmit="registerMembership(event)" class="glass rounded-3xl p-4 mb-4">
+            <form onsubmit="sendOneSignalNotice(event)" class="glass rounded-3xl p-4 mb-4">
+                <h3 class="font-semibold mb-2">Send club notification</h3>
+                <input id="notice-title" placeholder="Title" class="input-gold w-full px-4 py-3 rounded-2xl mb-2" required>
+                <textarea id="notice-body" placeholder="Message" class="input-gold w-full px-4 py-3 rounded-2xl mb-2" required></textarea>
+                <input id="notice-url" placeholder="Optional link" class="input-gold w-full px-4 py-3 rounded-2xl mb-2">
+                <button class="btn-gold px-4 py-2 rounded-2xl">Send to subscribers</button>
+            </form>
                 <div class="grid md:grid-cols-3 gap-2">
                     <input id="member-name" placeholder="Display name" class="input-gold px-4 py-3 rounded-2xl" required>
                     <select id="member-role" class="input-gold px-4 py-3 rounded-2xl"><option>Member</option><option>Developer</option><option>Moderator</option><option>Admin</option></select>
@@ -1479,7 +1485,16 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="verity.js"></script>
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      fetch("/api/onesignal").then(function (res) { return res.json(); }).then(function (data) {
+        if (!data.appId || data.appId.includes("YOUR_")) return;
+        OneSignalDeferred.push(async function (OneSignal) {
+          await OneSignal.init({ appId: data.appId, serviceWorkerPath: "OneSignalSDKWorker.js" });
+        });
+      }).catch(function () {});
+    </script>
     <script>
 
         let pendingRequest = null;
@@ -2300,6 +2315,11 @@
             const data = await memberApi("/api/members");
             document.getElementById("membership-list").innerHTML = (data.members || []).map(function (m) { return '<div class="glass rounded-2xl p-4"><strong>' + m.member_number + '</strong> · ' + m.display_name + ' · ' + m.club_role + ' · ' + m.status + '<div class="flex gap-2 mt-2"><button onclick="setMembershipStatus(\'' + m.member_number + '\',\'suspended\')">Suspend</button><button onclick="setMembershipStatus(\'' + m.member_number + '\',\'active\')">Activate</button><button onclick="setMembershipStatus(\'' + m.member_number + '\',\'revoked\')">Revoke</button><button onclick="rotateMembership(\'' + m.member_number + '\')">Rotate QR</button></div></div>'; }).join("") || "No memberships yet.";
         }
+        async function sendOneSignalNotice(event) {
+            event.preventDefault();
+            const data = await memberApi("/api/notify", { title: document.getElementById("notice-title").value, body: document.getElementById("notice-body").value, url: document.getElementById("notice-url").value || location.origin });
+            showToast(data.id ? "Notification sent." : "Notification accepted.");
+        }
         async function registerMembership(event) {
             event.preventDefault();
             const data = await memberApi("/api/members/register", { display_name: document.getElementById("member-name").value, club_role: document.getElementById("member-role").value });
@@ -2697,15 +2717,13 @@
             notifyClub(postDraft.type === "event" ? "New event" : "New announcement", title);
         }
         async function enableClubNotifications() {
-            if (!("serviceWorker" in navigator) || !("Notification" in window)) return;
-            const permission = await Notification.requestPermission();
-            if (permission !== "granted") return;
-            const reg = await navigator.serviceWorker.register("/sw.js");
-            const keyRes = await fetch("/api/push-key");
-            if (!keyRes.ok) return;
-            const data = await keyRes.json();
-            const sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(data.publicKey) });
-            await fetch("/api/subscribe", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(sub) });
+            if (!("Notification" in window)) return showToast("This browser does not support notifications.", "error");
+            if (Notification.permission === "denied") return showToast("Notifications are blocked in this browser.", "error");
+            window.OneSignalDeferred = window.OneSignalDeferred || [];
+            OneSignalDeferred.push(async function (OneSignal) {
+                await OneSignal.Notifications.requestPermission();
+                showToast(OneSignal.Notifications.permission ? "Notifications enabled." : "Notification permission was not granted.", OneSignal.Notifications.permission ? "success" : "error");
+            });
         }
         function urlBase64ToUint8Array(base64String) {
             const padding = "=".repeat((4 - base64String.length % 4) % 4);
@@ -2727,7 +2745,7 @@
         }
         function notifyClub(title, body) {
             showLocalNotification(title, body);
-            fetch("/api/notify", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title: title, body: body }) }).catch(function () {});
+            fetch("/api/notify", { method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + (safeStorage.getItem("mm_api_token") || "") }, body: JSON.stringify({ title: title, body: body, url: location.origin }) }).catch(function () {});
         }
         function deleteEvent(id) {
             if (!canEditPosts() || !confirm("Delete this event?")) return;
@@ -2749,8 +2767,8 @@
             try {
                 const res = await fetch("/api/notify", {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ title: heading, body: title })
+                    headers: { "Content-Type": "application/json", Authorization: "Bearer " + (safeStorage.getItem("mm_api_token") || "") },
+                    body: JSON.stringify({ title: heading, body: title, url: location.origin })
                 });
                 if (!res.ok) throw new Error("push failed");
                 showToast("Push notification sent.");

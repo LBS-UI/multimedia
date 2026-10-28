@@ -172,10 +172,12 @@ async function handleNotify(request, env) {
       try { await env.DB.prepare("INSERT INTO alerts (title, body, created_at, link, category) VALUES (?, ?, ?, ?, ?)").bind(title, message, new Date().toISOString(), url, body.segment || "Subscribed Users").run(); }
       catch (e) {}
     }
-    if (!env.ONESIGNAL_REST_API_KEY || !env.ONESIGNAL_APP_ID || env.ONESIGNAL_APP_ID.includes("YOUR_")) return json(503, { error: "OneSignal is not configured" });
+    const restKey = String(env.ONESIGNAL_REST_API_KEY || "").trim().replace(/^Key\s+/i, "");
+    if (!restKey || !env.ONESIGNAL_APP_ID || env.ONESIGNAL_APP_ID.includes("YOUR_")) return json(503, { error: "OneSignal REST API key is missing in Cloudflare secrets." });
+    if (/^[0-9a-f-]{36}$/i.test(restKey)) return json(503, { error: "That is the App ID. Add the REST API key that starts with os_v2_app_." });
     const res = await fetch("https://api.onesignal.com/notifications", {
       method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: "Key " + env.ONESIGNAL_REST_API_KEY },
+      headers: { "Content-Type": "application/json", Authorization: "Key " + restKey },
       body: JSON.stringify({ app_id: env.ONESIGNAL_APP_ID, target_channel: "push", included_segments: [body.segment || "Subscribed Users"], headings: { en: title }, contents: { en: message }, url: url })
     });
     const data = await res.json().catch(function () { return {}; });

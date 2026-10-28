@@ -2728,11 +2728,18 @@
         }
         async function enableClubNotifications() {
             if (!("Notification" in window)) return showToast("This browser does not support notifications.", "error");
-            if (Notification.permission === "denied") return showToast("Notifications are blocked in this browser.", "error");
+            if (Notification.permission === "denied") return showToast("Notifications are blocked. Allow them in the browser settings.", "error");
             window.OneSignalDeferred = window.OneSignalDeferred || [];
             OneSignalDeferred.push(async function (OneSignal) {
-                await OneSignal.Notifications.requestPermission();
-                showToast(OneSignal.Notifications.permission ? "Notifications enabled." : "Notification permission was not granted.", OneSignal.Notifications.permission ? "success" : "error");
+                try {
+                    if (!OneSignal.Notifications) throw new Error("OneSignal did not start. Check the site URL in OneSignal.");
+                    await OneSignal.Notifications.requestPermission();
+                    if (OneSignal.User && OneSignal.User.PushSubscription && OneSignal.User.PushSubscription.optIn) await OneSignal.User.PushSubscription.optIn();
+                    const on = OneSignal.Notifications.permission && OneSignal.User.PushSubscription.optedIn;
+                    showToast(on ? "This device is subscribed." : "Permission was not granted.", on ? "success" : "error");
+                } catch (error) {
+                    showToast(error.message || "Could not subscribe this device.", "error");
+                }
             });
         }
         function urlBase64ToUint8Array(base64String) {

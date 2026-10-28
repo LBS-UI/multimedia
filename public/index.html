@@ -6,6 +6,11 @@
     <title>Multi Media Club • Official School Portal</title>
     <meta name="description" content="Official portal for the Multi Media Club. Stay connected with events, announcements, and creative projects.">
     
+    <link rel="preload" as="image" href="badges/Member.jpg">
+    <link rel="preload" as="image" href="badges/Admin.jpg">
+    <link rel="preload" as="image" href="badges/Developer.jpg">
+    <link rel="preload" as="image" href="badges/backpin.jpg">
+
     <!-- Tailwind CSS via CDN (Demo only) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
@@ -109,7 +114,6 @@
             background-size: 60px 60px;
         }
 
-        /* Glassmorphism */
         .glass {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
@@ -123,7 +127,6 @@
             border: 1px solid rgba(255, 215, 0, 0.25);
         }
 
-        /* Neon & Glow Effects */
         .neon-text {
             text-shadow: var(--neon-glow);
         }
@@ -137,7 +140,6 @@
             box-shadow: var(--neon-glow-strong);
         }
 
-        /* Futuristic Buttons */
         .btn-gold {
             background: linear-gradient(135deg, var(--gold), var(--amber));
             color: #0a0803;
@@ -147,7 +149,6 @@
             overflow: hidden;
         }
 
-        /* Rainbow Glow Hover Effect for Primary Buttons */
         .btn-gold::before {
             content: "";
             background: linear-gradient(
@@ -169,14 +170,8 @@
             opacity: 0;
         }
 
-        .btn-gold:hover::before {
-            opacity: 1;
-        }
-
-        .btn-gold:active {
-            color: #000;
-            font-weight: bold;
-        }
+        .btn-gold:hover::before { opacity: 1; }
+        .btn-gold:active { color: #000; font-weight: bold; }
 
         @keyframes glowing {
             0% { background-position: 0 0; }
@@ -189,9 +184,7 @@
             box-shadow: var(--neon-glow-strong);
         }
 
-        .btn-gold:active {
-            transform: scale(0.98);
-        }
+        .btn-gold:active { transform: scale(0.98); }
 
         .btn-gold::after {
             content: '';
@@ -204,11 +197,8 @@
             transition: 0.6s;
         }
 
-        .btn-gold:hover::after {
-            left: 250%;
-        }
+        .btn-gold:hover::after { left: 250%; }
 
-        /* Cards */
         .card {
             transition: transform 0.4s cubic-bezier(0.23, 1.0, 0.32, 1), 
                         box-shadow 0.4s cubic-bezier(0.23, 1.0, 0.32, 1),
@@ -222,7 +212,6 @@
             border-color: var(--gold);
         }
 
-        /* Event Cards & Countdown */
         .countdown {
             font-family: 'Space Grotesk', 'Inter', sans-serif;
             font-feature-settings: "tnum";
@@ -238,11 +227,7 @@
             letter-spacing: 1px;
         }
 
-        /* Announcement Cards */
-        .announcement-card {
-            position: relative;
-        }
-
+        .announcement-card { position: relative; }
         .announcement-card.pinned::before {
             content: '📌';
             position: absolute;
@@ -306,12 +291,341 @@
         .welcome-stage { position: relative; height: 280px; margin-top: 4vh; overflow: visible; }
         .welcome-ground { position: absolute; left: 18%; right: 18%; bottom: 16px; height: 5px; border-radius: 999px; background: #FFD700; box-shadow: 0 0 18px rgba(255,215,0,0.7); }
         @keyframes verity-drop { from { opacity: 0; transform: translateX(-50%) translateY(-110vh) rotate(-12deg); } to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1.14, 0.78); } }
-        @keyframes joinSpin { to { transform: rotateY(360deg); } }
-        .join-stage { width: min(240px, 68vw); height: min(240px, 68vw); perspective: 1000px; margin: 0 auto; }
-        .join-pin { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; animation: joinSpin 8s linear infinite; }
-        .join-face { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; border-radius: 50%; backface-visibility: hidden; box-shadow: 0 18px 40px rgba(0,0,0,.45); }
-        .join-front { transform: translateZ(8px) scale(1.18); }
-        .join-back { transform: rotateY(180deg) translateZ(8px) scale(1); background: #fff; }
+
+/* ---------- 3D Badge Showcase (scoped) ---------- */
+.showcase-3d {
+    --bdg-size: clamp(200px, 55vw, 300px);
+    --bdg-thickness: 18px;
+    --bdg-face-z: calc(var(--bdg-thickness) / 2 + 1px);
+    --bdg-gold-100: #fff6d8;
+    --bdg-gold-200: #f7d067;
+    --bdg-gold-300: #f5c344;
+    --bdg-gold-400: #c9922a;
+    --bdg-gold-500: #8a5f12;
+    --bdg-gold-600: #5e400b;
+    --bdg-line: rgba(245,195,68,.16);
+    --bdg-line-strong: rgba(245,195,68,.38);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+}
+
+.showcase-3d .badge-switch {
+    display: inline-flex;
+    gap: .4rem;
+    padding: .35rem;
+    border-radius: 999px;
+    border: 1px solid var(--bdg-line);
+    background: rgba(255,255,255,.028);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+.showcase-3d .switch-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .55rem 1.05rem;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: rgba(255,251,234,.62);
+    font-size: .82rem;
+    font-weight: 600;
+    letter-spacing: .02em;
+    cursor: pointer;
+    transition: background .22s, color .22s, border-color .22s;
+}
+.showcase-3d .switch-btn:hover { color: #fffbea; background: rgba(255,255,255,.05); }
+.showcase-3d .switch-btn:focus-visible { outline: 2px solid var(--bdg-gold-300); outline-offset: 2px; }
+.showcase-3d .switch-btn.is-active {
+    background: linear-gradient(180deg, rgba(245,195,68,.22), rgba(245,195,68,.10));
+    border-color: var(--bdg-line-strong);
+    color: var(--bdg-gold-100);
+}
+.showcase-3d .switch-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(0,0,0,.5);
+    flex: none;
+}
+.showcase-3d .switch-dot--admin { background: linear-gradient(140deg, var(--bdg-gold-300), #101017 60%); }
+.showcase-3d .switch-dot--member { background: linear-gradient(140deg, var(--bdg-gold-300), #f5c344 60%); }
+.showcase-3d .switch-dot--developer { background: linear-gradient(140deg, var(--bdg-gold-300), #6b7280 60%); }
+
+.showcase-3d .stage {
+    position: relative;
+    width: var(--bdg-size);
+    height: var(--bdg-size);
+    display: grid;
+    place-items: center;
+    perspective: 1600px;
+    perspective-origin: 50% 45%;
+}
+.showcase-3d .stage-glow {
+    position: absolute;
+    inset: -20%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(245,195,68,.24) 0%, rgba(245,195,68,0) 62%);
+    filter: blur(26px);
+    pointer-events: none;
+    z-index: 0;
+    animation: bdgGlowPulse 6s ease-in-out infinite;
+}
+.showcase-3d .contact-shadow {
+    position: absolute;
+    left: 50%;
+    bottom: 1%;
+    width: 64%;
+    height: 26px;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,.8), rgba(0,0,0,0) 72%);
+    filter: blur(11px);
+    z-index: 0;
+    animation: bdgShadowPulse 7s ease-in-out infinite;
+}
+
+.showcase-3d .badge-float,
+.showcase-3d .badge-tilt,
+.showcase-3d .badge-spin {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+}
+.showcase-3d .badge-float { animation: bdgFloatY 7s ease-in-out infinite; }
+.showcase-3d .badge-tilt { will-change: transform; }
+.showcase-3d .badge-spin { transform: rotateY(0deg); will-change: transform; }
+
+.showcase-3d .rim {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background:
+        linear-gradient(180deg,
+            var(--bdg-gold-500) 0%,
+            var(--bdg-gold-300) 14%,
+            var(--bdg-gold-100) 30%,
+            var(--bdg-gold-400) 52%,
+            var(--bdg-gold-600) 74%,
+            var(--bdg-gold-300) 90%,
+            var(--bdg-gold-500) 100%);
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.35);
+}
+
+.showcase-3d .face {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    overflow: hidden;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    box-shadow:
+        inset 0 0 0 2px rgba(255,255,255,.20),
+        inset 0 10px 26px rgba(255,255,255,.28),
+        inset 0 -14px 28px rgba(0,0,0,.45),
+        0 14px 34px rgba(0,0,0,.55);
+}
+.showcase-3d .face--front { transform: translateZ(var(--bdg-face-z)); }
+.showcase-3d .face--back  { transform: translateZ(calc(-1 * var(--bdg-face-z))) rotateY(180deg); }
+
+.showcase-3d .art {
+    position: absolute;
+    inset: 0;
+    transition: opacity .45s ease;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.showcase-3d .art svg { display: block; width: 100%; height: 100%; }
+
+/* NEW: image artwork — clips to circle, covers the face */
+.showcase-3d .art img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
+}
+
+.showcase-3d .art--member,
+.showcase-3d .art--admin,
+.showcase-3d .art--developer { opacity: 0; }
+.showcase-3d[data-badge="member"]    .art--member    { opacity: 1; }
+.showcase-3d[data-badge="admin"]     .art--admin     { opacity: 1; }
+.showcase-3d[data-badge="developer"] .art--developer { opacity: 1; }
+
+.showcase-3d .gloss {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: 50%;
+    background: radial-gradient(ellipse 62% 46% at 30% 20%,
+                rgba(255,255,255,.72) 0%,
+                rgba(255,255,255,.22) 42%,
+                rgba(255,255,255,0) 72%);
+    mix-blend-mode: screen;
+    opacity: .75;
+}
+.showcase-3d .gloss--back { opacity: .28; }
+.showcase-3d .sheen {
+    position: absolute;
+    inset: -45%;
+    pointer-events: none;
+    background: linear-gradient(112deg,
+        transparent 40%,
+        rgba(255,255,255,.28) 47%,
+        rgba(255,255,255,.85) 50%,
+        rgba(255,255,255,.28) 53%,
+        transparent 60%);
+    mix-blend-mode: screen;
+    opacity: .45;
+    animation: bdgSheenSweep 7.5s ease-in-out infinite;
+}
+
+.showcase-3d .controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: .55rem;
+    padding: .8rem;
+    border-radius: 22px;
+    border: 1px solid var(--bdg-line);
+    background: rgba(255,255,255,.028);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    max-width: 100%;
+}
+.showcase-3d .badge-ctrl {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    padding: .6rem 1.05rem;
+    border-radius: 999px;
+    border: 1px solid var(--bdg-line-strong);
+    background: rgba(245,195,68,.07);
+    color: var(--bdg-gold-200);
+    font-size: .82rem;
+    font-weight: 600;
+    letter-spacing: .03em;
+    cursor: pointer;
+    transition: background .2s, border-color .2s, color .2s, transform .12s;
+    -webkit-tap-highlight-color: transparent;
+}
+.showcase-3d .badge-ctrl:hover { background: rgba(245,195,68,.16); border-color: rgba(245,195,68,.7); }
+.showcase-3d .badge-ctrl:active { transform: scale(.96); }
+.showcase-3d .badge-ctrl:focus-visible { outline: 2px solid var(--bdg-gold-300); outline-offset: 2px; }
+.showcase-3d .badge-ctrl--primary {
+    background: linear-gradient(180deg, var(--bdg-gold-300), var(--bdg-gold-400));
+    border-color: var(--bdg-gold-200);
+    color: #241a02;
+    box-shadow: 0 6px 18px rgba(245,195,68,.22);
+}
+.showcase-3d .badge-ctrl--primary:hover {
+    background: linear-gradient(180deg, var(--bdg-gold-200), var(--bdg-gold-300));
+    border-color: var(--bdg-gold-100);
+}
+.showcase-3d .badge-ctrl .ico {
+    font-size: .9em;
+    line-height: 1;
+    display: inline-block;
+    min-width: 1em;
+    text-align: center;
+}
+
+.showcase-3d .slider-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    padding: .35rem .85rem .35rem .5rem;
+    border-radius: 999px;
+    border: 1px solid var(--bdg-line);
+    background: rgba(255,255,255,.02);
+}
+.showcase-3d .slider-label {
+    font-size: .72rem;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: rgba(255,251,234,.4);
+}
+.showcase-3d input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 104px;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(245,195,68,.22);
+    outline: none;
+    cursor: pointer;
+}
+.showcase-3d input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--bdg-gold-300);
+    border: 2px solid #241a02;
+    box-shadow: 0 0 0 3px rgba(245,195,68,.16);
+    cursor: pointer;
+}
+.showcase-3d input[type="range"]::-moz-range-thumb {
+    width: 13px; height: 13px;
+    border-radius: 50%;
+    background: var(--bdg-gold-300);
+    border: 2px solid #241a02;
+    cursor: pointer;
+}
+.showcase-3d input[type="range"]:focus-visible { outline: 2px solid var(--bdg-gold-300); outline-offset: 4px; }
+.showcase-3d .slider-out {
+    min-width: 3.6em;
+    text-align: right;
+    font-size: .76rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--bdg-gold-200);
+}
+
+body.light-mode .showcase-3d .stage-glow { opacity: .35; }
+body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
+
+@keyframes bdgFloatY {
+    0%, 100% { transform: translateY(-7px); }
+    50%      { transform: translateY(7px); }
+}
+@keyframes bdgGlowPulse {
+    0%, 100% { opacity: .62; transform: scale(1); }
+    50%      { opacity: 1;   transform: scale(1.07); }
+}
+@keyframes bdgShadowPulse {
+    0%, 100% { opacity: .55; transform: translateX(-50%) scaleX(.92); }
+    50%      { opacity: .9;  transform: translateX(-50%) scaleX(1.06); }
+}
+@keyframes bdgSheenSweep {
+    0%, 100% { transform: translateX(-62%); }
+    50%      { transform: translateX(62%); }
+}
+
+@media (max-width: 520px) {
+    .showcase-3d .controls { padding: .65rem; gap: .45rem; border-radius: 18px; }
+    .showcase-3d .badge-ctrl { padding: .55rem .85rem; font-size: .78rem; }
+    .showcase-3d .badge-ctrl .lbl { display: none; }
+    .showcase-3d .badge-ctrl--primary .lbl { display: inline; }
+    .showcase-3d .slider-wrap { padding-right: .6rem; }
+    .showcase-3d input[type="range"] { width: 80px; }
+    .showcase-3d .badge-switch { width: 100%; justify-content: center; flex-wrap: wrap; }
+    .showcase-3d .switch-btn { flex: 1; justify-content: center; font-size: .78rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .showcase-3d .badge-float,
+    .showcase-3d .stage-glow,
+    .showcase-3d .contact-shadow,
+    .showcase-3d .sheen { animation: none !important; }
+    .showcase-3d .art,
+    .showcase-3d .badge-ctrl,
+    .showcase-3d .switch-btn { transition: none !important; }
+}
+
         #music-btn.music-needs-play { animation: musicRgb 1.2s linear infinite; }
         @keyframes musicRgb { 0% { box-shadow: 0 0 0 3px #ff3b3b, 0 0 18px #ff3b3b; } 33% { box-shadow: 0 0 0 3px #3bff7a, 0 0 18px #3bff7a; } 66% { box-shadow: 0 0 0 3px #3b8bff, 0 0 18px #3b8bff; } 100% { box-shadow: 0 0 0 3px #ff3b3b, 0 0 18px #ff3b3b; } }
         @keyframes verity-bounce { 0% { transform: translateX(-50%) translateY(0) scale(1.14, 0.78); } 18% { transform: translateX(-50%) translateY(-70px) scale(0.96, 1.06); } 36% { transform: translateX(-50%) translateY(0) scale(1.1, 0.86); } 52% { transform: translateX(-50%) translateY(-36px) scale(0.98, 1.04); } 68% { transform: translateX(-50%) translateY(0) scale(1.06, 0.92); } 82% { transform: translateX(-50%) translateY(-14px) scale(1, 1.02); } 100% { transform: translateX(-50%) translateY(0) scale(1); } }
@@ -362,7 +676,6 @@
                 0 0 60px rgba(255, 215, 0, 0.5);
         }
 
-        /* Chat Bubbles */
         .chat-bubble-user {
             background: linear-gradient(135deg, var(--gold), var(--amber));
             color: #0a0803;
@@ -389,7 +702,6 @@
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        /* Typing Indicator */
         .typing-indicator {
             display: flex;
             align-items: center;
@@ -413,7 +725,6 @@
             40% { transform: translateY(-6px); }
         }
 
-        /* Form Inputs */
         .input-gold {
             background: rgba(255,255,255,0.06);
             border: 1px solid rgba(255, 215, 0, 0.3);
@@ -429,21 +740,15 @@
         }
 
         select.input-gold, select.input-gold option { color: #1a1208; background: #fffbea; }
-        .input-gold::placeholder {
-            color: #8888AA;
-        }
+        .input-gold::placeholder { color: #8888AA; }
 
-        /* Modal */
-        .modal {
-            animation: modal-enter 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-        }
+        .modal { animation: modal-enter 0.4s cubic-bezier(0.23, 1, 0.32, 1); }
 
         @keyframes modal-enter {
             from { opacity: 0; transform: translateY(40px) scale(0.96); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        /* Toast Notifications */
         .toast {
             animation: toast-slide 0.4s cubic-bezier(0.23, 1, 0.32, 1);
             backdrop-filter: blur(12px);
@@ -454,7 +759,6 @@
             to { transform: translateX(0); opacity: 1; }
         }
 
-        /* Countdown Status */
         .status-badge {
             padding: 2px 10px;
             border-radius: 9999px;
@@ -472,7 +776,6 @@
             50% { opacity: 0.7; }
         }
 
-        /* Filter Chips */
         .filter-chip {
             padding: 6px 16px;
             border-radius: 9999px;
@@ -491,7 +794,6 @@
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
         }
 
-        /* Quick Nav Cards */
         .nav-card {
             background: linear-gradient(145deg, var(--dark-card), var(--dark-surface));
             transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
@@ -503,15 +805,9 @@
             box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4);
         }
 
-        .nav-card .icon-wrapper {
-            transition: transform 0.4s ease;
-        }
+        .nav-card .icon-wrapper { transition: transform 0.4s ease; }
+        .nav-card:hover .icon-wrapper { transform: scale(1.15) rotate(8deg); }
 
-        .nav-card:hover .icon-wrapper {
-            transform: scale(1.15) rotate(8deg);
-        }
-
-        /* Floating Shapes */
         .floating-shape {
             position: absolute;
             border-radius: 50%;
@@ -532,14 +828,8 @@
         }
 
         @media (max-width: 768px) {
-            #verity-orb {
-                width: 56px;
-                height: 56px;
-            }
-            
-            .countdown {
-                font-size: 0.75rem;
-            }
+            #verity-orb { width: 56px; height: 56px; }
+            .countdown { font-size: 0.75rem; }
         }
     
         @keyframes loading-bar {
@@ -649,36 +939,22 @@
 
 <!-- IMPROVED CINEMATIC LOADING SCREEN -->
     <div id="loading-screen" class="fixed inset-0 z-[999] flex items-center justify-center bg-[#0a0803] overflow-hidden">
-        <!-- Background Effects -->
         <div class="absolute inset-0 futuristic-grid opacity-30"></div>
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,#FFD70010_0%,transparent_70%)]"></div>
         
         <div class="relative z-10 text-center px-6">
-            
-            <!-- Enhanced Animated Logo -->
             <div class="mx-auto mb-8 relative w-24 h-24">
-                <!-- Outer glowing ring -->
                 <div class="absolute inset-0 rounded-full border-[3px] border-[#FFD700] animate-[pulse-glow_2s_ease-in-out_infinite]"></div>
-                
-                <!-- Main SVG -->
                 <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" 
                      class="relative z-10 animate-[spin_4s_linear_infinite]">
-                    
-                    <!-- Outer ring with gradient -->
                     <defs>
                         <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" stop-color="#FFD700"/>
                             <stop offset="100%" stop-color="#FFEA00"/>
                         </linearGradient>
                     </defs>
-                    
-                    <!-- Background circle -->
                     <circle cx="48" cy="48" r="42" fill="#1a1208" stroke="#FFD700" stroke-width="2.5"/>
-                    
-                    <!-- Inner film reel circle -->
                     <circle cx="48" cy="48" r="30" fill="none" stroke="#FFD700" stroke-width="1.5" stroke-opacity="0.6"/>
-                    
-                    <!-- Aperture blades (rotating effect) -->
                     <g stroke="#FFD700" stroke-width="3" stroke-linecap="round">
                         <line x1="48" y1="18" x2="48" y2="30"/>
                         <line x1="70" y1="30" x2="60" y2="38"/>
@@ -687,20 +963,12 @@
                         <line x1="26" y1="66" x2="36" y2="58"/>
                         <line x1="26" y1="30" x2="36" y2="38"/>
                     </g>
-                    
-                    <!-- Center glowing core -->
                     <circle cx="48" cy="48" r="11" fill="#FFD700"/>
                     <circle cx="48" cy="48" r="7" fill="#0a0803"/>
-                    
-                    <!-- Play icon -->
                     <polygon points="42,40 42,56 56,48" fill="#FFD700"/>
                 </svg>
-                
-                <!-- Subtle inner glow -->
                 <div class="absolute inset-[22px] rounded-full bg-[#FFD700] opacity-20 blur-md animate-[pulse-glow_1.5s_ease-in-out_infinite]"></div>
             </div>
-            
-            <!-- Brand -->
             <div class="mb-3">
                 <div class="font-display text-5xl font-bold tracking-tighter">
                     <span class="text-white">Multi</span>
@@ -708,22 +976,15 @@
                 </div>
                 <div class="mt-1 text-sm tracking-[4px] text-[#fffbea] font-medium">SCHOOL MULTIMEDIA HUB</div>
             </div>
-            
-            <!-- Elegant Loading Bar -->
             <div class="mt-10 w-64 mx-auto">
                 <div class="relative h-[3px] bg-white/10 rounded-full overflow-hidden">
-                    <!-- Main loading bar -->
                     <div class="absolute h-[3px] bg-gradient-to-r from-[#FFD700] via-[#FFEA00] to-[#FFD700] w-0 
                                 animate-[loading-bar_2.2s_ease-in-out_forwards]"></div>
-                    
-                    <!-- Shimmer effect -->
                     <div class="absolute h-[3px] w-1/3 bg-gradient-to-r from-transparent via-white to-transparent 
                                 animate-[shimmer_1.8s_linear_infinite]"></div>
                 </div>
-                
                 <div class="mt-3 text-[10px] tracking-[2px] text-white/40 font-mono">INITIALIZING CREATIVE SYSTEM</div>
             </div>
-            
         </div>
     </div>
 
@@ -731,18 +992,12 @@
     <nav class="fixed top-0 left-0 right-0 z-50 glass border-b border-white/10">
         <div class="max-w-screen-2xl mx-auto">
             <div class="px-4 sm:px-8 py-3 flex items-center justify-between gap-2">
-                <!-- Logo -->
                 <div class="flex items-center gap-x-3">
                     <div class="w-11 h-11 flex items-center justify-center">
-                        <!-- Custom SVG Picture Logo -->
                         <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <!-- Outer glow ring -->
                             <circle cx="22" cy="22" r="20" fill="#FFD700" fill-opacity="0.15"/>
-                            <!-- Main circle -->
                             <circle cx="22" cy="22" r="17" fill="#1a1208" stroke="#FFD700" stroke-width="2.5"/>
-                            <!-- Inner film reel style -->
                             <circle cx="22" cy="22" r="11" fill="none" stroke="#FFD700" stroke-width="1.5"/>
-                            <!-- Camera aperture blades -->
                             <g stroke="#FFD700" stroke-width="1.2" stroke-linecap="round">
                                 <line x1="22" y1="11" x2="22" y2="17"/>
                                 <line x1="30.5" y1="15.5" x2="26.5" y2="19.5"/>
@@ -751,9 +1006,7 @@
                                 <line x1="13.5" y1="28.5" x2="17.5" y2="24.5"/>
                                 <line x1="13.5" y1="15.5" x2="17.5" y2="19.5"/>
                             </g>
-                            <!-- Center dot -->
                             <circle cx="22" cy="22" r="3.5" fill="#FFD700"/>
-                            <!-- Play triangle -->
                             <polygon points="19,18 19,26 26,22" fill="#0a0803"/>
                         </svg>
                     </div>
@@ -763,7 +1016,6 @@
                     </div>
                 </div>
 
-                <!-- Desktop Nav -->
                 <div class="desktop-nav hidden md:flex items-center gap-x-8 text-sm font-medium">
                     <a href="#home" onclick="document.getElementById('home').scrollIntoView({ behavior: 'smooth' })" class="hover:text-[#FFD700] transition-colors">Home</a>
                     <a href="#events" onclick="document.getElementById('events').scrollIntoView({ behavior: 'smooth' })" class="hover:text-[#FFD700] transition-colors">Events</a>
@@ -777,10 +1029,8 @@
                     <a href="#" onclick="openMembersOrSignup(); return false;" class="hover:text-[#FFD700] transition-colors" id="members-nav-link">Members</a>
                 </div>
 
-                <!-- Right Side Actions -->
                 <div class="flex items-center gap-x-2">
                     <button type="button" id="mobile-menu-btn" onclick="document.getElementById('mobile-menu').classList.toggle('is-open')" class="w-10 h-10 items-center justify-center rounded-2xl glass text-[#FFD700]" style="display:none"><i class="fa-solid fa-bars"></i></button>
-                    <!-- Music Toggle -->
                     <div class="relative group">
                         <button onclick="toggleMusic()" id="music-btn"
                                 class="w-10 h-10 flex items-center justify-center rounded-2xl glass hover:bg-white/10 transition-all text-[#FFD700]">
@@ -808,13 +1058,11 @@
                         </div>
                     </div>
 
-                    <!-- Theme Toggle -->
                     <button onclick="toggleTheme()" 
                             class="w-10 h-10 flex items-center justify-center rounded-2xl glass hover:bg-white/10 transition-all text-[#FFD700]">
                         <i class="fa-solid fa-adjust text-lg" id="theme-icon"></i>
                     </button>
 
-                    <!-- User / Auth -->
                     <div id="nav-user-section">
                         <button onclick="showLoginModal()" class="text-sm px-3 py-2 rounded-full border border-[#FFD700]/40">Log in</button>
                     </div>
@@ -872,7 +1120,6 @@
                     </div>
                 </div>
 
-                <!-- Hero Image -->
                 <div class="lg:col-span-5 relative">
                     <div class="relative rounded-3xl overflow-hidden shadow-2xl border border-white/10 aspect-[16/10]">
                         <img src="images/class-photo.jpg" 
@@ -892,7 +1139,6 @@
         </div>
     </section>
 
-    <!-- INTRO + VERITY -->
     <section class="max-w-screen-2xl mx-auto px-6 pt-16 pb-12">
         <div class="grid lg:grid-cols-12 gap-8 items-center">
             <div class="lg:col-span-7">
@@ -903,7 +1149,6 @@
                 </p>
             </div>
 
-            <!-- Verity with portrait -->
             <div class="lg:col-span-5">
                 <div class="glass rounded-3xl p-8 border border-[#FFD700]/20">
                     <div class="flex items-start gap-x-5">
@@ -926,7 +1171,6 @@
         </div>
     </section>
 
-    <!-- QUICK NAV -->
     <section class="max-w-screen-2xl mx-auto px-6 pb-16">
         <h3 class="text-3xl font-semibold tracking-tight mb-6 px-1">Jump right in</h3>
         
@@ -973,18 +1217,99 @@
         </div>
         <div class="grid lg:grid-cols-2 gap-10 items-center">
             <div class="flex flex-col items-center">
-                <div class="flex gap-2 mb-4">
-                    <button type="button" onclick="setJoinBadge('member')" class="px-4 py-2 rounded-full border border-[#FFD700]/40">Member</button>
-                    <button type="button" onclick="setJoinBadge('admin')" class="px-4 py-2 rounded-full border border-[#FFD700]/40">Admin</button>
-                    <button type="button" onclick="setJoinBadge('developer')" class="px-4 py-2 rounded-full border border-[#FFD700]/40">Developer</button>
-                </div>
-                <div id="join-stage" class="join-stage">
-                    <div class="join-pin" id="join-pin-3d">
-                        <img id="join-badge" class="join-face join-front" src="badges/Member.jpg" alt="Multimedia Club badge front">
-                        <img class="join-face join-back" src="badges/backpin.jpg" alt="Button pin back">
+
+                <div id="join-showcase" class="showcase-3d" data-badge="member">
+
+                    <!-- Switcher -->
+                    <div class="badge-switch" role="group" aria-label="Choose badge type">
+                        <button class="switch-btn is-active" data-badge-btn="member" aria-pressed="true">
+                            <span class="switch-dot switch-dot--member" aria-hidden="true"></span>
+                            Member
+                        </button>
+                        <button class="switch-btn" data-badge-btn="admin" aria-pressed="false">
+                            <span class="switch-dot switch-dot--admin" aria-hidden="true"></span>
+                            Admin
+                        </button>
+                        <button class="switch-btn" data-badge-btn="developer" aria-pressed="false">
+                            <span class="switch-dot switch-dot--developer" aria-hidden="true"></span>
+                            Developer
+                        </button>
                     </div>
+
+                    <!-- 3D stage -->
+                    <div class="stage" id="join-3d-stage">
+                        <div class="stage-glow" aria-hidden="true"></div>
+                        <div class="contact-shadow" aria-hidden="true"></div>
+
+                        <div class="badge-float">
+                            <div class="badge-tilt" id="join-3d-tilt">
+                                <div class="badge-spin" id="join-3d-spin" role="img"
+                                     aria-label="Multimedia Club member badge">
+
+                                    <!-- Rim discs injected by script -->
+
+                                    <!-- ================= FRONT FACE ================= -->
+                                    <div class="face face--front" id="join-3d-front">
+
+                                        <!-- Member -->
+                                        <div class="art art--member">
+                                            <img src="badges/Member.jpg" alt="Member badge">
+                                        </div>
+
+                                        <!-- Admin -->
+                                        <div class="art art--admin">
+                                            <img src="badges/Admin.jpg" alt="Admin badge">
+                                        </div>
+
+                                        <!-- Developer -->
+                                        <div class="art art--developer">
+                                            <img src="badges/Developer.jpg" alt="Developer badge">
+                                        </div>
+
+                                        <div class="gloss" aria-hidden="true"></div>
+                                        <div class="sheen" aria-hidden="true"></div>
+                                    </div>
+
+                                    <!-- ================= BACK FACE ================= -->
+                                    <div class="face face--back">
+                                        <div class="art art--back">
+                                            <img src="badges/backpin.jpg" alt="Badge back">
+                                        </div>
+                                        <div class="gloss gloss--back" aria-hidden="true"></div>
+                                    </div>
+
+                                </div><!-- /.badge-spin -->
+                            </div><!-- /.badge-tilt -->
+                        </div><!-- /.badge-float -->
+                    </div><!-- /.stage -->
+
+                    <!-- Controls -->
+                    <div class="controls" role="group" aria-label="Badge animation controls">
+                        <button class="badge-ctrl badge-ctrl--primary" id="join-3d-play" aria-pressed="true">
+                            <span class="ico" aria-hidden="true">❚❚</span>
+                            <span class="lbl">Pause</span>
+                        </button>
+                        <button class="badge-ctrl" id="join-3d-left" aria-label="Rotate left">
+                            <span class="ico" aria-hidden="true">⟲</span>
+                            <span class="lbl">Left</span>
+                        </button>
+                        <button class="badge-ctrl" id="join-3d-right" aria-label="Rotate right">
+                            <span class="ico" aria-hidden="true">⟳</span>
+                            <span class="lbl">Right</span>
+                        </button>
+                        <button class="badge-ctrl" id="join-3d-reset" aria-label="Reset view">
+                            <span class="ico" aria-hidden="true">⌖</span>
+                            <span class="lbl">Reset</span>
+                        </button>
+                        <label class="slider-wrap" for="join-3d-speed">
+                            <span class="slider-label">Speed</span>
+                            <input type="range" id="join-3d-speed" min="0.25" max="2.5" step="0.05" value="1" />
+                            <output class="slider-out" id="join-3d-speed-out" for="join-3d-speed">1.00×</output>
+                        </label>
+                    </div>
+
                 </div>
-                <p id="join-badge-note" class="text-sm text-white/70 mt-4 text-center">Your digital badge appears here after you join.</p>
+                <p id="join-badge-note" class="text-sm text-white/70 mt-2 text-center">Your digital badge appears here after you join.</p>
             </div>
             <form id="join-form" class="glass rounded-3xl p-6" onsubmit="submitClubJoin(event)">
                 <label class="block text-sm mb-2">Name</label>
@@ -1262,7 +1587,6 @@
         </div>
     </div>
 
-    <!-- REGISTER MODAL (with Photographer role) -->
     <div id="register-modal" onclick="if (event.target.id === 'register-modal') hideRegisterModal()" class="hidden fixed inset-0 z-[95] flex items-center justify-center bg-[#0a0803]/80 p-4 overflow-y-auto">
         <div onclick="event.stopImmediatePropagation()" class="login-card glass w-full max-w-md rounded-3xl p-6 sm:p-8 my-6">
             <h3 class="font-display text-3xl font-semibold mb-6">Join the Multi Media Club</h3>
@@ -1360,10 +1684,8 @@
         </div>
     </div>
 
-    <!-- TOAST CONTAINER -->
     <div id="toast-container" class="fixed top-20 right-5 z-[90] flex flex-col gap-y-2"></div>
 
-    <!-- DASHBOARD OVERLAY -->
     <div id="dashboard-overlay" class="hidden fixed inset-0 z-[75] bg-black/90 flex">
         <div class="w-full max-w-[1100px] mx-auto my-6 glass rounded-3xl overflow-hidden flex flex-col">
             <div class="px-8 py-5 border-b border-white/10 flex justify-between items-center">
@@ -1387,7 +1709,6 @@
         </div>
     </div>
 
-    <!-- ADMIN PANEL -->
     <div id="admin-panel" class="hidden fixed inset-0 bg-black/95 z-[85] overflow-y-auto">
         <div class="w-full max-w-[1200px] mx-auto my-8 glass rounded-3xl overflow-hidden flex flex-col">
             <div class="px-8 py-5 border-b flex justify-between items-center bg-[#1a1208]">
@@ -1399,7 +1720,6 @@
             </div>
             
             <div class="p-8 flex-1 overflow-auto">
-                <!-- Header with Quick Actions -->
                 <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
                     <div>
                         <h2 class="text-2xl font-semibold">Admin Dashboard</h2>
@@ -1419,7 +1739,6 @@
                     </div>
                 </div>
 
-                <!-- Live Stats -->
                 <div class="mb-8">
                     <div class="flex items-center justify-between mb-3">
                         <h4 class="uppercase tracking-widest text-xs text-[#FFD700]">LIVE STATISTICS</h4>
@@ -1429,7 +1748,6 @@
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
-                    <!-- Recent Activity -->
                     <div class="lg:col-span-2">
                         <div class="flex items-center justify-between mb-3">
                             <h4 class="uppercase tracking-widest text-xs text-[#FFD700]">RECENT ACTIVITY</h4>
@@ -1437,19 +1755,15 @@
                         <div class="glass rounded-3xl p-4 max-h-[280px] overflow-auto text-sm" id="login-history"></div>
                     </div>
 
-                    <!-- Live Users -->
                     <div class="lg:col-span-3">
                         <div class="flex items-center justify-between mb-3">
                             <h4 class="uppercase tracking-widest text-xs text-[#FFD700]">CURRENTLY ONLINE</h4>
                             <span id="online-count" class="text-xs px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400"></span>
                         </div>
-                        <div class="glass rounded-3xl p-4 max-h-[280px] overflow-auto" id="live-users-list">
-                            <!-- Populated by JS -->
-                        </div>
+                        <div class="glass rounded-3xl p-4 max-h-[280px] overflow-auto" id="live-users-list"></div>
                     </div>
                 </div>
 
-                <!-- User Management -->
                 <div class="mt-8">
                     <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-3">
                         <h4 class="uppercase tracking-widest text-xs text-[#FFD700]">MEMBER MANAGEMENT</h4>
@@ -1704,10 +2018,6 @@
         }
 
 /* Multi Media Club scripts */
-        // =============================================
-        // COMPLETE SINGLE-FILE JAVASCRIPT (Enhanced)
-        // =============================================
-        
         let currentUser = null;
         let users = [];
         let events = [];
@@ -1722,14 +2032,12 @@
         let audioContext = null;
         let musicGain = null;
 
-        // Robust safeStorage wrapper for sandboxed environments
         let storageAvailable = true;
         
         const safeStorage = {
             getItem(key) {
-                try {
-                    return localStorage.getItem(key);
-                } catch (e) {
+                try { return localStorage.getItem(key); }
+                catch (e) {
                     if (storageAvailable) {
                         storageAvailable = false;
                         console.warn('%c[Multi Media] Running in sandboxed environment. Using memory fallback (data will not persist after refresh).', 'color:#FFD700');
@@ -1738,9 +2046,8 @@
                 }
             },
             setItem(key, value) {
-                try {
-                    localStorage.setItem(key, value);
-                } catch (e) {
+                try { localStorage.setItem(key, value); }
+                catch (e) {
                     if (storageAvailable) {
                         storageAvailable = false;
                         console.warn('%c[Multi Media] Running in sandboxed environment. Data changes will not persist.', 'color:#FFD700');
@@ -1766,13 +2073,11 @@
             { id: 2, title: "Call for Submissions: Spring Film Festival", content: "Submit your short films by March 25.", category: "Event", date: "2026-01-28", pinned: true, author: "editor_maya" }
         ];
 
-        // Allowed passwords for member access (strict list)
         const ALLOWED_PASSWORDS = [
             "Q7#mL2!x", "V$9pT4@k", "n8&Xr1*F", "Z!5qHm#2",
             "c@7YwL9%", "R3^fNp8!", "u#6Jx2$M", "P!4vK9&d", "h8*Qz1@T"
         ];
 
-        // Secure password hashing using Web Crypto API (SHA-256)
         async function hashPassword(password) {
             const encoder = new TextEncoder();
             const data = encoder.encode(password);
@@ -1782,7 +2087,6 @@
             return hashHex;
         }
 
-        // Verify password during login
         async function verifyPassword(inputPassword, storedHash) {
             const inputHash = await hashPassword(inputPassword);
             return inputHash === storedHash;
@@ -1894,7 +2198,6 @@
             return currentUser && (currentUser.role === "Admin" || currentUser.role === "Developer");
         }
 
-        // Admin Panel
         let adminRefreshInterval = null;
         let loginHistory = [];
         try { loginHistory = JSON.parse(safeStorage.getItem("mm_login_history") || "[]"); } catch (e) { loginHistory = []; }
@@ -1910,7 +2213,6 @@
             loadClubUsers().then(function () { renderAdminStats(); renderAdminUsers(); renderLiveOnlineUsers(); });
             refreshVisitorCount();
 
-            // Auto-refresh stats every 8 seconds while admin panel is open
             if (adminRefreshInterval) clearInterval(adminRefreshInterval);
             adminRefreshInterval = setInterval(() => {
                 if (!document.getElementById("admin-panel").classList.contains("hidden")) {
@@ -2062,7 +2364,6 @@
             `).join('');
         }
 
-        // Officer Role Assignment
         function showAssignOfficerModal(userId) {
             const user = users.find(u => u.id === userId);
             if (!user) return;
@@ -2114,7 +2415,6 @@
             }
         }
 
-        // Export Login History as CSV
         function exportLoginHistoryCSV() {
             if (!loginHistory || loginHistory.length === 0) {
                 showToast("No login history available to export.", "info");
@@ -2140,15 +2440,11 @@
             showToast("Login history exported successfully!");
         }
 
-        // Analytics Modal
         function showAnalyticsModal() {
-            // Dynamically load Chart.js only when needed (performance optimization)
             if (typeof Chart === 'undefined') {
                 const script = document.createElement('script');
                 script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
-                script.onload = () => {
-                    openAnalyticsModal();
-                };
+                script.onload = () => { openAnalyticsModal(); };
                 document.head.appendChild(script);
             } else {
                 openAnalyticsModal();
@@ -2190,72 +2486,43 @@
                 </div>
             `;
             document.body.appendChild(modal);
-
-            setTimeout(() => {
-                renderAnalyticsCharts();
-            }, 150);
+            setTimeout(() => { renderAnalyticsCharts(); }, 150);
         }
 
         function renderAnalyticsCharts() {
-            // Daily Logins Line Chart
             new Chart(document.getElementById('dailyLoginsChart'), {
                 type: 'line',
                 data: {
                     labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    datasets: [{
-                        label: 'Logins',
-                        data: [12, 19, 14, 22, 18, 9, 15],
-                        borderColor: '#FFD700',
-                        tension: 0.4,
-                        fill: false
-                    }]
+                    datasets: [{ label: 'Logins', data: [12, 19, 14, 22, 18, 9, 15], borderColor: '#FFD700', tension: 0.4, fill: false }]
                 },
                 options: { responsive: true, plugins: { legend: { display: false } } }
             });
-
-            // Device Usage Doughnut
             new Chart(document.getElementById('deviceChart'), {
                 type: 'doughnut',
                 data: {
                     labels: ['Desktop', 'Laptop', 'Mobile', 'Tablet'],
-                    datasets: [{
-                        data: [35, 40, 20, 5],
-                        backgroundColor: ['#FFD700', '#FFC107', '#FFEA00', '#B8860B']
-                    }]
+                    datasets: [{ data: [35, 40, 20, 5], backgroundColor: ['#FFD700', '#FFC107', '#FFEA00', '#B8860B'] }]
                 }
             });
-
-            // Browser Usage Bar
             new Chart(document.getElementById('browserChart'), {
                 type: 'bar',
                 data: {
                     labels: ['Chrome', 'Firefox', 'Edge', 'Safari'],
-                    datasets: [{
-                        label: 'Users',
-                        data: [55, 18, 15, 12],
-                        backgroundColor: '#FFD700'
-                    }]
+                    datasets: [{ label: 'Users', data: [55, 18, 15, 12], backgroundColor: '#FFD700' }]
                 },
                 options: { responsive: true, plugins: { legend: { display: false } } }
             });
-
-            // User Growth Line
             new Chart(document.getElementById('growthChart'), {
                 type: 'line',
                 data: {
                     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                    datasets: [{
-                        label: 'Total Users',
-                        data: [45, 62, 78, 95, 110, 128],
-                        borderColor: '#FFEA00',
-                        tension: 0.3
-                    }]
+                    datasets: [{ label: 'Total Users', data: [45, 62, 78, 95, 110, 128], borderColor: '#FFEA00', tension: 0.3 }]
                 },
                 options: { responsive: true, plugins: { legend: { display: false } } }
             });
         }
 
-        // Auth with safe storage
         function loadData() {
             users = JSON.parse(safeStorage.getItem('mm_users') || '[]').filter(u => !['alex.rivera@school.edu', 'maya.chen@school.edu', 'jake.morales@school.edu', 'kai.nakamura@school.edu'].includes(u.email));
             events = JSON.parse(safeStorage.getItem('mm_events') || '[]').filter(ev => !['Winter Showcase 2026', 'Spring Film Festival'].includes(ev.name));
@@ -2269,9 +2536,7 @@
             }
 
             if (!storageAvailable) {
-                setTimeout(() => {
-                    showToast("Running in limited/sandboxed mode. Data won't persist after refresh.", "info");
-                }, 1500);
+                setTimeout(() => { showToast("Running in limited/sandboxed mode. Data won't persist after refresh.", "info"); }, 1500);
             }
         }
 
@@ -2282,12 +2547,8 @@
         window.SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
         if (window.Verity) Verity.config.endpoint = apiUrl("/api/chat");
         const supabaseClient = (SUPABASE_ANON_KEY.includes("YOUR_SUPABASE") || typeof supabase === "undefined") ? null : supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        async function refreshClubToken() {
-            if (!currentUser) return;
-        }
-        function authHeaders() {
-            return { "Content-Type": "application/json" };
-        }
+        async function refreshClubToken() { if (!currentUser) return; }
+        function authHeaders() { return { "Content-Type": "application/json" }; }
         async function loadClubUsers() {
             const response = await fetch("/api/accounts", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "list" }) });
             const data = await response.json().catch(function () { return {}; });
@@ -2476,25 +2737,15 @@
                 return;
             }
             const accessCode = (document.getElementById('reg-access-code') || {}).value || '';
-            if (role === 'Admin' && accessCode !== ADMIN_ACCESS_CODE) {
-                showToast('Admin code required', 'error');
-                return;
-            }
-            if (role === 'Developer' && accessCode !== DEVELOPER_ACCESS_CODE) {
-                showToast('Developer code required', 'error');
-                return;
-            }
+            if (role === 'Admin' && accessCode !== ADMIN_ACCESS_CODE) { showToast('Admin code required', 'error'); return; }
+            if (role === 'Developer' && accessCode !== DEVELOPER_ACCESS_CODE) { showToast('Developer code required', 'error'); return; }
             
-            // Professional registration rules
-            // 1. Password must not already be used by another account
             const passwordHash = await hashPassword(pass);
             const passwordAlreadyUsed = users.some(u => u.passwordHash === passwordHash);
             if (passwordAlreadyUsed) {
                 showToast('This password is already in use. Please choose another.', 'error');
                 return;
             }
-            
-            // 2. Prevent registering as Admin if slots are full (max 2)
             if (role === 'Admin') {
                 const currentAdmins = users.filter(u => u.role === 'Admin').length;
                 if (currentAdmins >= 2) {
@@ -2538,7 +2789,6 @@
             showLoginModal();
         }
 
-        // Events
         function renderEvents() {
             const grid = document.getElementById('events-grid');
             grid.innerHTML = '';
@@ -2814,7 +3064,6 @@
             await enableClubNotifications();
         }
 
-        // Announcements
         let currentFilter = 'all';
         
         function renderAnnouncements(filtered = null) {
@@ -2869,7 +3118,6 @@
             renderAnnouncements();
         }
 
-        // Verity Chat + voice
         const VERITY_FACES = {
             idle: "verity-faces/idle.jpg",
             talking: "verity-faces/talking.jpg",
@@ -3257,7 +3505,6 @@
             return "Oh im sorry but i think i dont know this yet due to my code. anything else that i could help you with?";
         }
 
-        // Website Tour
         function highlightPortrait(id) {
             document.querySelectorAll(".portrait-frame").forEach(function (el) { el.style.boxShadow = ""; });
             const el = document.getElementById(id);
@@ -3331,13 +3578,12 @@
             })();
         }
 
-        // Dashboard
         function showDashboard() {
             if (!currentUser) { showLoginModal(); return; }
             document.getElementById('dashboard-overlay').classList.remove('hidden');
             document.getElementById('dashboard-overlay').classList.add('flex');
             document.getElementById('dashboard-role-badge').textContent = currentUser.role.toUpperCase();
-            switchDashboardTab('overview'); // Default to overview with button for members
+            switchDashboardTab('overview');
         }
 
         function hideDashboard() {
@@ -3368,7 +3614,6 @@
             content.innerHTML = '';
             
             if (tab === 'overview') {
-                // Overview with button to view members
                 content.innerHTML = `
                     <h3 class="text-2xl font-semibold mb-4">Welcome back, ${currentUser.username}!</h3>
                     
@@ -3413,7 +3658,6 @@
             }
             
             if (tab === 'members') {
-                // Member Directory
                 let html = `
                     <div class="flex justify-between items-center mb-6">
                         <div>
@@ -3469,12 +3713,181 @@
             }
         }
 
-        // Modals
         function setJoinBadge(kind) {
-            const img = document.getElementById("join-badge");
-            const files = { member: "badges/Member.jpg", admin: "badges/Admin.jpg", developer: "badges/Developer.jpg" };
-            if (img) img.src = files[kind] || files.member;
+            const showcase = document.getElementById('join-showcase');
+            if (!showcase) return;
+            if (!['member', 'admin', 'developer'].includes(kind)) kind = 'member';
+            showcase.dataset.badge = kind;
+
+            showcase.querySelectorAll('.switch-btn').forEach(function (tab) {
+                const on = tab.dataset.badgeBtn === kind;
+                tab.classList.toggle('is-active', on);
+                tab.setAttribute('aria-pressed', String(on));
+            });
+
+            const spin = document.getElementById('join-3d-spin');
+            if (spin) {
+                const labels = {
+                    member: 'Member badge — Multimedia Club member pin',
+                    admin: 'Admin badge — Multimedia Club officer pin',
+                    developer: 'Developer badge — Multimedia Club developer pin'
+                };
+                spin.setAttribute('aria-label', labels[kind] || labels.member);
+            }
+
+            showcase.dispatchEvent(new CustomEvent('badgechange', { detail: { kind: kind } }));
         }
+
+        (function () {
+            'use strict';
+
+            const CONFIG = {
+                thickness: 18,
+                layers: 32,
+                baseRate: 34,
+                hoverRate: 0.14,
+                nudge: 90
+            };
+
+            const showcase   = document.getElementById('join-showcase');
+            const stage      = document.getElementById('join-3d-stage');
+            const badgeSpin  = document.getElementById('join-3d-spin');
+            const badgeTilt  = document.getElementById('join-3d-tilt');
+            const playBtn    = document.getElementById('join-3d-play');
+            const rotLeft    = document.getElementById('join-3d-left');
+            const rotRight   = document.getElementById('join-3d-right');
+            const resetBtn   = document.getElementById('join-3d-reset');
+            const speedInput = document.getElementById('join-3d-speed');
+            const speedOut   = document.getElementById('join-3d-speed-out');
+
+            if (!showcase || !stage || !badgeSpin || !badgeTilt) return;
+
+            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+            let angle = 0, playing = !reducedMotion, speed = 1, dir = 1;
+            let target = null, flick = 0, hoverScale = 1, hovering = false;
+            let tiltX = 0, tiltY = 0, wantTiltX = 0, wantTiltY = 0;
+            let lastTime = performance.now();
+
+            (function buildRim() {
+                const N = CONFIG.layers;
+                const half = CONFIG.thickness / 2;
+                const frag = document.createDocumentFragment();
+                for (let i = 0; i < N; i++) {
+                    const z = N === 1 ? 0 : (-half + (2 * half * i) / (N - 1));
+                    const disc = document.createElement('div');
+                    disc.className = 'rim';
+                    disc.style.transform = 'translateZ(' + z.toFixed(3) + 'px)';
+                    frag.appendChild(disc);
+                }
+                badgeSpin.insertBefore(frag, badgeSpin.firstChild);
+            })();
+
+            function syncPlayButton() {
+                playBtn.setAttribute('aria-pressed', String(playing));
+                playBtn.querySelector('.ico').textContent = playing ? '❚❚' : '▶';
+                playBtn.querySelector('.lbl').textContent = playing ? 'Pause' : 'Play';
+            }
+            function setPlaying(value) {
+                playing = value;
+                if (playing) target = null;
+                syncPlayButton();
+            }
+            function nudge(direction) {
+                const base = target !== null ? target : angle;
+                target = base + CONFIG.nudge * direction;
+            }
+
+            playBtn.addEventListener('click', function () { setPlaying(!playing); });
+            rotLeft.addEventListener('click', function () { nudge(-1); });
+            rotRight.addEventListener('click', function () { nudge(+1); });
+            resetBtn.addEventListener('click', function () {
+                target = Math.round(angle / 360) * 360;
+                wantTiltX = 0; wantTiltY = 0; flick = 0; dir = 1; speed = 1;
+                speedInput.value = '1';
+                speedOut.textContent = '1.00×';
+                setPlaying(true);
+            });
+            speedInput.addEventListener('input', function () {
+                speed = parseFloat(speedInput.value) || 1;
+                speedOut.textContent = speed.toFixed(2) + '×';
+            });
+
+            showcase.querySelectorAll('.switch-btn').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    setJoinBadge(btn.dataset.badgeBtn);
+                });
+            });
+
+            showcase.addEventListener('badgechange', function () {
+                target = Math.round(angle / 360) * 360;
+            });
+
+            if (canHover) {
+                stage.addEventListener('pointerenter', function () { hovering = true; });
+                stage.addEventListener('pointermove', function (e) {
+                    const rect = stage.getBoundingClientRect();
+                    const px = (e.clientX - rect.left) / rect.width - 0.5;
+                    const py = (e.clientY - rect.top) / rect.height - 0.5;
+                    wantTiltY = px * 18;
+                    wantTiltX = -py * 14;
+                });
+                const leave = function () {
+                    hovering = false;
+                    wantTiltX = 0;
+                    wantTiltY = 0;
+                };
+                stage.addEventListener('pointerleave', leave);
+                stage.addEventListener('pointercancel', leave);
+            }
+
+            function frame(now) {
+                const dt = Math.min((now - lastTime) / 1000, 0.05);
+                lastTime = now;
+
+                const wantScale = (hovering && canHover) ? CONFIG.hoverRate : 1;
+                hoverScale += (wantScale - hoverScale) * Math.min(1, dt * 9);
+
+                if (target !== null) {
+                    angle += (target - angle) * (1 - Math.pow(0.0008, dt));
+                    if (Math.abs(target - angle) < 0.25) { angle = target; target = null; }
+                } else if (playing) {
+                    angle += CONFIG.baseRate * speed * dir * hoverScale * dt;
+                }
+
+                if (flick !== 0) {
+                    angle += flick * dt;
+                    flick *= Math.pow(0.5, dt / 0.18);
+                    if (Math.abs(flick) < 1) flick = 0;
+                }
+
+                if (canHover) {
+                    if (!hovering && !reducedMotion) {
+                        const t = now / 1000;
+                        wantTiltY = Math.sin(t * 0.34) * 7;
+                        wantTiltX = Math.sin(t * 0.23 + 1.1) * 4;
+                    }
+                } else {
+                    wantTiltX = 0;
+                    wantTiltY = 0;
+                }
+
+                tiltX += (wantTiltX - tiltX) * Math.min(1, dt * 9);
+                tiltY += (wantTiltY - tiltY) * Math.min(1, dt * 9);
+
+                badgeSpin.style.transform = 'rotateY(' + angle.toFixed(3) + 'deg)';
+                badgeTilt.style.transform =
+                    'rotateX(' + tiltX.toFixed(2) + 'deg) rotateY(' + tiltY.toFixed(2) + 'deg)';
+
+                requestAnimationFrame(frame);
+            }
+
+            syncPlayButton();
+            speedOut.textContent = '1.00×';
+            requestAnimationFrame(function (t) { lastTime = t; requestAnimationFrame(frame); });
+        })();
+
         async function submitClubJoin(event) {
             event.preventDefault();
             const name = document.getElementById("join-name").value.trim();
@@ -3535,7 +3948,6 @@
             localStorage.setItem('mm_theme', light ? 'light' : 'dark');
         }
 
-        // Load saved theme
         function loadTheme() {
             if (localStorage.getItem('mm_theme') === 'light') {
                 document.body.classList.add('light-mode');
@@ -3548,7 +3960,6 @@
         }
 
         function initEverything() {
-            // Hide unique loading screen
             const loadingScreen = document.getElementById('loading-screen');
             if (loadingScreen) {
                 setTimeout(() => {
@@ -3556,10 +3967,7 @@
                     loadingScreen.style.opacity = '0';
                     setTimeout(() => {
                         loadingScreen.remove();
-                        
-                        setTimeout(() => {
-                            /* intro replaced */
-                        }, 200);
+                        setTimeout(() => {}, 200);
                     }, 600);
                 }, 1600);
             }
@@ -3583,8 +3991,6 @@
             renderAnnouncements();
             filterAnnouncementsInit();
             
-
-            // Welcome message (no Konami mention)
             setTimeout(() => {
                 if (!safeStorage.getItem('mm_welcomed')) {
                     showToast('Welcome to the Multi Media Club!', 'info');
@@ -3592,7 +3998,6 @@
                 }
             }, 4500);
             
-            // Ctrl + A for Admin Panel
             document.addEventListener("keydown", function(e) {
                 if (e.ctrlKey && e.key.toLowerCase() === "a") {
                     e.preventDefault();
@@ -3606,7 +4011,6 @@
             
             console.log('%c[Multi Media Final] Loaded successfully with all features!', 'color:#FFD700');
 
-            // === Web Vitals Measurement ===
             if (typeof webVitals !== 'undefined') {
                 console.log('%c[Web Vitals] Performance monitoring enabled. Check console for metrics.', 'color:#4ade80');
                 webVitals.onCLS(console.log);
@@ -3633,7 +4037,6 @@
 
         window.onload = initEverything;
         
-        // Make functions global
         window.showRequestsPage = showRequestsPage;
         window.showUploadsPage = showUploadsPage;
         window.openRequestForm = openRequestForm;
@@ -3653,7 +4056,7 @@
         window.showRegisterModal = showRegisterModal;
         window.showDashboard = showDashboard;
         window.toggleMusic = toggleMusic;
-    
+        window.setJoinBadge = setJoinBadge;
 
         document.addEventListener('change', function (event) {
             if (event.target && event.target.id === 'file-input') selectUpload(event.target.files[0]);

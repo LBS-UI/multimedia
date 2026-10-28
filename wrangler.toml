@@ -11,7 +11,7 @@ not_found_handling = "single-page-application"
 TTS_REFERENCE_ID = "8d21b053e2804e2a890e1cf62f267b6f"
 TTS_VOICE_ID = "8d21b053e2804e2a890e1cf62f267b6f"
 TTS_MODEL = "s2.1-pro-free"
-ONESIGNAL_APP_ID = "aab001d1-5e18-41af-9055-0ce94131d4c1"
+ONESIGNAL_APP_ID = "YOUR_ONESIGNAL_APP_ID"
 
 [[d1_databases]]
 binding = "DB"

@@ -1831,11 +1831,21 @@
         }
 
         function startBGM(track = 'welcome') {
-            if (isMusicPlaying) stopBGM();
+            const order = ["welcome", "creative", "digital", "solis"];
             const files = { welcome: "sounds/welcome.mp3", creative: "sounds/creative.mp3", digital: "sounds/digital.mp3", solis: "sounds/verity.mp3" };
-            if (!window.bgmAudio) window.bgmAudio = new Audio();
+            if (!window.bgmAudio) {
+                window.bgmAudio = new Audio();
+                window.bgmAudio.addEventListener("ended", function () {
+                    if (!isMusicPlaying) return;
+                    const next = order[(order.indexOf(currentMusicTrack) + 1) % order.length];
+                    const select = document.getElementById("music-track");
+                    if (select) select.value = next;
+                    startBGM(next);
+                });
+            }
+            if (isMusicPlaying) window.bgmAudio.pause();
             window.bgmAudio.src = files[track] || files.welcome;
-            window.bgmAudio.loop = true;
+            window.bgmAudio.loop = false;
             window.bgmAudio.volume = musicVolume;
             window.bgmAudio.play().then(function () {
                 isMusicPlaying = true;
@@ -2770,7 +2780,7 @@
                     headers: { "Content-Type": "application/json", Authorization: "Bearer " + (safeStorage.getItem("mm_api_token") || "") },
                     body: JSON.stringify({ title: heading, body: title, url: location.origin })
                 });
-                if (!res.ok) throw new Error("push failed");
+                if (!res.ok) throw new Error((await res.json().catch(function () { return {}; })).error || "push failed");
                 showToast("Push notification sent.");
                 playNotificationSound();
             } catch (e) {

@@ -313,9 +313,9 @@
         .join-front { transform: translateZ(8px) scale(1.18); }
         .join-back { transform: rotateY(180deg) translateZ(8px) scale(1); background: #fff; }
         #music-btn.music-needs-play { animation: musicRgb 1.2s linear infinite; }
-        #verity-glitch { position: fixed; inset: 0; z-index: 120; display: none; align-items: center; justify-content: center; background: #000; }
-        #verity-glitch img { width: min(280px, 70vw); height: min(280px, 70vw); object-fit: cover; border-radius: 50%; animation: verityGlitch .12s steps(2) infinite; }
-        @keyframes verityGlitch { 0% { transform: translate(-8px, 2px) skewX(-4deg); filter: contrast(1.4); } 50% { transform: translate(8px, -3px) skewX(4deg); filter: hue-rotate(20deg); } 100% { transform: translate(-4px, 4px); } }
+        .notify-highlight { animation: notifyPulse 1.6s ease-in-out infinite; box-shadow: 0 0 16px rgba(255,215,0,.45); background: rgba(255,215,0,.12); }
+        @keyframes notifyPulse { 50% { box-shadow: 0 0 24px rgba(255,215,0,.8); transform: scale(1.04); } }
+        #notify-float { position: fixed; right: 1rem; bottom: 5.5rem; z-index: 70; }
         @keyframes musicRgb { 0% { box-shadow: 0 0 0 3px #ff3b3b, 0 0 18px #ff3b3b; } 33% { box-shadow: 0 0 0 3px #3bff7a, 0 0 18px #3bff7a; } 66% { box-shadow: 0 0 0 3px #3b8bff, 0 0 18px #3b8bff; } 100% { box-shadow: 0 0 0 3px #ff3b3b, 0 0 18px #ff3b3b; } }
         @keyframes verity-bounce { 0% { transform: translateX(-50%) translateY(0) scale(1.14, 0.78); } 18% { transform: translateX(-50%) translateY(-70px) scale(0.96, 1.06); } 36% { transform: translateX(-50%) translateY(0) scale(1.1, 0.86); } 52% { transform: translateX(-50%) translateY(-36px) scale(0.98, 1.04); } 68% { transform: translateX(-50%) translateY(0) scale(1.06, 0.92); } 82% { transform: translateX(-50%) translateY(-14px) scale(1, 1.02); } 100% { transform: translateX(-50%) translateY(0) scale(1); } }
         .welcome-verity { position: absolute; left: 50%; bottom: 21px; margin: 0; opacity: 0; transform: translateX(-50%) translateY(-110vh); }
@@ -651,7 +651,7 @@
 
 
 <!-- IMPROVED CINEMATIC LOADING SCREEN -->
-    <div id="verity-glitch"><img src="verity-faces/smiling.jpg" alt="Verity smiling"></div>
+    <button id="notify-float" onclick="enableClubNotifications()" class="notify-highlight px-4 py-3 rounded-full border border-[#FFD700] text-[#FFD700] font-semibold">Enable notifications</button>
     <div id="loading-screen" class="fixed inset-0 z-[999] flex items-center justify-center bg-[#0a0803] overflow-hidden">
         <!-- Background Effects -->
         <div class="absolute inset-0 futuristic-grid opacity-30"></div>
@@ -777,7 +777,7 @@
                         <span>Verity</span>
                     </a>
                     <a href="#about" onclick="document.getElementById('about').scrollIntoView({ behavior: 'smooth' })" class="hover:text-[#FFD700] transition-colors">About</a>
-                    <a href="#" onclick="enableClubNotifications(); return false;" class="hover:text-[#FFD700] transition-colors">Notifications</a>
+                    <a href="#" onclick="enableClubNotifications(); return false;" class="notify-highlight px-4 py-2 rounded-full border border-[#FFD700] text-[#FFD700] font-semibold">Notifications</a>
                     <a href="#" onclick="openMembersOrSignup(); return false;" class="hover:text-[#FFD700] transition-colors" id="members-nav-link">Members</a>
                 </div>
 
@@ -835,7 +835,7 @@
         <button class="block w-full max-w-xs py-3 text-xl" onclick="showRequestsPage(); document.getElementById('mobile-menu').classList.add('hidden')">Requests</button>
         <button class="block w-full max-w-xs py-3 text-xl" onclick="openMembersOrSignup(); document.getElementById('mobile-menu').classList.remove('is-open')">Members</button>
         <a href="#about" class="block w-full max-w-xs py-3 text-xl" onclick="document.getElementById('mobile-menu').classList.remove('is-open')">About</a>
-        <button class="block w-full max-w-xs py-3 text-xl" onclick="showLoginModal(); document.getElementById('mobile-menu').classList.remove('is-open')">Sign in</button>
+        <button class="block w-full max-w-xs py-3 text-xl rounded-full border border-[#FFD700] text-[#FFD700]" onclick="enableClubNotifications(); document.getElementById('mobile-menu').classList.remove('is-open')">Notifications</button>
         <button class="block w-full max-w-xs py-3 text-xl text-[#FFD700]" onclick="showRegisterModal(); document.getElementById('mobile-menu').classList.remove('is-open')">Sign up</button>
         <button class="block w-full max-w-xs py-3 text-xl" onclick="showDashboard(); document.getElementById('mobile-menu').classList.remove('is-open')">My account</button>
         <button id="mobile-admin-tools" class="hidden w-full max-w-xs py-3 text-xl text-[#FFD700]" onclick="showAdminPanel(); document.getElementById('mobile-menu').classList.add('hidden')">Admin tools</button>
@@ -3272,23 +3272,17 @@
         function clearPortraitHighlight() {
             document.querySelectorAll(".portrait-frame").forEach(function (el) { el.style.boxShadow = ""; });
         }
-        function scheduleVerityMusicLine() {
-            if (window.verityMusicTimer) return;
-            window.verityMusicTimer = setTimeout(function () {
-                const userLines = verityChatHistory.filter(function (item) { return item.role === "user"; }).length;
-                if (userLines > 2) return;
-                setVerityMood("smiling");
-                addVerityMessage("ahh i like this music");
-            }, 60000);
+        function sayVerityMusicLine() {
+            if (window.verityMusicSaid) return;
+            window.verityMusicSaid = true;
+            if (window.verityMusicTimer) clearTimeout(window.verityMusicTimer);
+            setVerityMood("smiling");
+            addVerityMessage("ahh i like this music");
         }
         function startVerityStayMoments() {
-            scheduleVerityMusicLine();
-            setTimeout(function () {
-                const glitch = document.getElementById("verity-glitch");
-                if (!glitch) return;
-                glitch.style.display = "flex";
-                setTimeout(function () { glitch.style.display = "none"; }, 1400);
-            }, 300000);
+            if (window.verityMusicTimer) return;
+            window.verityMusicTimer = setTimeout(sayVerityMusicLine, 180000);
+            setTimeout(function () { setVerityMood("smiling"); }, 300000);
         }
         function startWebsiteTour() {
             hideVerityChat();
@@ -3350,7 +3344,7 @@
                 setVerityTalking(false);
                 verityTourButtonsHidden = true;
                 document.querySelectorAll(".verity-quick-replies").forEach(function (el) { el.remove(); });
-                scheduleVerityMusicLine();
+                sayVerityMusicLine();
             })();
         }
 

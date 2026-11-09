@@ -21,20 +21,20 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
         
         :root {
-            --gold: #fbbf24;
-            --gold-dark: #f59e0b;
-            --amber: #f59e0b;
-            --yellow: #fde047;
-            --yellow-light: #fffbea;
-            --dark-bg: #0a0803;
-            --dark-surface: #1a1208;
-            --dark-card: #24180c;
-            --glass-bg: rgba(251, 191, 36, 0.06);
-            --glass-border: rgba(253, 224, 71, 0.28);
-            --text-primary: #fffbea;
-            --text-secondary: rgba(255, 251, 234, 0.62);
-            --neon-glow: 0 0 12px rgba(251, 191, 36, 0.45);
-            --neon-glow-strong: 0 0 22px rgba(253, 224, 71, 0.55);
+            --gold: #FFD700;
+            --gold-dark: #B8860B;
+            --amber: #FFE600;
+            --yellow: #FFE600;
+            --yellow-light: #FFFFFF;
+            --dark-bg: #050505;
+            --dark-surface: #101010;
+            --dark-card: #171717;
+            --glass-bg: rgba(255, 215, 0, 0.06);
+            --glass-border: rgba(255, 215, 0, 0.32);
+            --text-primary: #FFFFFF;
+            --text-secondary: #C8C8C8;
+            --neon-glow: 0 0 14px rgba(255, 215, 0, 0.45);
+            --neon-glow-strong: 0 0 24px rgba(255, 230, 0, 0.55);
         }
 
         * {
@@ -44,8 +44,8 @@
 
         body {
             font-family: 'Inter', system-ui, sans-serif;
-            background: #0a0803;
-            color: #fffbea;
+            background: #050505;
+            color: #FFFFFF;
             overflow-x: hidden;
         }
         body.light-mode { background: #f7f1e4 !important; color: #2a2118 !important; }
@@ -100,7 +100,13 @@
             font-feature-settings: "ss02";
         }
 
-        .section-header {
+        .hero-brand { display: flex; align-items: center; gap: 1.2rem; }
+        .hero-logo { width: min(180px, 42vw); height: min(180px, 42vw); object-fit: cover; border-radius: 50%; border: 3px solid #FFD700; box-shadow: 0 0 28px rgba(255,215,0,.35); }
+        .hero-mascot { width: 88px; height: 88px; object-fit: cover; border-radius: 50%; border: 3px solid #FFE600; box-shadow: 0 0 18px rgba(255,230,0,.45); }
+        .gold-line { height: 1px; background: linear-gradient(90deg, transparent, #FFD700, transparent); margin: 1rem 0; }
+        .club-card { background: #171717; border: 1px solid rgba(255,215,0,.28); border-radius: 1.4rem; }
+        .site-footer { background: #050505; border-top: 1px solid rgba(255,215,0,.28); }
+        @media (max-width: 768px) { .hero-brand { flex-direction: column; } .hero-mascot { width: 64px; height: 64px; } }
             font-size: 2.25rem;
             line-height: 2.5rem;
             font-weight: 700;
@@ -942,7 +948,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
   <div class="intro__text">
     <p class="intro__welcome">Welcome to the Multimedia Club.</p>
     <p class="intro__name"><img src="images/logo.jpg" alt="Multimedia logo"><span>Multimedia</span></p>
-    <p class="intro__tagline">Create • Capture • Collaborate • Collaborated by Verity</p>
+    <p class="intro__tagline">CREATE • CAPTURE • CONNECT • Collaborated by Verity</p>
     <button id="introEnter" type="button" class="intro__gate-label" style="display:none;margin-top:1.2rem;pointer-events:auto;border:1px solid rgba(253,224,71,.4);border-radius:999px;padding:12px 22px;background:#fbbf24;color:#0a0803;">Click to enter multimedia</button>
   </div>
   <div class="intro__gate" id="introGate"><div class="intro__gate-inner"><p class="intro__gate-label">Click to enter multimedia</p><p class="intro__gate-hint" id="introGateHint">Click anywhere to start</p></div></div>
@@ -1038,7 +1044,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
                         <i class="fa-solid fa-robot"></i>
                         <span>Verity</span>
                     </a>
-                    <a href="#about" onclick="document.getElementById('about').scrollIntoView({ behavior: 'smooth' })" class="hover:text-[#FFD700] transition-colors">About</a>
+                    <a href="#about" onclick="document.getElementById('about').scrollIntoView({ behavior: 'smooth' })" class="hover:text-[#FFD700] transition-colors">About Us</a>
                     <a href="#" onclick="enableClubNotifications(); return false;" class="notify-highlight px-4 py-2 rounded-full border border-[#FFD700] text-[#FFD700] font-semibold">Notifications</a>
                     <a href="#" onclick="openMembersOrSignup(); return false;" class="hover:text-[#FFD700] transition-colors" id="members-nav-link">Members</a>
                 </div>
@@ -1101,55 +1107,13 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
     </div>
 
     <!-- HERO SECTION -->
-    <section id="home" class="min-h-[100dvh] pt-16 relative flex items-center justify-center overflow-hidden multimedia-bg">
-        <div class="absolute inset-0 futuristic-grid opacity-40"></div>
-        
-        <div class="floating-shape w-72 h-72 top-20 -left-20" style="animation-delay: 0s;"></div>
-        <div class="floating-shape w-96 h-96 top-1/3 right-10" style="animation-delay: -7s;"></div>
-        <div class="floating-shape w-64 h-64 bottom-20 left-1/4" style="animation-delay: -12s;"></div>
-
-        <div class="max-w-screen-2xl mx-auto px-6 relative z-10 pt-8">
-            <div class="grid lg:grid-cols-12 gap-12 items-center">
-                <div class="lg:col-span-7 text-center lg:text-left">
-                    <div class="inline-flex items-center gap-x-2 px-4 py-1.5 rounded-full glass mb-6 border border-[#FFD700]/30">
-                        <div class="w-2 h-2 bg-[#FFD700] rounded-full animate-pulse"></div>
-                        <span class="text-sm font-medium tracking-[2px] text-[#FFD700]">SCHOOL YEAR 2026-2027</span>
-                    </div>
-                    
-                    <h1 class="font-display text-7xl lg:text-8xl font-bold tracking-tighter leading-none mb-4">
-                        Where <span class="bg-gradient-to-r from-[#FFD700] via-[#FFEA00] to-[#FFC107] bg-clip-text text-transparent">Creativity</span><br>
-                        Meets <span class="bg-gradient-to-r from-[#FFD700] via-[#FFEA00] to-[#FFC107] bg-clip-text text-transparent">Collaboration</span>
-                    </h1>
-                    
-                    <p class="max-w-lg mx-auto lg:mx-0 text-xl text-[#fffbea] mb-8">
-                        The official portal for the Multi Media Club. 
-                        Collaborate on creative projects, stay updated with events, and grow your skills.
-                    </p>
-
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                        <button onclick="document.getElementById('events').scrollIntoView({ behavior: 'smooth' })" 
-                                class="btn-gold px-9 py-4 rounded-3xl text-lg flex items-center justify-center gap-x-3 shadow-xl">
-                            <span>Explore Events</span>
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="lg:col-span-5 relative">
-                    <div class="relative rounded-3xl overflow-hidden shadow-2xl border border-white/10 aspect-[16/10]">
-                        <img src="images/class-photo.jpg" 
-                             class="w-full h-full object-cover brightness-[0.85]" alt="Multimedia hero banner">
-                        <div class="absolute inset-0 bg-gradient-to-tr from-[#0a0803] via-[#0a0803]/70 to-transparent"></div>
-                        
-                        <div class="absolute bottom-6 left-6 glass px-5 py-3 rounded-2xl flex items-center gap-x-3">
-                            <div>
-                                <div class="text-xs tracking-widest text-[#FFD700]">NOW ACTIVE</div>
-                                <div class="font-semibold">MULTIMEDIA 2026 - 2027</div>
-                            </div>
-                            <div class="w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
-                        </div>
-                    </div>
-                </div>
+    <section id="home" class="min-h-[100dvh] pt-24 relative flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 futuristic-grid opacity-30"></div>
+        <div class="max-w-screen-2xl mx-auto px-6 relative z-10 text-center">
+            <img src="images/banner.png" alt="Multimedia Club banner: Create, Capture, Connect" class="w-full rounded-3xl border border-[#FFD700]/40 shadow-[0_0_32px_rgba(255,215,0,.25)]">
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+                <button onclick="document.getElementById('events').scrollIntoView({ behavior: 'smooth' })" class="btn-gold px-8 py-4 rounded-2xl text-lg">Explore Our Work</button>
+                <button onclick="document.getElementById('about').scrollIntoView({ behavior: 'smooth' })" class="px-8 py-4 rounded-2xl text-lg border border-[#FFD700] text-[#FFD700]">Learn About Us</button>
             </div>
         </div>
     </section>
@@ -1320,8 +1284,16 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
     </section>
 
     <!-- ABOUT THE DEVELOPER -->
-    <section id="about" class="max-w-screen-2xl mx-auto px-6 py-20 border-t border-white/10">
-        <h2 class="section-header text-center mb-12">About the Developer</h2>
+    <section id="about" class="max-w-screen-2xl mx-auto px-6 py-20 border-t border-[#FFD700]/20">
+        <p class="text-center text-xs tracking-[0.3em] text-[#FFD700] mb-3">ABOUT THE CLUB</p>
+        <h2 class="section-header text-center mb-4">Multimedia Club</h2>
+        <p class="text-center text-[#C8C8C8] max-w-2xl mx-auto mb-10">We create, capture, and connect through photography, video, design, and technology.</p>
+        <div class="grid md:grid-cols-3 gap-4 mb-12">
+            <div class="club-card p-6"><i class="fa-solid fa-camera text-[#FFD700] text-2xl"></i><h3 class="mt-3 font-semibold">Photography</h3><p class="text-[#C8C8C8] text-sm mt-2">Capture school moments and club projects.</p></div>
+            <div class="club-card p-6"><i class="fa-solid fa-film text-[#FFD700] text-2xl"></i><h3 class="mt-3 font-semibold">Video</h3><p class="text-[#C8C8C8] text-sm mt-2">Edit stories, events, and announcements.</p></div>
+            <div class="club-card p-6"><i class="fa-solid fa-code text-[#FFD700] text-2xl"></i><h3 class="mt-3 font-semibold">Technology</h3><p class="text-[#C8C8C8] text-sm mt-2">Build the club platform and digital tools.</p></div>
+        </div>
+        <h3 class="section-header text-center mb-8">About the Developer</h3>
         
         <div class="max-w-5xl mx-auto">
             <div class="flex flex-col sm:flex-row items-center justify-center gap-10 mb-10">
@@ -1475,8 +1447,8 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             <div id="welcome-hi" class="welcome-hi mt-4 inline-block glass rounded-3xl px-5 py-3 text-lg">Ahhhhhhh</div>
             <div class="welcome-log">
                 <h2 class="font-display text-5xl font-bold leading-none tracking-tight mt-6">Multi <span class="bg-gradient-to-r from-[#FFD700] via-[#FFEA00] to-[#FFC107] bg-clip-text text-transparent">Media</span></h2>
-                <p class="mt-2 text-sm tracking-[0.28em] text-[#FFD700]">CREATE. CAPTURE. COLLABORATE.</p>
-                <p class="mt-3 text-sm text-[#FFD700]">Collaborated by Verity</p>
+                <p class="mt-2 text-sm tracking-[0.28em] text-[#FFD700]">CREATE • CAPTURE • CONNECT</p>
+                <p class="mt-3 text-sm text-[#FFD700]">COLLABORATED BY VERITY</p>
                 <div class="text-left glass rounded-2xl p-4 mt-5">
                     <div class="text-xs tracking-wide text-[#FFD700] mb-2">UPDATE LOG</div>
                     <p class="text-sm text-[#fffbea]">Voice tour, requests, and file uploads are ready for members.</p>
@@ -1485,6 +1457,24 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             </div>
         </div>
     </div>
+    <footer class="site-footer px-6 py-12">
+        <div class="max-w-screen-2xl mx-auto grid md:grid-cols-3 gap-8 items-center">
+            <div class="flex items-center gap-3">
+                <img src="images/logo.jpg" alt="Multimedia Club logo" class="w-14 h-14 rounded-full object-cover border border-[#FFD700]">
+                <div><div class="font-display text-2xl font-bold">MULTIMEDIA CLUB</div><div class="text-xs tracking-[0.2em] text-[#FFD700]">CREATE • CAPTURE • CONNECT</div></div>
+            </div>
+            <div class="flex flex-wrap gap-4 text-sm text-[#C8C8C8]">
+                <a href="#home" class="hover:text-[#FFD700]">Home</a>
+                <a href="#events" class="hover:text-[#FFD700]">Events</a>
+                <a href="#announcements" class="hover:text-[#FFD700]">Announcements</a>
+                <a href="#about" class="hover:text-[#FFD700]">About Us</a>
+            </div>
+            <div class="md:text-right text-sm text-[#C8C8C8]">
+                <div class="text-[#FFD700] tracking-[0.2em]">COLLABORATED BY VERITY</div>
+                <div class="mt-2">© <span id="footer-year"></span> Multimedia Club</div>
+            </div>
+        </div>
+    </footer>
     <div id="floating-verity" class="fixed z-[60]">
         <div onclick="showVerityChat()" class="verity-orb" role="button" aria-label="Open Verity chat">
             <img src="verity-faces/idle.jpg" class="verity-avatar-img" alt="Verity, Multimedia Club AI guide">
@@ -3930,6 +3920,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             loadJoinShowcase();
             startPresence();
             startVerityStayMoments();
+            document.getElementById('footer-year').textContent = new Date().getFullYear();
             startBGM(currentMusicTrack || "welcome");
             const unlockMusic = function () { startBGM(currentMusicTrack || "welcome"); };
             window.addEventListener("pointerdown", unlockMusic, { once: true });

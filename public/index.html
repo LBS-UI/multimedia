@@ -1051,7 +1051,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
                 <div class="hidden lg:flex items-center gap-8 text-xs font-bold tracking-wider">
                     <a href="#home" class="text-[#FFD700] hover:text-[#FFE600] flex items-center gap-2 transition"><i class="fa-solid fa-house"></i> HOME</a>
                     <a href="#about" class="text-gray-300 hover:text-[#FFD700] flex items-center gap-2 transition"><i class="fa-solid fa-circle-info"></i> ABOUT</a>
-                    <a href="#dashboard" onclick="if(currentUser) showDashboard(); else showLoginModal(); return false;" class="text-gray-300 hover:text-[#FFD700] flex items-center gap-2 transition"><i class="fa-solid fa-border-all"></i> PROJECTS</a>
+                    <a href="#projects" class="text-gray-300 hover:text-[#FFD700] flex items-center gap-2 transition"><i class="fa-solid fa-border-all"></i> PROJECTS</a>
                     <a href="#events" class="text-gray-300 hover:text-[#FFD700] flex items-center gap-2 transition"><i class="fa-solid fa-calendar-days"></i> EVENTS</a>
                     <a href="#contact" class="text-gray-300 hover:text-[#FFD700] flex items-center gap-2 transition"><i class="fa-solid fa-envelope"></i> CONTACT</a>
                 </div>
@@ -1082,7 +1082,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
         <button type="button" class="absolute top-5 right-5 w-10 h-10 rounded-2xl glass text-[#FFD700]" onclick="document.getElementById('mobile-menu').classList.remove('is-open')"><i class="fa-solid fa-xmark"></i></button>
         <a href="#home" class="block w-full max-w-xs py-3 text-xl font-bold" onclick="document.getElementById('mobile-menu').classList.remove('is-open')">Home</a>
         <a href="#about" class="block w-full max-w-xs py-3 text-xl font-bold" onclick="document.getElementById('mobile-menu').classList.remove('is-open')">About</a>
-        <a href="#dashboard" class="block w-full max-w-xs py-3 text-xl font-bold" onclick="if(currentUser) showDashboard(); else showLoginModal(); document.getElementById('mobile-menu').classList.remove('is-open'); return false;">Projects</a>
+        <a href="#projects" class="block w-full max-w-xs py-3 text-xl font-bold" onclick="document.getElementById('mobile-menu').classList.remove('is-open')">Projects</a>
         <a href="#events" class="block w-full max-w-xs py-3 text-xl font-bold" onclick="document.getElementById('mobile-menu').classList.remove('is-open')">Events</a>
         <a href="#contact" class="block w-full max-w-xs py-3 text-xl font-bold" onclick="document.getElementById('mobile-menu').classList.remove('is-open')">Contact</a>
         <button class="block w-full max-w-xs py-3 text-xl mt-4 rounded-full border border-[#FFD700] text-[#FFD700] font-bold" onclick="showRegisterModal(); document.getElementById('mobile-menu').classList.remove('is-open')">Join the Club</button>
@@ -1164,7 +1164,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
                 </div>
                 <h3 class="text-lg font-bold text-white mb-2 tracking-wide">OUR PROJECTS</h3>
                 <p class="text-xs text-gray-400 mb-6">Explore our creative works and projects.</p>
-                <a href="#dashboard" onclick="if(currentUser) showDashboard(); else showLoginModal(); return false;" class="text-[#FFD700] text-sm font-semibold flex items-center justify-center gap-2 group-hover:gap-3 transition-all">View Projects <i class="fa-solid fa-arrow-right"></i></a>
+                <a href="#projects" class="text-[#FFD700] text-sm font-semibold flex items-center justify-center gap-2 group-hover:gap-3 transition-all">View Projects <i class="fa-solid fa-arrow-right"></i></a>
             </div>
 
             <!-- Card 3 -->
@@ -1198,6 +1198,14 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
                 <i class="fa-solid fa-plus"></i> Add Event
             </button>
         </div>
+        
+        <!-- Empty State for Events -->
+        <div id="events-empty" class="hidden glass rounded-3xl p-12 text-center border border-white/10">
+            <i class="fa-solid fa-calendar-xmark text-5xl text-[#FFD700]/40 mb-4"></i>
+            <h3 class="text-xl font-semibold text-white mb-2">No Events Yet</h3>
+            <p class="text-gray-400">Check back soon for upcoming club activities and events!</p>
+        </div>
+        
         <div id="events-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </section>
 
@@ -1216,8 +1224,35 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
                    class="input-gold flex-1 px-5 py-3 rounded-3xl text-sm">
             <div id="announcement-filters" class="flex gap-2"></div>
         </div>
+
+        <!-- Empty State for Announcements -->
+        <div id="announcements-empty" class="hidden glass rounded-3xl p-12 text-center border border-white/10">
+            <i class="fa-solid fa-bullhorn text-5xl text-[#FFD700]/40 mb-4"></i>
+            <h3 class="text-xl font-semibold text-white mb-2">No Announcements</h3>
+            <p class="text-gray-400">There are no active announcements at this time.</p>
+        </div>
         
         <div id="announcements-list" class="space-y-4"></div>
+    </section>
+
+    <!-- NEW PROJECTS SECTION -->
+    <section id="projects" class="max-w-screen-2xl mx-auto px-6 pb-20 border-t border-white/10 pt-10">
+        <div class="section-row flex justify-between items-end mb-6">
+            <h2 class="section-header text-3xl font-bold">Our Projects</h2>
+            <button onclick="if (canEditPosts()) showCreateProjectModal(); else showLoginModal()" 
+                    class="px-5 py-2 rounded-2xl border border-[#FFD700]/60 text-sm flex items-center gap-x-2 hover:bg-[#FFD700]/10 transition">
+                <i class="fa-solid fa-plus"></i> Add Project
+            </button>
+        </div>
+        
+        <!-- Empty State for Projects -->
+        <div id="projects-empty" class="hidden glass rounded-3xl p-12 text-center border border-white/10">
+            <i class="fa-solid fa-photo-film text-5xl text-[#FFD700]/40 mb-4"></i>
+            <h3 class="text-xl font-semibold text-white mb-2">No Projects Uploaded</h3>
+            <p class="text-gray-400">Our creative works will be displayed here soon. Stay tuned!</p>
+        </div>
+
+        <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </section>
 
     <!-- ABOUT THE DEVELOPER -->
@@ -1892,6 +1927,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
         let users = [];
         let events = [];
         let announcements = [];
+        let projects = [];
         let mediaItems = [];
         let activityLog = [];
         let verityChatHistory = [];
@@ -2397,6 +2433,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             users = JSON.parse(safeStorage.getItem('mm_users') || '[]').filter(u => !['alex.rivera@school.edu', 'maya.chen@school.edu', 'jake.morales@school.edu', 'kai.nakamura@school.edu'].includes(u.email));
             events = JSON.parse(safeStorage.getItem('mm_events') || '[]').filter(ev => !['Winter Showcase 2026', 'Spring Film Festival'].includes(ev.name));
             announcements = JSON.parse(safeStorage.getItem('mm_announcements') || '[]').filter(a => !['New Camera Equipment Arrived!', 'Call for Submissions: Spring Film Festival'].includes(a.title));
+            projects = JSON.parse(safeStorage.getItem('mm_projects') || '[]');
             mediaItems = JSON.parse(safeStorage.getItem('mm_media') || '[]').filter(item => item.caption !== 'Winter showcase');
             
             const sessionUser = readSessionUser();
@@ -2499,6 +2536,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             safeStorage.setItem('mm_users', JSON.stringify(users));
             safeStorage.setItem('mm_events', JSON.stringify(events));
             safeStorage.setItem('mm_announcements', JSON.stringify(announcements));
+            safeStorage.setItem('mm_projects', JSON.stringify(projects));
             safeStorage.setItem('mm_media', JSON.stringify(mediaItems));
         }
 
@@ -2659,31 +2697,40 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
 
         function renderEvents() {
             const grid = document.getElementById('events-grid');
+            const emptyState = document.getElementById('events-empty');
             grid.innerHTML = '';
             
-            events.forEach(ev => {
-                const remaining = getTimeRemaining(ev.date);
-                const card = document.createElement('div');
-                card.className = `card glass rounded-3xl overflow-hidden border border-white/10`;
-                card.innerHTML = `
-                    <div class="h-36 flex items-center justify-center overflow-hidden" style="background:#1a1208">
-                        ${ev.image ? `<img src="${ev.image}" class="w-full h-full object-cover" alt="">` : `<i class="fa-solid fa-film text-5xl opacity-40 text-[#FFD700]"></i>`}
-                    </div>
-                    <div class="p-5">
-                        <div class="font-semibold text-xl mb-1">${ev.name}</div>
-                        <div class="text-xs text-white/50 mb-3">${new Date(ev.date).toLocaleDateString()}</div>
-                        <p class="text-sm text-[#fffbea] line-clamp-2 mb-4">${ev.description}</p>
-                        <div class="flex justify-between items-center">
-                            <div class="countdown text-sm font-mono">
-                                ${remaining.expired ? 'ENDED' : `${remaining.days}d ${remaining.hours}h ${remaining.minutes}m`}
-                            </div>
-                            <button onclick="rsvpEvent(${ev.id}, this)" class="text-xs px-4 py-1.5 rounded-2xl border border-[#FFD700]/60">RSVP</button>
+            if (events.length === 0) {
+                emptyState.classList.remove('hidden');
+                grid.classList.add('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                grid.classList.remove('hidden');
+                
+                events.forEach(ev => {
+                    const remaining = getTimeRemaining(ev.date);
+                    const card = document.createElement('div');
+                    card.className = `card glass rounded-3xl overflow-hidden border border-white/10`;
+                    card.innerHTML = `
+                        <div class="h-36 flex items-center justify-center overflow-hidden" style="background:#1a1208">
+                            ${ev.image ? `<img src="${ev.image}" class="w-full h-full object-cover" alt="">` : `<i class="fa-solid fa-film text-5xl opacity-40 text-[#FFD700]"></i>`}
                         </div>
-                        ${canEditPosts() ? `<div class="flex gap-2 mt-3"><button onclick="notifyAgain('event', '${(ev.name || "").replace(/'/g, "")}')" class="text-xs px-3 py-1 rounded-xl border border-[#FFD700]/50 text-[#FFD700]">Push again</button><button onclick="showPostModal('event', events.find(e => e.id === ${ev.id}))" class="text-xs px-3 py-1 rounded-xl border border-white/20">Edit</button><button onclick="deleteEvent(${ev.id})" class="text-xs px-3 py-1 rounded-xl border border-red-400/40 text-red-400">Delete</button></div>` : ""}
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
+                        <div class="p-5">
+                            <div class="font-semibold text-xl mb-1">${ev.name}</div>
+                            <div class="text-xs text-white/50 mb-3">${new Date(ev.date).toLocaleDateString()}</div>
+                            <p class="text-sm text-[#fffbea] line-clamp-2 mb-4">${ev.description}</p>
+                            <div class="flex justify-between items-center">
+                                <div class="countdown text-sm font-mono">
+                                    ${remaining.expired ? 'ENDED' : `${remaining.days}d ${remaining.hours}h ${remaining.minutes}m`}
+                                </div>
+                                <button onclick="rsvpEvent(${ev.id}, this)" class="text-xs px-4 py-1.5 rounded-2xl border border-[#FFD700]/60">RSVP</button>
+                            </div>
+                            ${canEditPosts() ? `<div class="flex gap-2 mt-3"><button onclick="notifyAgain('event', '${(ev.name || "").replace(/'/g, "")}')" class="text-xs px-3 py-1 rounded-xl border border-[#FFD700]/50 text-[#FFD700]">Push again</button><button onclick="showPostModal('event', events.find(e => e.id === ${ev.id}))" class="text-xs px-3 py-1 rounded-xl border border-white/20">Edit</button><button onclick="deleteEvent(${ev.id})" class="text-xs px-3 py-1 rounded-xl border border-red-400/40 text-red-400">Delete</button></div>` : ""}
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
             
             startCountdowns();
         }
@@ -2832,6 +2879,12 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
                 saveData();
                 fetch("/api/events", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(item || events[events.length - 1]) });
                 renderEvents();
+            } else if (postDraft.type === "project") {
+                const item = postDraft.id ? projects.find(function (p) { return p.id === postDraft.id; }) : null;
+                if (item) { item.title = title; item.description = body; item.image = postDraft.image; }
+                else projects.unshift({ id: Date.now(), title: title, description: body, image: postDraft.image, category: "Creative Work", date: new Date().toISOString() });
+                saveData();
+                renderProjects();
             } else {
                 const item = postDraft.id ? announcements.find(function (a) { return a.id === postDraft.id; }) : null;
                 if (item) { item.title = title; item.content = body; item.image = postDraft.image; }
@@ -2842,7 +2895,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             }
             hidePostModal();
             showToast("Post saved.");
-            notifyClub(postDraft.type === "event" ? "New event" : "New announcement", title);
+            notifyClub(postDraft.type === "event" ? "New event" : postDraft.type === "project" ? "New project" : "New announcement", title);
         }
         async function enableClubNotifications() {
             if (!("Notification" in window)) return showToast("This browser does not support notifications.", "error");
@@ -2889,6 +2942,12 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             fetch("/api/events?id=" + encodeURIComponent(id), { method: "DELETE" }).then(function () { loadLiveData(); });
             renderEvents();
         }
+        function deleteProject(id) {
+            if (!canEditPosts() || !confirm("Delete this project?")) return;
+            projects = projects.filter(function (p) { return String(p.id) !== String(id); });
+            saveData();
+            renderProjects();
+        }
         function deleteAnnouncement(id) {
             if (!canEditPosts() || !confirm("Delete this announcement?")) return;
             announcements = announcements.filter(function (a) { return String(a.id) !== String(id); });
@@ -2917,6 +2976,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
         }
         function showCreateEventModal() { showPostModal("event"); }
         function showCreateAnnouncementModal() { showPostModal("announcement"); }
+        function showCreateProjectModal() { showPostModal("project"); }
         function askNotificationChoice() {
             if (!("Notification" in window) || Notification.permission !== "default") return;
             if (safeStorage.getItem("mm_notify_choice") === "later") return;
@@ -2936,10 +2996,20 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
         
         function renderAnnouncements(filtered = null) {
             const container = document.getElementById('announcements-list');
+            const emptyState = document.getElementById('announcements-empty');
             container.innerHTML = '';
             let list = filtered || announcements;
             
             list.sort((a,b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || new Date(b.date) - new Date(a.date));
+            
+            if (list.length === 0) {
+                emptyState.classList.remove('hidden');
+                container.classList.add('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+                container.classList.remove('hidden');
+            }
             
             list.forEach(ann => {
                 const div = document.createElement('div');
@@ -2963,6 +3033,38 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
                     </div>
                 `;
                 container.appendChild(div);
+            });
+        }
+
+        function renderProjects() {
+            const grid = document.getElementById('projects-grid');
+            const emptyState = document.getElementById('projects-empty');
+            grid.innerHTML = '';
+            
+            if (projects.length === 0) {
+                emptyState.classList.remove('hidden');
+                grid.classList.add('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+                grid.classList.remove('hidden');
+            }
+            
+            projects.forEach(proj => {
+                const card = document.createElement('div');
+                card.className = `card glass rounded-3xl overflow-hidden border border-white/10`;
+                card.innerHTML = `
+                    <div class="h-48 flex items-center justify-center overflow-hidden bg-[#1a1208]">
+                        ${proj.image ? `<img src="${proj.image}" class="w-full h-full object-cover" alt="">` : `<i class="fa-solid fa-photo-film text-5xl opacity-40 text-[#FFD700]"></i>`}
+                    </div>
+                    <div class="p-5">
+                        <div class="font-semibold text-xl mb-1">${proj.title}</div>
+                        <div class="text-xs text-[#FFD700] mb-3">${proj.category || 'General'}</div>
+                        <p class="text-sm text-[#fffbea] line-clamp-2 mb-4">${proj.description}</p>
+                        ${canEditPosts() ? `<div class="flex gap-2 mt-3"><button onclick="deleteProject(${proj.id})" class="text-xs px-3 py-1 rounded-xl border border-red-400/40 text-red-400">Delete</button></div>` : ""}
+                    </div>
+                `;
+                grid.appendChild(card);
             });
         }
 
@@ -3366,6 +3468,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             if (q.includes("😂") || q.includes("💀") || q.includes("lol") || q.includes("haha")) return pick(["Okay that got me.", "Ha. Fair.", "Alright, I'll allow it."]);
             if (q.includes("🙄")) return "Wait, was that sarcasm?";
             if (q.includes("event")) return "Events show up in the Events section once a member posts them.";
+            if (q.includes("project")) return "You can check out our creative works in the Projects section.";
             if (q.includes("announcement")) return "Announcements are in the School Announcements section.";
             if (q.includes("register") || q.includes("join")) return "The member join code is MMC-JOIN-4821. Admin and Developer still need their own private code.";
             if (q.includes("salamat")) return "Walang anuman.";
@@ -3402,6 +3505,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             const steps = [
                 { el: "events", text: "Here are the events. This is where club events show up once a member posts them." },
                 { el: "announcements", text: "And here are the announcements. This is where school events and suspensions are posted." },
+                { el: "projects", text: "And this is our projects section, showing the creative works the club has made." },
                 { el: "about", highlight: "developer-portrait", text: "And here is the about section. This is the developer who made our website." },
                 { el: "about", highlight: "verity-portrait", text: "And that is me, your assistant. Hehe. Lets go back to the homepage." },
                 { el: "home", text: "And this is the homepage. It is a simple welcome page for the club." },
@@ -3872,6 +3976,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             updateNavUser();
             renderEvents();
             renderAnnouncements();
+            renderProjects();
             filterAnnouncementsInit();
             
             setTimeout(() => {

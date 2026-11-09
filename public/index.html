@@ -900,6 +900,30 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
         .notify-highlight { animation: notifyPulse 1.6s ease-in-out infinite; box-shadow: 0 0 16px rgba(255,215,0,.45); background: rgba(255,215,0,.12); }
         @keyframes notifyPulse { 50% { box-shadow: 0 0 24px rgba(255,215,0,.8); transform: scale(1.04); } }
         #notify-float { position: fixed; right: 1rem; bottom: 5.5rem; z-index: 70; }
+
+        /* --- NEW DESIGN STYLES FROM PROMPT --- */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(-12deg); }
+            50% { transform: translateY(-15px) rotate(-12deg); }
+        }
+        @keyframes float-delayed {
+            0%, 100% { transform: translateY(0) rotate(12deg); }
+            50% { transform: translateY(-15px) rotate(12deg); }
+        }
+        .animate-float { animation: float 4s ease-in-out infinite; }
+        .animate-float-delayed { animation: float-delayed 5s ease-in-out infinite; }
+        
+        .film-strip-element {
+            position: absolute;
+            width: 150vw;
+            height: 100px;
+            border-top: 10px solid rgba(255, 215, 0, 0.3);
+            border-bottom: 10px solid rgba(255, 215, 0, 0.3);
+            background-image: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255, 215, 0, 0.3) 40px, rgba(255, 215, 0, 0.3) 50px);
+            transform: rotate(-15deg);
+            pointer-events: none;
+        }
+
 </style>
 
 
@@ -1007,226 +1031,170 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
         </div>
     </div>
 
-    <!-- NAVIGATION -->
-    <nav class="fixed top-0 left-0 right-0 z-50 glass border-b border-white/10">
-        <div class="max-w-screen-2xl mx-auto">
-            <div class="px-4 sm:px-8 py-3 flex items-center justify-between gap-2">
-                <div class="flex items-center gap-x-3">
-                    <div class="w-11 h-11 flex items-center justify-center overflow-hidden rounded-full border border-[#FFD700]/40">
-                        <img src="images/logo.jpg" alt="Multimedia Club logo" class="w-11 h-11 object-cover">
-                        <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="22" cy="22" r="20" fill="#FFD700" fill-opacity="0.15"/>
-                            <circle cx="22" cy="22" r="17" fill="#1a1208" stroke="#FFD700" stroke-width="2.5"/>
-                            <circle cx="22" cy="22" r="11" fill="none" stroke="#FFD700" stroke-width="1.5"/>
-                            <g stroke="#FFD700" stroke-width="1.2" stroke-linecap="round">
-                                <line x1="22" y1="11" x2="22" y2="17"/>
-                                <line x1="30.5" y1="15.5" x2="26.5" y2="19.5"/>
-                                <line x1="30.5" y1="28.5" x2="26.5" y2="24.5"/>
-                                <line x1="22" y1="33" x2="22" y2="27"/>
-                                <line x1="13.5" y1="28.5" x2="17.5" y2="24.5"/>
-                                <line x1="13.5" y1="15.5" x2="17.5" y2="19.5"/>
-                            </g>
-                            <circle cx="22" cy="22" r="3.5" fill="#FFD700"/>
-                            <polygon points="19,18 19,26 26,22" fill="#0a0803"/>
-                        </svg>
+    <!-- NEW NAVIGATION -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass border-b border-[#FFD700]/30">
+        <div class="max-w-screen-2xl mx-auto px-4 sm:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <a href="#home" class="flex items-center gap-3">
+                    <div class="relative w-10 h-10 flex items-center justify-center">
+                        <span class="font-display text-4xl font-black italic text-[#FFD700] drop-shadow-[0_0_10px_rgba(255,215,0,0.8)]">M</span>
+                        <i class="fa-regular fa-face-laugh-wink absolute -right-3 -bottom-1 text-xl text-[#FFE600]"></i>
                     </div>
-                    <div>
-                        <span class="font-display text-3xl font-bold tracking-tighter">Multi</span>
-                        <span class="font-display text-3xl font-bold tracking-tighter bg-gradient-to-r from-[#FFD700] to-[#FFEA00] bg-clip-text text-transparent">Media</span>
+                    <div class="hidden sm:block text-left">
+                        <div class="font-display text-xl font-bold italic text-white tracking-wider leading-none">MULTIMEDIA</div>
+                        <div class="text-[10px] tracking-[0.3em] text-[#FFD700] leading-none mt-1">CLUB</div>
                     </div>
+                </a>
+
+                <!-- Desktop Links -->
+                <div class="hidden lg:flex items-center gap-8 text-xs font-bold tracking-wider">
+                    <a href="#home" class="text-[#FFD700] hover:text-[#FFE600] flex items-center gap-2 transition"><i class="fa-solid fa-house"></i> HOME</a>
+                    <a href="#about" class="text-gray-300 hover:text-[#FFD700] flex items-center gap-2 transition"><i class="fa-solid fa-circle-info"></i> ABOUT</a>
+                    <a href="#dashboard" onclick="if(currentUser) showDashboard(); else showLoginModal(); return false;" class="text-gray-300 hover:text-[#FFD700] flex items-center gap-2 transition"><i class="fa-solid fa-border-all"></i> PROJECTS</a>
+                    <a href="#events" class="text-gray-300 hover:text-[#FFD700] flex items-center gap-2 transition"><i class="fa-solid fa-calendar-days"></i> EVENTS</a>
+                    <a href="#contact" class="text-gray-300 hover:text-[#FFD700] flex items-center gap-2 transition"><i class="fa-solid fa-envelope"></i> CONTACT</a>
                 </div>
 
-                <div class="desktop-nav hidden md:flex items-center gap-x-8 text-sm font-medium">
-                    <a href="#home" onclick="document.getElementById('home').scrollIntoView({ behavior: 'smooth' })" class="hover:text-[#FFD700] transition-colors">Home</a>
-                    <a href="#events" onclick="document.getElementById('events').scrollIntoView({ behavior: 'smooth' })" class="hover:text-[#FFD700] transition-colors">Events</a>
-                    <a href="#announcements" onclick="document.getElementById('announcements').scrollIntoView({ behavior: 'smooth' })" class="hover:text-[#FFD700] transition-colors">Announcements</a>
-                    <a href="#" onclick="showVerityChat()" class="hover:text-[#FFD700] transition-colors flex items-center gap-x-1.5">
-                        <i class="fa-solid fa-robot"></i>
-                        <span>Verity</span>
-                    </a>
-                    <a href="#about" onclick="document.getElementById('about').scrollIntoView({ behavior: 'smooth' })" class="hover:text-[#FFD700] transition-colors">About Us</a>
-                    <a href="#" onclick="enableClubNotifications(); return false;" class="notify-highlight px-4 py-2 rounded-full border border-[#FFD700] text-[#FFD700] font-semibold">Notifications</a>
-                    <a href="#" onclick="openMembersOrSignup(); return false;" class="hover:text-[#FFD700] transition-colors" id="members-nav-link">Members</a>
-                </div>
-
-                <div class="flex items-center gap-x-2">
-                    <button type="button" id="mobile-menu-btn" onclick="document.getElementById('mobile-menu').classList.toggle('is-open')" class="w-10 h-10 items-center justify-center rounded-2xl glass text-[#FFD700]" style="display:none"><i class="fa-solid fa-bars"></i></button>
-                    <div class="relative group">
-                        <button onclick="toggleMusic()" id="music-btn"
-                                class="w-10 h-10 flex items-center justify-center rounded-2xl glass hover:bg-white/10 transition-all text-[#FFD700]">
-                            <i class="fa-solid fa-music text-lg"></i>
-                        </button>
-                        <div class="absolute hidden group-hover:block top-12 right-0 w-64 glass rounded-3xl p-4 text-sm z-50">
-                            <div class="flex items-center justify-between mb-3">
-                                <span class="font-semibold">Background Music</span>
-                                <button onclick="event.stopImmediatePropagation(); toggleMusic()" class="text-xs px-3 py-1 rounded-full bg-white/10">Close</button>
-                            </div>
-                            <select id="music-track" onchange="changeMusicTrack()" class="w-full bg-[#24180c] border border-white/20 rounded-2xl px-4 py-2 text-sm mb-3">
-                                <option value="welcome">Welcome Theme</option>
-                                <option value="creative">Creative Focus</option>
-                                <option value="digital">Digital Campus</option>
-                                <option value="solis">Verity Theme</option>
-                            </select>
-                            <div class="flex items-center gap-x-3">
-                                <button onclick="toggleMusic()" id="music-play-btn" 
-                                        class="flex-1 flex items-center justify-center gap-x-2 px-4 py-2 rounded-2xl bg-[#FFD700] text-[#0a0803] font-semibold text-sm">
-                                    <i class="fa-solid fa-play mr-1"></i> <span>Play</span>
-                                </button>
-                                <input type="range" id="music-volume" min="0" max="1" step="0.05" value="0.6" 
-                                       oninput="setMusicVolume(this.value)" class="w-24 accent-[#FFD700]">
-                            </div>
-                        </div>
-                    </div>
-
-                    <button onclick="toggleTheme()" 
-                            class="w-10 h-10 flex items-center justify-center rounded-2xl glass hover:bg-white/10 transition-all text-[#FFD700]">
-                        <i class="fa-solid fa-adjust text-lg" id="theme-icon"></i>
-                    </button>
-
+                <!-- Actions -->
+                <div class="flex items-center gap-3">
                     <div id="nav-user-section">
-                        <button onclick="showLoginModal()" class="text-sm px-3 py-2 rounded-full border border-[#FFD700]/40">Log in</button>
+                        <button onclick="showLoginModal()" class="text-xs font-bold px-4 py-2 rounded-full border border-[#FFD700]/50 text-[#FFD700] hover:bg-[#FFD700]/10 transition">Log in</button>
                     </div>
+                    <button onclick="showRegisterModal()" class="btn-gold px-6 py-2.5 rounded-full text-xs font-bold flex items-center gap-2 hidden sm:flex">
+                        JOIN THE CLUB <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    </button>
+                    
+                    <button type="button" id="mobile-menu-btn" onclick="document.getElementById('mobile-menu').classList.toggle('is-open')" class="w-10 h-10 items-center justify-center rounded-xl glass text-[#FFD700] lg:hidden flex"><i class="fa-solid fa-bars"></i></button>
+                    
+                    <div class="relative group hidden lg:block">
+                        <button onclick="toggleMusic()" class="w-10 h-10 flex items-center justify-center rounded-xl glass hover:bg-white/10 transition-all text-[#FFD700]"><i class="fa-solid fa-music text-lg"></i></button>
+                    </div>
+                    
+                    <button onclick="toggleTheme()" class="w-10 h-10 hidden lg:flex items-center justify-center rounded-xl glass hover:bg-white/10 transition-all text-[#FFD700]"><i class="fa-solid fa-adjust text-lg" id="theme-icon"></i></button>
                 </div>
             </div>
         </div>
     </nav>
+
+    <!-- Mobile Menu -->
     <div id="mobile-menu" class="fixed inset-0 z-[80] bg-[#0a0803] flex flex-col items-center justify-center text-center gap-2 px-6">
         <button type="button" class="absolute top-5 right-5 w-10 h-10 rounded-2xl glass text-[#FFD700]" onclick="document.getElementById('mobile-menu').classList.remove('is-open')"><i class="fa-solid fa-xmark"></i></button>
-        <a href="#home" class="block w-full max-w-xs py-3 text-xl" onclick="document.getElementById('mobile-menu').classList.remove('is-open')">Home</a>
-        <a href="#events" class="block w-full max-w-xs py-3 text-xl" onclick="document.getElementById('mobile-menu').classList.remove('is-open')">Events</a>
-        <a href="#announcements" class="block w-full max-w-xs py-3 text-xl" onclick="document.getElementById('mobile-menu').classList.remove('is-open')">Announcements</a>
-        <button class="block w-full max-w-xs py-3 text-xl" onclick="showVerityChat(); document.getElementById('mobile-menu').classList.add('hidden')">Verity</button>
-        <button class="block w-full max-w-xs py-3 text-xl" onclick="showRequestsPage(); document.getElementById('mobile-menu').classList.add('hidden')">Requests</button>
-        <button class="block w-full max-w-xs py-3 text-xl" onclick="openMembersOrSignup(); document.getElementById('mobile-menu').classList.remove('is-open')">Members</button>
-        <a href="#about" class="block w-full max-w-xs py-3 text-xl" onclick="document.getElementById('mobile-menu').classList.remove('is-open')">About</a>
-        <button class="block w-full max-w-xs py-3 text-xl rounded-full border border-[#FFD700] text-[#FFD700]" onclick="enableClubNotifications(); document.getElementById('mobile-menu').classList.remove('is-open')">Notifications</button>
-        <button class="block w-full max-w-xs py-3 text-xl" onclick="showLoginModal(); document.getElementById('mobile-menu').classList.remove('is-open')">Sign in</button>
-        <button class="block w-full max-w-xs py-3 text-xl text-[#FFD700]" onclick="showRegisterModal(); document.getElementById('mobile-menu').classList.remove('is-open')">Sign up</button>
-        <button class="block w-full max-w-xs py-3 text-xl" onclick="showDashboard(); document.getElementById('mobile-menu').classList.remove('is-open')">My account</button>
-        <button id="mobile-admin-tools" class="hidden w-full max-w-xs py-3 text-xl text-[#FFD700]" onclick="showAdminPanel(); document.getElementById('mobile-menu').classList.add('hidden')">Admin tools</button>
+        <a href="#home" class="block w-full max-w-xs py-3 text-xl font-bold" onclick="document.getElementById('mobile-menu').classList.remove('is-open')">Home</a>
+        <a href="#about" class="block w-full max-w-xs py-3 text-xl font-bold" onclick="document.getElementById('mobile-menu').classList.remove('is-open')">About</a>
+        <a href="#dashboard" class="block w-full max-w-xs py-3 text-xl font-bold" onclick="if(currentUser) showDashboard(); else showLoginModal(); document.getElementById('mobile-menu').classList.remove('is-open'); return false;">Projects</a>
+        <a href="#events" class="block w-full max-w-xs py-3 text-xl font-bold" onclick="document.getElementById('mobile-menu').classList.remove('is-open')">Events</a>
+        <a href="#contact" class="block w-full max-w-xs py-3 text-xl font-bold" onclick="document.getElementById('mobile-menu').classList.remove('is-open')">Contact</a>
+        <button class="block w-full max-w-xs py-3 text-xl mt-4 rounded-full border border-[#FFD700] text-[#FFD700] font-bold" onclick="showRegisterModal(); document.getElementById('mobile-menu').classList.remove('is-open')">Join the Club</button>
     </div>
 
-    <!-- HERO SECTION -->
-    <section id="home" class="min-h-[100dvh] pt-24 relative flex items-center justify-center overflow-hidden">
-        <div class="absolute inset-0 futuristic-grid opacity-30"></div>
-        <div class="max-w-screen-2xl mx-auto px-6 relative z-10 text-center">
-            <img src="images/banner.png" alt="Multimedia Club banner: Create, Capture, Connect" class="w-full rounded-3xl border border-[#FFD700]/40 shadow-[0_0_32px_rgba(255,215,0,.25)]">
-            <div class="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-                <button onclick="document.getElementById('events').scrollIntoView({ behavior: 'smooth' })" class="btn-gold px-8 py-4 rounded-2xl text-lg">Explore Our Work</button>
-                <button onclick="document.getElementById('about').scrollIntoView({ behavior: 'smooth' })" class="px-8 py-4 rounded-2xl text-lg border border-[#FFD700] text-[#FFD700]">Learn About Us</button>
+    <!-- NEW HERO SECTION -->
+    <section id="home" class="relative min-h-[100dvh] flex flex-col items-center justify-center overflow-hidden pt-20 bg-black">
+        <!-- Background elements -->
+        <div class="absolute inset-0 pointer-events-none overflow-hidden">
+            <!-- Glow behind text -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#FFD700] rounded-full blur-[150px] opacity-[0.07]"></div>
+            
+            <!-- Film strips -->
+            <div class="film-strip-element top-[20%] -left-[20%] opacity-20"></div>
+            <div class="film-strip-element bottom-[20%] -right-[20%] opacity-20 transform rotate(15deg)"></div>
+            
+            <!-- Sparkles -->
+            <div class="absolute top-[15%] left-[20%] text-[#FFD700] animate-pulse"><i class="fa-solid fa-star text-xl"></i></div>
+            <div class="absolute top-[25%] right-[25%] text-[#FFD700] animate-pulse delay-150"><i class="fa-solid fa-star text-2xl"></i></div>
+            <div class="absolute bottom-[35%] left-[30%] text-[#FFD700] animate-pulse delay-300"><i class="fa-solid fa-star text-lg"></i></div>
+            <div class="absolute top-[40%] right-[15%] text-[#FFD700] animate-pulse delay-500"><i class="fa-solid fa-star text-sm"></i></div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="relative z-10 text-center px-4 max-w-5xl mx-auto mt-10">
+            <!-- Logo Text -->
+            <h1 class="relative text-6xl md:text-8xl lg:text-[9rem] font-display font-black italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-[#FFD700] to-[#B8860B] leading-[0.9] mb-6 drop-shadow-[0_0_30px_rgba(255,215,0,0.3)]" style="transform: skewX(-5deg);">
+                MULTIMEDIA<br>
+                <span class="text-7xl md:text-9xl lg:text-[11rem]">CLUB</span>
+            </h1>
+
+            <!-- Tagline -->
+            <div class="flex items-center justify-center gap-3 md:gap-8 text-sm md:text-xl font-bold tracking-[0.2em] md:tracking-[0.4em] text-[#FFD700] mb-8 uppercase">
+                <span>Create</span> <span class="text-white opacity-50">•</span>
+                <span>Capture</span> <span class="text-white opacity-50">•</span>
+                <span>Connect</span>
             </div>
+
+            <!-- Description -->
+            <p class="text-gray-300 max-w-xl mx-auto text-sm md:text-base mb-10 leading-relaxed tracking-wide">
+                A community of creators, developers, and dreamers<br>united by the power of multimedia.
+            </p>
+
+            <!-- CTA Button -->
+            <button onclick="showRegisterModal()" class="btn-gold px-10 py-4 rounded-full text-base font-bold inline-flex items-center gap-3 tracking-[0.1em] shadow-[0_0_20px_rgba(255,215,0,0.4)] relative z-20">
+                JOIN THE CLUB <i class="fa-solid fa-chevron-right text-sm"></i>
+            </button>
+        </div>
+
+        <!-- Floating Icons -->
+        <div class="hidden xl:flex absolute left-[10%] top-[35%] w-24 h-24 bg-black/80 backdrop-blur-sm border-2 border-[#FFD700] rounded-2xl items-center justify-center shadow-[0_0_30px_rgba(255,215,0,0.3)] transform -rotate-12 animate-float">
+            <i class="fa-solid fa-camera text-4xl text-[#FFD700]"></i>
+        </div>
+        <div class="hidden xl:flex absolute right-[12%] top-[35%] w-24 h-24 bg-black/80 backdrop-blur-sm border-2 border-[#FFD700] rounded-2xl items-center justify-center shadow-[0_0_30px_rgba(255,215,0,0.3)] transform rotate-12 animate-float-delayed">
+            <i class="fa-solid fa-play text-4xl text-[#FFD700]"></i>
+        </div>
+        <div class="hidden xl:flex absolute right-[15%] bottom-[25%] w-24 h-24 bg-black/80 backdrop-blur-sm border-2 border-[#FFD700] rounded-2xl items-center justify-center shadow-[0_0_30px_rgba(255,215,0,0.3)] transform -rotate-6 animate-float">
+            <i class="fa-solid fa-code text-4xl text-[#FFD700]"></i>
         </div>
     </section>
 
-    <section class="max-w-screen-2xl mx-auto px-6 pt-16 pb-12">
-        <div class="grid lg:grid-cols-12 gap-8 items-center">
-            <div class="lg:col-span-7">
-                <div class="uppercase tracking-[3px] text-[#FFD700] text-sm font-semibold mb-3">EST. 2025 • CREATIVE MEDIA ARTS</div>
-                <h2 class="section-header mb-5">We turn moments into<br>memories that matter.</h2>
-                <p class="text-[#fffbea] max-w-prose text-[15px]">
-                    Multi Media is the beating heart of our school's creative ecosystem.
-                </p>
+    <!-- NEW CARDS SECTION -->
+    <section class="relative z-20 max-w-7xl mx-auto px-6 -mt-16 pb-24">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Card 1 -->
+            <div class="glass rounded-3xl p-6 border-2 border-[#FFD700]/30 text-center hover:border-[#FFD700] hover:shadow-[0_0_30px_rgba(255,215,0,0.2)] transition-all duration-300 group bg-black/80">
+                <div class="w-16 h-16 mx-auto bg-[#1a1208] rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(255,215,0,0.2)]">
+                    <i class="fa-solid fa-users text-3xl text-[#FFD700]"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2 tracking-wide">ABOUT US</h3>
+                <p class="text-xs text-gray-400 mb-6">Learn more about our club and community.</p>
+                <a href="#about" class="text-[#FFD700] text-sm font-semibold flex items-center justify-center gap-2 group-hover:gap-3 transition-all">Learn More <i class="fa-solid fa-arrow-right"></i></a>
             </div>
 
-            <div class="lg:col-span-5">
-                <div class="glass rounded-3xl p-8 border border-[#FFD700]/20">
-                    <div class="flex items-start gap-x-5">
-                        <div onclick="showVerityChat()" class="verity-orb verity-card-face flex-shrink-0 mt-1" role="button" aria-label="Open Verity chat">
-                            <img src="verity-faces/idle.jpg" class="verity-avatar-img" alt="Verity, Multimedia Club AI guide">
-                        </div>
-                        <div class="flex-1">
-                            <div class="flex items-center gap-x-2 mb-1">
-                                <span class="font-semibold text-xl">Verity</span>
-                                <span class="px-2.5 py-px text-[10px] font-mono tracking-widest bg-[#FFD700] text-[#0a0803] rounded">AI GUIDE</span>
-                            </div>
-                            <p class="text-[#fffbea] text-sm">Helloo im Verity your personal hover friend. Ask me anything. I know everything. Well except for everything. Hahaha.</p>
-                            <button onclick="showVerityChat()" class="mt-3 text-sm text-[#FFD700] hover:text-[#FFEA00] font-medium flex items-center gap-x-1">
-                                CHAT WITH ME <i class="fa-solid fa-arrow-right ml-1"></i>
-                            </button>
-                        </div>
-                    </div>
+            <!-- Card 2 -->
+            <div class="glass rounded-3xl p-6 border-2 border-[#FFD700]/30 text-center hover:border-[#FFD700] hover:shadow-[0_0_30px_rgba(255,215,0,0.2)] transition-all duration-300 group bg-black/80">
+                <div class="w-16 h-16 mx-auto bg-[#1a1208] rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(255,215,0,0.2)]">
+                    <i class="fa-solid fa-code text-3xl text-[#FFD700]"></i>
                 </div>
+                <h3 class="text-lg font-bold text-white mb-2 tracking-wide">OUR PROJECTS</h3>
+                <p class="text-xs text-gray-400 mb-6">Explore our creative works and projects.</p>
+                <a href="#dashboard" onclick="if(currentUser) showDashboard(); else showLoginModal(); return false;" class="text-[#FFD700] text-sm font-semibold flex items-center justify-center gap-2 group-hover:gap-3 transition-all">View Projects <i class="fa-solid fa-arrow-right"></i></a>
             </div>
-        </div>
-    </section>
 
-    <section class="max-w-screen-2xl mx-auto px-6 pb-16">
-        <h3 class="text-3xl font-semibold tracking-tight mb-6 px-1">Jump right in</h3>
-        
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div onclick="document.getElementById('events').scrollIntoView({ behavior: 'smooth' })" class="nav-card cursor-pointer rounded-3xl p-6 border border-white/10">
-                <div class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#FFD700]/10 text-[#FFD700] mb-4">
-                    <i class="fa-solid fa-calendar text-3xl"></i>
+            <!-- Card 3 -->
+            <div class="glass rounded-3xl p-6 border-2 border-[#FFD700]/30 text-center hover:border-[#FFD700] hover:shadow-[0_0_30px_rgba(255,215,0,0.2)] transition-all duration-300 group bg-black/80">
+                <div class="w-16 h-16 mx-auto bg-[#1a1208] rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(255,215,0,0.2)]">
+                    <i class="fa-solid fa-calendar-days text-3xl text-[#FFD700]"></i>
                 </div>
-                <div class="font-semibold text-xl mb-2">Upcoming Events</div>
-                <p class="text-sm text-[#fffbea]">Live countdowns and details</p>
+                <h3 class="text-lg font-bold text-white mb-2 tracking-wide">UPCOMING EVENTS</h3>
+                <p class="text-xs text-gray-400 mb-6">Join our events and activities!</p>
+                <a href="#events" class="text-[#FFD700] text-sm font-semibold flex items-center justify-center gap-2 group-hover:gap-3 transition-all">View Events <i class="fa-solid fa-arrow-right"></i></a>
             </div>
-            
-            <div onclick="document.getElementById('announcements').scrollIntoView({ behavior: 'smooth' })" class="nav-card cursor-pointer rounded-3xl p-6 border border-white/10">
-                <div class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#FFD700]/10 text-[#FFD700] mb-4">
-                    <i class="fa-solid fa-bullhorn text-3xl"></i>
-                </div>
-                <div class="font-semibold text-xl mb-2">Announcements</div>
-                <p class="text-sm text-[#fffbea]">Stay updated with the latest news</p>
-            </div>
-            
-            <div onclick="showVerityChat()" class="nav-card cursor-pointer rounded-3xl p-6 border border-white/10">
-                <div class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#FFD700]/10 text-[#FFD700] mb-4">
-                    <i class="fa-solid fa-robot text-3xl"></i>
-                </div>
-                <div class="font-semibold text-xl mb-2">Talk to Verity</div>
-                <p class="text-sm text-[#fffbea]">Your intelligent AI guide</p>
-            </div>
-            
-            <div onclick="if (currentUser) showDashboard(); else showLoginModal()" class="nav-card cursor-pointer rounded-3xl p-6 border border-white/10">
-                <div class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#FFD700]/10 text-[#FFD700] mb-4">
-                    <i class="fa-solid fa-user-astronaut text-3xl"></i>
-                </div>
-                <div class="font-semibold text-xl mb-2">Member Dashboard</div>
-                <p class="text-sm text-[#fffbea]">Your personal hub</p>
-            </div>
-        </div>
-    </section>
 
-    <section id="join" class="max-w-screen-2xl mx-auto px-6 py-16 border-t border-white/10">
-        <div class="text-center mb-8">
-            <p class="uppercase tracking-[3px] text-[#FFD700] text-sm font-semibold">Official membership</p>
-            <h2 class="section-header">Join Multimedia Club</h2>
-            <p class="text-[#fffbea] max-w-2xl mx-auto">Sign up for a free digital member badge. Want the real button pin? Request the exclusive pin for 45 PHP.</p>
-        </div>
-        <div class="grid lg:grid-cols-2 gap-10 items-center">
-            <div class="flex flex-col items-center">
-                <div class="flex gap-2 mb-4">
-                    <button type="button" onclick="setJoinBadge('member')" class="px-4 py-2 rounded-full border border-[#FFD700]/40">Member</button>
-                    <button type="button" onclick="setJoinBadge('admin')" class="px-4 py-2 rounded-full border border-[#FFD700]/40">Admin</button>
-                    <button type="button" onclick="setJoinBadge('developer')" class="px-4 py-2 rounded-full border border-[#FFD700]/40">Developer</button>
+            <!-- Card 4 -->
+            <div class="glass rounded-3xl p-6 border-2 border-[#FFD700]/30 text-center hover:border-[#FFD700] hover:shadow-[0_0_30px_rgba(255,215,0,0.2)] transition-all duration-300 group bg-black/80">
+                <div class="w-16 h-16 mx-auto bg-[#1a1208] rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(255,215,0,0.2)]">
+                    <i class="fa-solid fa-envelope text-3xl text-[#FFD700]"></i>
                 </div>
-                <div id="join-stage" class="join-stage">
-                    <div class="join-pin" id="join-pin-3d">
-                        <img id="join-badge" class="join-face join-front" src="badges/Member.jpg" alt="Multimedia Club badge front">
-                        <img class="join-face join-back" src="badges/backpin.jpg" alt="Button pin back">
-                    </div>
-                </div>
-                <p id="join-badge-note" class="text-sm text-white/70 mt-4 text-center">Your digital badge appears here after you join.</p>
+                <h3 class="text-lg font-bold text-white mb-2 tracking-wide">GET IN TOUCH</h3>
+                <p class="text-xs text-gray-400 mb-6">Have questions? Reach out to us!</p>
+                <a href="#contact" class="text-[#FFD700] text-sm font-semibold flex items-center justify-center gap-2 group-hover:gap-3 transition-all">Contact Us <i class="fa-solid fa-arrow-right"></i></a>
             </div>
-            <form id="join-form" class="glass rounded-3xl p-6" onsubmit="submitClubJoin(event)">
-                <label class="block text-sm mb-2">Name</label>
-                <input id="join-name" required class="input-gold w-full px-4 py-3 rounded-2xl mb-4" placeholder="Your name">
-                <label class="block text-sm mb-2">Email</label>
-                <input id="join-email" type="email" required class="input-gold w-full px-4 py-3 rounded-2xl mb-4" placeholder="you@school.edu">
-                <label class="flex items-center gap-2 mb-4 text-sm"><input id="join-pin" type="checkbox"> I want the exclusive button pin for 45 PHP</label>
-                <button class="btn-gold px-6 py-3 rounded-2xl font-semibold">Get my digital badge</button>
-                <p id="join-result" class="mt-4 text-sm"></p>
-            </form>
         </div>
     </section>
 
     <!-- EVENTS SECTION -->
     <section id="events" class="max-w-screen-2xl mx-auto px-6 pb-20 border-t border-white/10 pt-10">
         <div class="section-row flex justify-between items-end mb-6">
-            <h2 class="section-header">Events Countdown</h2>
+            <h2 class="section-header text-3xl font-bold">Events Countdown</h2>
             <button onclick="if (canEditPosts()) showCreateEventModal(); else showLoginModal()" 
-                    class="px-5 py-2 rounded-2xl border border-[#FFD700]/60 text-sm flex items-center gap-x-2">
+                    class="px-5 py-2 rounded-2xl border border-[#FFD700]/60 text-sm flex items-center gap-x-2 hover:bg-[#FFD700]/10 transition">
                 <i class="fa-solid fa-plus"></i> Add Event
             </button>
         </div>
@@ -1236,9 +1204,9 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
     <!-- ANNOUNCEMENTS SECTION -->
     <section id="announcements" class="max-w-screen-2xl mx-auto px-6 pb-20 border-t border-white/10 pt-10">
         <div class="section-row flex justify-between items-end mb-6">
-            <h2 class="section-header">School Announcements</h2>
+            <h2 class="section-header text-3xl font-bold">School Announcements</h2>
             <button onclick="if (canEditPosts()) showCreateAnnouncementModal(); else showLoginModal()" 
-                    class="px-5 py-2 rounded-2xl bg-[#FFD700] text-[#0a0803] text-sm font-semibold flex items-center gap-x-2">
+                    class="px-5 py-2 rounded-2xl bg-[#FFD700] text-[#0a0803] text-sm font-semibold flex items-center gap-x-2 hover:bg-[#FFE600] transition">
                 <i class="fa-solid fa-plus"></i> Publish
             </button>
         </div>
@@ -1252,48 +1220,17 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
         <div id="announcements-list" class="space-y-4"></div>
     </section>
 
-    <!-- SOCIAL MEDIA SECTION -->
-    <section class="max-w-screen-2xl mx-auto px-6 pb-16 border-t border-white/10 pt-10">
-        <div class="text-center mb-8">
-            <h2 class="section-header mb-2">Stay Connected</h2>
-            <p class="text-[#fffbea]">Follow us on our social media channels</p>
-        </div>
-        
-        <div class="social-row flex justify-center gap-x-8">
-            <a href="https://facebook.com" target="_blank" class="flex flex-col items-center gap-y-3 group">
-                <div class="w-16 h-16 flex items-center justify-center rounded-3xl glass group-hover:bg-[#FFD700]/10 transition-all">
-                    <i class="fa-brands fa-facebook-f text-4xl text-[#FFD700]"></i>
-                </div>
-                <span class="text-sm font-medium">Facebook</span>
-            </a>
-            
-            <a href="https://tiktok.com" target="_blank" class="flex flex-col items-center gap-y-3 group">
-                <div class="w-16 h-16 flex items-center justify-center rounded-3xl glass group-hover:bg-[#FFD700]/10 transition-all">
-                    <i class="fa-brands fa-tiktok text-4xl text-[#FFD700]"></i>
-                </div>
-                <span class="text-sm font-medium">TikTok</span>
-            </a>
-            
-            <a href="https://instagram.com" target="_blank" class="flex flex-col items-center gap-y-3 group">
-                <div class="w-16 h-16 flex items-center justify-center rounded-3xl glass group-hover:bg-[#FFD700]/10 transition-all">
-                    <i class="fa-brands fa-instagram text-4xl text-[#FFD700]"></i>
-                </div>
-                <span class="text-sm font-medium">Instagram</span>
-            </a>
-        </div>
-    </section>
-
     <!-- ABOUT THE DEVELOPER -->
     <section id="about" class="max-w-screen-2xl mx-auto px-6 py-20 border-t border-[#FFD700]/20">
         <p class="text-center text-xs tracking-[0.3em] text-[#FFD700] mb-3">ABOUT THE CLUB</p>
-        <h2 class="section-header text-center mb-4">Multimedia Club</h2>
+        <h2 class="section-header text-4xl font-bold text-center mb-4">Multimedia Club</h2>
         <p class="text-center text-[#C8C8C8] max-w-2xl mx-auto mb-10">We create, capture, and connect through photography, video, design, and technology.</p>
         <div class="grid md:grid-cols-3 gap-4 mb-12">
             <div class="club-card p-6"><i class="fa-solid fa-camera text-[#FFD700] text-2xl"></i><h3 class="mt-3 font-semibold">Photography</h3><p class="text-[#C8C8C8] text-sm mt-2">Capture school moments and club projects.</p></div>
             <div class="club-card p-6"><i class="fa-solid fa-film text-[#FFD700] text-2xl"></i><h3 class="mt-3 font-semibold">Video</h3><p class="text-[#C8C8C8] text-sm mt-2">Edit stories, events, and announcements.</p></div>
             <div class="club-card p-6"><i class="fa-solid fa-code text-[#FFD700] text-2xl"></i><h3 class="mt-3 font-semibold">Technology</h3><p class="text-[#C8C8C8] text-sm mt-2">Build the club platform and digital tools.</p></div>
         </div>
-        <h3 class="section-header text-center mb-8">About the Developer</h3>
+        <h3 class="section-header text-2xl font-bold text-center mb-8">About the Developer</h3>
         
         <div class="max-w-5xl mx-auto">
             <div class="flex flex-col sm:flex-row items-center justify-center gap-10 mb-10">
@@ -1314,7 +1251,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
                     I made this website so that students can have a centralized hub for all multimedia activities. As a passionate developer and designer, I wanted to create an interactive and engaging platform that fosters creativity and collaboration among students. This project is a testament to the power of technology in enhancing educational experiences.
                 </p>
                 
-                <div class="flex gap-4 flex-wrap">
+                <div class="flex gap-4 flex-wrap justify-center sm:justify-start">
                     <a href="#" class="glass px-5 py-2.5 rounded-2xl border border-white/10 hover:border-[#FFD700] transition-all inline-flex items-center">
                         <i class="fa-solid fa-globe mr-2"></i> Portfolio
                     </a>
@@ -1457,24 +1394,33 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             </div>
         </div>
     </div>
-    <footer class="site-footer px-6 py-12">
-        <div class="max-w-screen-2xl mx-auto grid md:grid-cols-3 gap-8 items-center">
-            <div class="flex items-center gap-3">
-                <img src="images/logo.jpg" alt="Multimedia Club logo" class="w-14 h-14 rounded-full object-cover border border-[#FFD700]">
-                <div><div class="font-display text-2xl font-bold">MULTIMEDIA CLUB</div><div class="text-xs tracking-[0.2em] text-[#FFD700]">CREATE • CAPTURE • CONNECT</div></div>
+
+    <!-- NEW FOOTER -->
+    <footer id="contact" class="relative bg-[#0a0803] border-t border-[#FFD700]/20 pt-12 pb-8 px-6 overflow-hidden">
+        <!-- Decorative diagonal stripes -->
+        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, #FFD700 10px, #FFD700 20px);"></div>
+        
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 relative z-10">
+            <div class="flex items-center gap-6">
+                <span class="text-sm font-bold tracking-widest text-white">FOLLOW US</span>
+                <div class="flex gap-3">
+                    <a href="#" class="w-10 h-10 rounded-full border border-[#FFD700]/50 flex items-center justify-center text-[#FFD700] hover:bg-[#FFD700] hover:text-black transition"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full border border-[#FFD700]/50 flex items-center justify-center text-[#FFD700] hover:bg-[#FFD700] hover:text-black transition"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full border border-[#FFD700]/50 flex items-center justify-center text-[#FFD700] hover:bg-[#FFD700] hover:text-black transition"><i class="fa-brands fa-tiktok"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full border border-[#FFD700]/50 flex items-center justify-center text-[#FFD700] hover:bg-[#FFD700] hover:text-black transition"><i class="fa-brands fa-github"></i></a>
+                </div>
             </div>
-            <div class="flex flex-wrap gap-4 text-sm text-[#C8C8C8]">
-                <a href="#home" class="hover:text-[#FFD700]">Home</a>
-                <a href="#events" class="hover:text-[#FFD700]">Events</a>
-                <a href="#announcements" class="hover:text-[#FFD700]">Announcements</a>
-                <a href="#about" class="hover:text-[#FFD700]">About Us</a>
+            
+            <div class="text-sm text-gray-400 flex items-center gap-2">
+                Collaborated by <span class="text-[#FFD700] font-black italic text-xl tracking-tighter">VERITY</span>
             </div>
-            <div class="md:text-right text-sm text-[#C8C8C8]">
-                <div class="text-[#FFD700] tracking-[0.2em]">COLLABORATED BY VERITY</div>
-                <div class="mt-2">© <span id="footer-year"></span> Multimedia Club</div>
+            
+            <div class="text-sm text-gray-300 italic tracking-wide">
+                "Together, we create more."
             </div>
         </div>
     </footer>
+
     <div id="floating-verity" class="fixed z-[60]">
         <div onclick="showVerityChat()" class="verity-orb" role="button" aria-label="Open Verity chat">
             <img src="verity-faces/idle.jpg" class="verity-avatar-img" alt="Verity, Multimedia Club AI guide">
@@ -2566,13 +2512,11 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
         }
         function updateNavUser() {
             const el = document.getElementById('nav-user-section');
-            const membersLink = document.getElementById("members-nav-link");
-            if (membersLink) membersLink.textContent = currentUser ? "Members" : "Sign up";
             if (!currentUser) {
-                el.innerHTML = '<button onclick="showLoginModal()" class="text-sm px-3 py-2 rounded-full border border-[#FFD700]/40">Log in</button>';
+                el.innerHTML = '<button onclick="showLoginModal()" class="text-xs font-bold px-4 py-2 rounded-full border border-[#FFD700]/50 text-[#FFD700] hover:bg-[#FFD700]/10 transition">Log in</button>';
                 return;
             }
-            el.innerHTML = '<button onclick="showProfileWindow()" class="flex items-center gap-2 text-sm px-3 py-1.5 rounded-full border border-[#FFD700]/40"><img src="' + (currentUser.avatar || "verity-faces/idle.jpg") + '" class="w-7 h-7 rounded-full object-cover" alt=""><span>' + currentUser.username + '</span></button>';
+            el.innerHTML = '<button onclick="showProfileWindow()" class="flex items-center gap-2 text-xs font-bold px-3 py-1.5 rounded-full border border-[#FFD700]/50 text-[#FFD700]"><img src="' + (currentUser.avatar || "verity-faces/idle.jpg") + '" class="w-6 h-6 rounded-full object-cover" alt=""><span>' + currentUser.username + '</span></button>';
         }
         function showProfileWindow() {
             if (!currentUser) return showLoginModal();

@@ -18,7 +18,7 @@
 
     <style>
 /* Multi Media Club styles */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@500;600;700;800;900&display=swap');
         
         :root {
             --gold: #FFD700;
@@ -43,11 +43,16 @@
         }
 
         body {
-            font-family: 'Inter', system-ui, sans-serif;
+            font-family: 'Inter', sans-serif;
             background: #050505;
             color: #FFFFFF;
             overflow-x: hidden;
         }
+        
+        .font-display {
+            font-family: 'Orbitron', sans-serif;
+        }
+
         body.light-mode { background: #f7f1e4 !important; color: #2a2118 !important; }
         body.light-mode::before {
             background:
@@ -95,11 +100,6 @@
             pointer-events: none;
         }
 
-        .font-display {
-            font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
-            font-feature-settings: "ss02";
-        }
-
         .hero-brand { display: flex; align-items: center; gap: 1.2rem; }
         .hero-logo { width: min(180px, 42vw); height: min(180px, 42vw); object-fit: cover; border-radius: 50%; border: 3px solid #FFD700; box-shadow: 0 0 28px rgba(255,215,0,.35); }
         .hero-mascot { width: 88px; height: 88px; object-fit: cover; border-radius: 50%; border: 3px solid #FFE600; box-shadow: 0 0 18px rgba(255,230,0,.45); }
@@ -107,6 +107,7 @@
         .club-card { background: #171717; border: 1px solid rgba(255,215,0,.28); border-radius: 1.4rem; }
         .site-footer { background: #050505; border-top: 1px solid rgba(255,215,0,.28); }
         @media (max-width: 768px) { .hero-brand { flex-direction: column; } .hero-mascot { width: 64px; height: 64px; } }
+        
         .section-header {
             font-size: 2.25rem;
             line-height: 2.5rem;
@@ -220,7 +221,7 @@
         }
 
         .countdown {
-            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            font-family: 'Orbitron', sans-serif;
             font-feature-settings: "tnum";
         }
 
@@ -924,6 +925,96 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             pointer-events: none;
         }
 
+        /* --- SCROLL ANIMATIONS --- */
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1), transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            will-change: opacity, transform;
+        }
+        .scroll-animate-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1), transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .scroll-animate-right {
+            opacity: 0;
+            transform: translateX(40px);
+            transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1), transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .is-visible {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+
+        /* --- ABOUT SECTION STYLES --- */
+        .about-grid-bg {
+            background-image: 
+                linear-gradient(rgba(255,215,0,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,215,0,0.04) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+        .terminal-window {
+            background: rgba(10, 8, 3, 0.85);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.1), inset 0 0 20px rgba(255, 215, 0, 0.05);
+            border-radius: 12px;
+            font-family: 'Inter', monospace;
+            position: relative;
+            overflow: hidden;
+        }
+        .terminal-header {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 8px 16px;
+            display: flex;
+            gap: 6px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        .terminal-dot {
+            width: 10px; height: 10px; border-radius: 50%;
+        }
+        .terminal-body {
+            padding: 24px;
+            color: #fffbea;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        .terminal-prompt {
+            color: #FFD700;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        .stat-card {
+            background: rgba(23, 23, 23, 0.8);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            border-color: #FFD700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+            transform: translateY(-5px);
+        }
+        .stat-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #FFD700;
+            line-height: 1;
+            margin-bottom: 8px;
+            text-shadow: 0 0 10px rgba(255,215,0,0.4);
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #C8C8C8;
+        }
 </style>
 
 
@@ -1115,7 +1206,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             </h1>
 
             <!-- Tagline -->
-            <div class="flex items-center justify-center gap-3 md:gap-8 text-sm md:text-xl font-bold tracking-[0.2em] md:tracking-[0.4em] text-[#FFD700] mb-8 uppercase">
+            <div class="flex items-center justify-center gap-3 md:gap-8 text-sm md:text-xl font-bold tracking-[0.2em] md:tracking-[0.4em] text-[#FFD700] mb-8 uppercase font-display">
                 <span>Create</span> <span class="text-white opacity-50">•</span>
                 <span>Capture</span> <span class="text-white opacity-50">•</span>
                 <span>Connect</span>
@@ -1148,41 +1239,41 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
     <section class="relative z-20 max-w-7xl mx-auto px-6 -mt-16 pb-24">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <!-- Card 1 -->
-            <div class="glass rounded-3xl p-6 border-2 border-[#FFD700]/30 text-center hover:border-[#FFD700] hover:shadow-[0_0_30px_rgba(255,215,0,0.2)] transition-all duration-300 group bg-black/80">
+            <div class="glass rounded-3xl p-6 border-2 border-[#FFD700]/30 text-center hover:border-[#FFD700] hover:shadow-[0_0_30px_rgba(255,215,0,0.2)] transition-all duration-300 group bg-black/80 scroll-animate">
                 <div class="w-16 h-16 mx-auto bg-[#1a1208] rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(255,215,0,0.2)]">
                     <i class="fa-solid fa-users text-3xl text-[#FFD700]"></i>
                 </div>
-                <h3 class="text-lg font-bold text-white mb-2 tracking-wide">ABOUT US</h3>
+                <h3 class="text-lg font-bold text-white mb-2 tracking-wide font-display">ABOUT US</h3>
                 <p class="text-xs text-gray-400 mb-6">Learn more about our club and community.</p>
                 <a href="#about" class="text-[#FFD700] text-sm font-semibold flex items-center justify-center gap-2 group-hover:gap-3 transition-all">Learn More <i class="fa-solid fa-arrow-right"></i></a>
             </div>
 
             <!-- Card 2 -->
-            <div class="glass rounded-3xl p-6 border-2 border-[#FFD700]/30 text-center hover:border-[#FFD700] hover:shadow-[0_0_30px_rgba(255,215,0,0.2)] transition-all duration-300 group bg-black/80">
+            <div class="glass rounded-3xl p-6 border-2 border-[#FFD700]/30 text-center hover:border-[#FFD700] hover:shadow-[0_0_30px_rgba(255,215,0,0.2)] transition-all duration-300 group bg-black/80 scroll-animate delay-100">
                 <div class="w-16 h-16 mx-auto bg-[#1a1208] rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(255,215,0,0.2)]">
                     <i class="fa-solid fa-code text-3xl text-[#FFD700]"></i>
                 </div>
-                <h3 class="text-lg font-bold text-white mb-2 tracking-wide">OUR PROJECTS</h3>
+                <h3 class="text-lg font-bold text-white mb-2 tracking-wide font-display">OUR PROJECTS</h3>
                 <p class="text-xs text-gray-400 mb-6">Explore our creative works and projects.</p>
                 <a href="#projects" class="text-[#FFD700] text-sm font-semibold flex items-center justify-center gap-2 group-hover:gap-3 transition-all">View Projects <i class="fa-solid fa-arrow-right"></i></a>
             </div>
 
             <!-- Card 3 -->
-            <div class="glass rounded-3xl p-6 border-2 border-[#FFD700]/30 text-center hover:border-[#FFD700] hover:shadow-[0_0_30px_rgba(255,215,0,0.2)] transition-all duration-300 group bg-black/80">
+            <div class="glass rounded-3xl p-6 border-2 border-[#FFD700]/30 text-center hover:border-[#FFD700] hover:shadow-[0_0_30px_rgba(255,215,0,0.2)] transition-all duration-300 group bg-black/80 scroll-animate delay-200">
                 <div class="w-16 h-16 mx-auto bg-[#1a1208] rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(255,215,0,0.2)]">
                     <i class="fa-solid fa-calendar-days text-3xl text-[#FFD700]"></i>
                 </div>
-                <h3 class="text-lg font-bold text-white mb-2 tracking-wide">UPCOMING EVENTS</h3>
+                <h3 class="text-lg font-bold text-white mb-2 tracking-wide font-display">UPCOMING EVENTS</h3>
                 <p class="text-xs text-gray-400 mb-6">Join our events and activities!</p>
                 <a href="#events" class="text-[#FFD700] text-sm font-semibold flex items-center justify-center gap-2 group-hover:gap-3 transition-all">View Events <i class="fa-solid fa-arrow-right"></i></a>
             </div>
 
             <!-- Card 4 -->
-            <div class="glass rounded-3xl p-6 border-2 border-[#FFD700]/30 text-center hover:border-[#FFD700] hover:shadow-[0_0_30px_rgba(255,215,0,0.2)] transition-all duration-300 group bg-black/80">
+            <div class="glass rounded-3xl p-6 border-2 border-[#FFD700]/30 text-center hover:border-[#FFD700] hover:shadow-[0_0_30px_rgba(255,215,0,0.2)] transition-all duration-300 group bg-black/80 scroll-animate delay-300">
                 <div class="w-16 h-16 mx-auto bg-[#1a1208] rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(255,215,0,0.2)]">
                     <i class="fa-solid fa-envelope text-3xl text-[#FFD700]"></i>
                 </div>
-                <h3 class="text-lg font-bold text-white mb-2 tracking-wide">GET IN TOUCH</h3>
+                <h3 class="text-lg font-bold text-white mb-2 tracking-wide font-display">GET IN TOUCH</h3>
                 <p class="text-xs text-gray-400 mb-6">Have questions? Reach out to us!</p>
                 <a href="#contact" class="text-[#FFD700] text-sm font-semibold flex items-center justify-center gap-2 group-hover:gap-3 transition-all">Contact Us <i class="fa-solid fa-arrow-right"></i></a>
             </div>
@@ -1190,9 +1281,9 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
     </section>
 
     <!-- EVENTS SECTION -->
-    <section id="events" class="max-w-screen-2xl mx-auto px-6 pb-20 border-t border-white/10 pt-10">
+    <section id="events" class="max-w-screen-2xl mx-auto px-6 pb-20 border-t border-white/10 pt-10 scroll-animate">
         <div class="section-row flex justify-between items-end mb-6">
-            <h2 class="section-header text-3xl font-bold">Events Countdown</h2>
+            <h2 class="section-header font-display text-3xl font-bold">Events Countdown</h2>
             <button onclick="if (canEditPosts()) showCreateEventModal(); else showLoginModal()" 
                     class="px-5 py-2 rounded-2xl border border-[#FFD700]/60 text-sm flex items-center gap-x-2 hover:bg-[#FFD700]/10 transition">
                 <i class="fa-solid fa-plus"></i> Add Event
@@ -1202,7 +1293,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
         <!-- Empty State for Events -->
         <div id="events-empty" class="hidden glass rounded-3xl p-12 text-center border border-white/10">
             <i class="fa-solid fa-calendar-xmark text-5xl text-[#FFD700]/40 mb-4"></i>
-            <h3 class="text-xl font-semibold text-white mb-2">No Events Yet</h3>
+            <h3 class="text-xl font-semibold text-white mb-2 font-display">No Events Yet</h3>
             <p class="text-gray-400">Check back soon for upcoming club activities and events!</p>
         </div>
         
@@ -1210,9 +1301,9 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
     </section>
 
     <!-- ANNOUNCEMENTS SECTION -->
-    <section id="announcements" class="max-w-screen-2xl mx-auto px-6 pb-20 border-t border-white/10 pt-10">
+    <section id="announcements" class="max-w-screen-2xl mx-auto px-6 pb-20 border-t border-white/10 pt-10 scroll-animate">
         <div class="section-row flex justify-between items-end mb-6">
-            <h2 class="section-header text-3xl font-bold">School Announcements</h2>
+            <h2 class="section-header font-display text-3xl font-bold">School Announcements</h2>
             <button onclick="if (canEditPosts()) showCreateAnnouncementModal(); else showLoginModal()" 
                     class="px-5 py-2 rounded-2xl bg-[#FFD700] text-[#0a0803] text-sm font-semibold flex items-center gap-x-2 hover:bg-[#FFE600] transition">
                 <i class="fa-solid fa-plus"></i> Publish
@@ -1228,7 +1319,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
         <!-- Empty State for Announcements -->
         <div id="announcements-empty" class="hidden glass rounded-3xl p-12 text-center border border-white/10">
             <i class="fa-solid fa-bullhorn text-5xl text-[#FFD700]/40 mb-4"></i>
-            <h3 class="text-xl font-semibold text-white mb-2">No Announcements</h3>
+            <h3 class="text-xl font-semibold text-white mb-2 font-display">No Announcements</h3>
             <p class="text-gray-400">There are no active announcements at this time.</p>
         </div>
         
@@ -1236,9 +1327,9 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
     </section>
 
     <!-- NEW PROJECTS SECTION -->
-    <section id="projects" class="max-w-screen-2xl mx-auto px-6 pb-20 border-t border-white/10 pt-10">
+    <section id="projects" class="max-w-screen-2xl mx-auto px-6 pb-20 border-t border-white/10 pt-10 scroll-animate">
         <div class="section-row flex justify-between items-end mb-6">
-            <h2 class="section-header text-3xl font-bold">Our Projects</h2>
+            <h2 class="section-header font-display text-3xl font-bold">Our Projects</h2>
             <button onclick="if (canEditPosts()) showCreateProjectModal(); else showLoginModal()" 
                     class="px-5 py-2 rounded-2xl border border-[#FFD700]/60 text-sm flex items-center gap-x-2 hover:bg-[#FFD700]/10 transition">
                 <i class="fa-solid fa-plus"></i> Add Project
@@ -1248,54 +1339,130 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
         <!-- Empty State for Projects -->
         <div id="projects-empty" class="hidden glass rounded-3xl p-12 text-center border border-white/10">
             <i class="fa-solid fa-photo-film text-5xl text-[#FFD700]/40 mb-4"></i>
-            <h3 class="text-xl font-semibold text-white mb-2">No Projects Uploaded</h3>
+            <h3 class="text-xl font-semibold text-white mb-2 font-display">No Projects Uploaded</h3>
             <p class="text-gray-400">Our creative works will be displayed here soon. Stay tuned!</p>
         </div>
 
         <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </section>
 
-    <!-- ABOUT THE DEVELOPER -->
-    <section id="about" class="max-w-screen-2xl mx-auto px-6 py-20 border-t border-[#FFD700]/20">
-        <p class="text-center text-xs tracking-[0.3em] text-[#FFD700] mb-3">ABOUT THE CLUB</p>
-        <h2 class="section-header text-4xl font-bold text-center mb-4">Multimedia Club</h2>
-        <p class="text-center text-[#C8C8C8] max-w-2xl mx-auto mb-10">We create, capture, and connect through photography, video, design, and technology.</p>
-        <div class="grid md:grid-cols-3 gap-4 mb-12">
-            <div class="club-card p-6"><i class="fa-solid fa-camera text-[#FFD700] text-2xl"></i><h3 class="mt-3 font-semibold">Photography</h3><p class="text-[#C8C8C8] text-sm mt-2">Capture school moments and club projects.</p></div>
-            <div class="club-card p-6"><i class="fa-solid fa-film text-[#FFD700] text-2xl"></i><h3 class="mt-3 font-semibold">Video</h3><p class="text-[#C8C8C8] text-sm mt-2">Edit stories, events, and announcements.</p></div>
-            <div class="club-card p-6"><i class="fa-solid fa-code text-[#FFD700] text-2xl"></i><h3 class="mt-3 font-semibold">Technology</h3><p class="text-[#C8C8C8] text-sm mt-2">Build the club platform and digital tools.</p></div>
-        </div>
-        <h3 class="section-header text-2xl font-bold text-center mb-8">About the Developer</h3>
+    <!-- UPDATED ABOUT THE DEVELOPER & CLUB SECTION -->
+    <section id="about" class="relative max-w-screen-2xl mx-auto px-6 py-24 border-t border-[#FFD700]/20 overflow-hidden about-grid-bg">
         
-        <div class="max-w-5xl mx-auto">
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-10 mb-10">
-                <figure class="text-center">
-                    <img id="developer-portrait" src="images/developer.jpg" alt="Ron Matthew Ferreras" class="portrait-frame mx-auto">
-                    <figcaption class="mt-3 font-semibold">Ron Matthew Ferreras</figcaption>
-                    <p class="text-xs text-[#fffbea]">Developer</p>
-                </figure>
-                <figure class="text-center">
-                    <img id="verity-portrait" src="verity-faces/idle.jpg" alt="Verity, Multimedia Club assistant" class="portrait-frame mx-auto">
-                    <figcaption class="mt-3 font-semibold">Verity</figcaption>
-                    <p class="text-xs text-[#fffbea]">Club assistant</p>
-                </figure>
+        <!-- Floating Elements -->
+        <div class="absolute top-10 left-10 w-32 h-32 bg-[#FFD700] rounded-full blur-[100px] opacity-20 pointer-events-none"></div>
+        <div class="absolute bottom-10 right-10 w-32 h-32 bg-[#FFD700] rounded-full blur-[100px] opacity-20 pointer-events-none"></div>
+
+        <div class="relative z-10 max-w-6xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-16 scroll-animate">
+                <p class="text-center text-xs tracking-[0.3em] text-[#FFD700] mb-3 font-display font-bold uppercase">System.Data // About</p>
+                <h2 class="section-header font-display text-4xl md:text-5xl font-black mb-4 uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white to-[#FFD700]">Multimedia Club</h2>
+                <p class="text-center text-[#C8C8C8] max-w-2xl mx-auto font-light">We create, capture, and connect through photography, video, design, and technology.</p>
             </div>
-            <div class="max-w-3xl mx-auto text-center sm:text-left">
-                <h3 class="font-display text-3xl font-semibold mb-3">Ron Matthew Ferreras</h3>
-                <p class="text-[#fffbea] mb-6">
-                    I made this website so that students can have a centralized hub for all multimedia activities. As a passionate developer and designer, I wanted to create an interactive and engaging platform that fosters creativity and collaboration among students. This project is a testament to the power of technology in enhancing educational experiences.
-                </p>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
+                <div class="stat-card scroll-animate delay-100">
+                    <div class="stat-number" data-target="150">0</div>
+                    <div class="stat-label">Projects</div>
+                </div>
+                <div class="stat-card scroll-animate delay-200">
+                    <div class="stat-number" data-target="50">0</div>
+                    <div class="stat-label">Members</div>
+                </div>
+                <div class="stat-card scroll-animate delay-300">
+                    <div class="stat-number" data-target="12">0</div>
+                    <div class="stat-label">Awards</div>
+                </div>
+                <div class="stat-card scroll-animate delay-300">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Creativity</div>
+                </div>
+            </div>
+
+            <!-- Pillars / Features -->
+            <div class="grid md:grid-cols-3 gap-6 mb-20">
+                <div class="glass p-8 rounded-3xl border-t-4 border-t-[#FFD700] hover:shadow-[0_0_30px_rgba(255,215,0,0.15)] transition-all duration-300 scroll-animate-left delay-100 group">
+                    <div class="w-14 h-14 rounded-2xl bg-[#FFD700]/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-camera text-[#FFD700] text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 font-display">Photography</h3>
+                    <p class="text-[#C8C8C8] text-sm leading-relaxed">Capture school moments, club projects, and the raw emotion of campus life through our lenses.</p>
+                </div>
                 
-                <div class="flex gap-4 flex-wrap justify-center sm:justify-start">
-                    <a href="#" class="glass px-5 py-2.5 rounded-2xl border border-white/10 hover:border-[#FFD700] transition-all inline-flex items-center">
-                        <i class="fa-solid fa-globe mr-2"></i> Portfolio
-                    </a>
-                    <a href="#" class="glass px-5 py-2.5 rounded-2xl border border-white/10 hover:border-[#FFD700] transition-all inline-flex items-center">
-                        <i class="fa-brands fa-github mr-2"></i> GitHub
-                    </a>
-                    <a href="#" class="glass px-5 py-2.5 rounded-2xl border border-white/10 hover:border-[#FFD700] transition-all inline-flex items-center">
-                        <i class="fa-solid fa-envelope mr-2"></i> Contact
-                    </a>
+                <div class="glass p-8 rounded-3xl border-t-4 border-t-[#FFD700] hover:shadow-[0_0_30px_rgba(255,215,0,0.15)] transition-all duration-300 scroll-animate delay-200 group">
+                    <div class="w-14 h-14 rounded-2xl bg-[#FFD700]/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-film text-[#FFD700] text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 font-display">Video</h3>
+                    <p class="text-[#C8C8C8] text-sm leading-relaxed">Edit stories, events, and announcements that keep the student body informed and entertained.</p>
+                </div>
+                
+                <div class="glass p-8 rounded-3xl border-t-4 border-t-[#FFD700] hover:shadow-[0_0_30px_rgba(255,215,0,0.15)] transition-all duration-300 scroll-animate-right delay-300 group">
+                    <div class="w-14 h-14 rounded-2xl bg-[#FFD700]/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-code text-[#FFD700] text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 font-display">Technology</h3>
+                    <p class="text-[#C8C8C8] text-sm leading-relaxed">Build the club platform, digital tools, and interactive experiences that power our creative ecosystem.</p>
+                </div>
+            </div>
+
+            <!-- Developer Section -->
+            <div class="mt-20">
+                <h3 class="font-display text-2xl font-bold text-center mb-12 scroll-animate">SYSTEM // Developer Info</h3>
+                
+                <div class="grid md:grid-cols-2 gap-10 items-center">
+                    <!-- Developer Portraits -->
+                    <div class="flex flex-col sm:flex-row justify-center gap-8 scroll-animate-left">
+                        <figure class="text-center group">
+                            <div class="relative inline-block">
+                                <div class="absolute inset-0 rounded-full bg-[#FFD700] blur-md opacity-20 group-hover:opacity-60 transition-opacity duration-500"></div>
+                                <img id="developer-portrait" src="images/developer.jpg" alt="Ron Matthew Ferreras" class="portrait-frame mx-auto relative z-10 transition-transform duration-500 group-hover:scale-105">
+                                <div class="absolute -bottom-2 -right-2 bg-[#FFD700] text-[#0a0803] w-8 h-8 rounded-full flex items-center justify-center z-20 shadow-[0_0_10px_rgba(255,215,0,0.8)]"><i class="fa-solid fa-code"></i></div>
+                            </div>
+                            <figcaption class="mt-4 font-bold text-lg font-display">Ron Matthew</figcaption>
+                            <p class="text-xs text-[#FFD700] tracking-widest uppercase mt-1">Lead Developer</p>
+                        </figure>
+                        
+                        <figure class="text-center group">
+                            <div class="relative inline-block">
+                                <div class="absolute inset-0 rounded-full bg-[#FFD700] blur-md opacity-20 group-hover:opacity-60 transition-opacity duration-500"></div>
+                                <img id="verity-portrait" src="verity-faces/idle.jpg" alt="Verity" class="portrait-frame mx-auto relative z-10 transition-transform duration-500 group-hover:scale-105">
+                                <div class="absolute -bottom-2 -right-2 bg-[#FFD700] text-[#0a0803] w-8 h-8 rounded-full flex items-center justify-center z-20 shadow-[0_0_10px_rgba(255,215,0,0.8)]"><i class="fa-solid fa-robot"></i></div>
+                            </div>
+                            <figcaption class="mt-4 font-bold text-lg font-display">Verity</figcaption>
+                            <p class="text-xs text-[#FFD700] tracking-widest uppercase mt-1">AI Assistant</p>
+                        </figure>
+                    </div>
+
+                    <!-- Terminal / Bio -->
+                    <div class="scroll-animate-right delay-200">
+                        <div class="terminal-window">
+                            <div class="terminal-header">
+                                <div class="terminal-dot bg-red-500"></div>
+                                <div class="terminal-dot bg-yellow-500"></div>
+                                <div class="terminal-dot bg-green-500"></div>
+                                <span class="text-xs text-white/50 ml-2 font-mono">bio.sh</span>
+                            </div>
+                            <div class="terminal-body font-mono">
+                                <p><span class="terminal-prompt">></span> init developer_profile</p>
+                                <p class="mt-2 text-white/80">I made this website so that students can have a centralized hub for all multimedia activities. As a passionate developer and designer, I wanted to create an interactive and engaging platform that fosters creativity and collaboration among students.</p>
+                                <p class="mt-2 text-white/80">This project is a testament to the power of technology in enhancing educational experiences.</p>
+                                <p class="mt-4"><span class="terminal-prompt">></span> loading skills...</p>
+                                <div class="flex gap-2 mt-2 flex-wrap">
+                                    <span class="px-2 py-1 bg-[#FFD700]/10 border border-[#FFD700]/30 rounded text-xs text-[#FFD700]">HTML/CSS</span>
+                                    <span class="px-2 py-1 bg-[#FFD700]/10 border border-[#FFD700]/30 rounded text-xs text-[#FFD700]">JavaScript</span>
+                                    <span class="px-2 py-1 bg-[#FFD700]/10 border border-[#FFD700]/30 rounded text-xs text-[#FFD700]">UI/UX</span>
+                                    <span class="px-2 py-1 bg-[#FFD700]/10 border border-[#FFD700]/30 rounded text-xs text-[#FFD700]">AI Integration</span>
+                                </div>
+                                <div class="flex gap-3 mt-6">
+                                    <a href="#" class="px-4 py-2 bg-[#FFD700] text-[#0a0803] rounded font-bold text-sm hover:bg-white transition flex items-center gap-2"><i class="fa-solid fa-globe"></i> Portfolio</a>
+                                    <a href="#" class="px-4 py-2 border border-white/20 rounded text-sm hover:border-[#FFD700] transition flex items-center gap-2"><i class="fa-brands fa-github"></i> GitHub</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1437,7 +1604,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
         
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 relative z-10">
             <div class="flex items-center gap-6">
-                <span class="text-sm font-bold tracking-widest text-white">FOLLOW US</span>
+                <span class="text-sm font-bold tracking-widest text-white font-display">FOLLOW US</span>
                 <div class="flex gap-3">
                     <a href="#" class="w-10 h-10 rounded-full border border-[#FFD700]/50 flex items-center justify-center text-[#FFD700] hover:bg-[#FFD700] hover:text-black transition"><i class="fa-brands fa-facebook-f"></i></a>
                     <a href="#" class="w-10 h-10 rounded-full border border-[#FFD700]/50 flex items-center justify-center text-[#FFD700] hover:bg-[#FFD700] hover:text-black transition"><i class="fa-brands fa-youtube"></i></a>
@@ -1446,12 +1613,12 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
                 </div>
             </div>
             
-            <div class="text-sm text-gray-400 flex items-center gap-2">
+            <div class="text-sm text-gray-400 flex items-center gap-2 font-display">
                 Collaborated by <span class="text-[#FFD700] font-black italic text-xl tracking-tighter">VERITY</span>
             </div>
             
             <div class="text-sm text-gray-300 italic tracking-wide">
-                "Together, we create more." <span class="text-gray-500 ml-2 not-italic text-xs">· © <span id="footer-year"></span></span>
+                "Together, we create more." <span class="text-gray-500 ml-2 not-italic text-xs font-display">· © <span id="footer-year"></span></span>
             </div>
         </div>
     </footer>
@@ -2717,7 +2884,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
                             ${ev.image ? `<img src="${ev.image}" class="w-full h-full object-cover" alt="">` : `<i class="fa-solid fa-film text-5xl opacity-40 text-[#FFD700]"></i>`}
                         </div>
                         <div class="p-5">
-                            <div class="font-semibold text-xl mb-1">${ev.name}</div>
+                            <div class="font-semibold text-xl mb-1 font-display">${ev.name}</div>
                             <div class="text-xs text-white/50 mb-3">${new Date(ev.date).toLocaleDateString()}</div>
                             <p class="text-sm text-[#fffbea] line-clamp-2 mb-4">${ev.description}</p>
                             <div class="flex justify-between items-center">
@@ -3025,7 +3192,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
                             <span class="px-3 py-px text-xs rounded-full bg-white/10">${ann.category}</span>
                             ${ann.pinned ? '<span class="ml-2 text-[#FFD700] text-xs">📌 PINNED</span>' : ''}
                             ${ann.image ? `<img src="${ann.image}" class="w-full h-36 object-cover rounded-2xl mt-3" alt="">` : ""}
-                            <h4 class="font-semibold text-xl mt-2">${ann.title}</h4>
+                            <h4 class="font-semibold text-xl mt-2 font-display">${ann.title}</h4>
                             <p class="text-xs text-white/50 mt-1">Posted ${new Date(ann.postedAt || ann.date).toLocaleString()}</p>
                             <p class="text-[#fffbea] mt-1">${ann.content}</p>
                         </div>
@@ -3063,7 +3230,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
                         ${proj.image ? `<img src="${proj.image}" class="w-full h-full object-cover" alt="">` : `<i class="fa-solid fa-photo-film text-5xl opacity-40 text-[#FFD700]"></i>`}
                     </div>
                     <div class="p-5 flex flex-col flex-1">
-                        <div class="font-semibold text-xl mb-1">${proj.title}</div>
+                        <div class="font-semibold text-xl mb-1 font-display">${proj.title}</div>
                         <div class="text-xs text-[#FFD700] mb-3">${proj.category || 'General'}</div>
                         <p class="text-sm text-[#fffbea] line-clamp-2 mb-4 flex-1">${proj.description}</p>
                         <div class="flex justify-between items-center mt-auto pt-4 border-t border-white/10">
@@ -4214,6 +4381,23 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
   gate.addEventListener("click", begin);
   window.addEventListener("keydown", begin);
 })();
+
+// --- SCROLL ANIMATIONS OBSERVER ---
+document.addEventListener("DOMContentLoaded", function() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                // Optional: stop observing once animated in
+                // observer.unobserve(entry.target); 
+            }
+        });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.scroll-animate, .scroll-animate-left, .scroll-animate-right').forEach((el) => {
+        observer.observe(el);
+    });
+});
 </script>
 
 </body>

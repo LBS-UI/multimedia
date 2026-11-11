@@ -12,13 +12,13 @@
     <link rel="preload" as="image" href="badges/backpin.jpg">
 
     <!-- Tailwind CSS via CDN (Demo only) -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
 /* Multi Media Club styles */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
         
         :root {
             --gold: #FFD700;
@@ -43,16 +43,11 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', system-ui, sans-serif;
             background: #050505;
             color: #FFFFFF;
             overflow-x: hidden;
         }
-        
-        .font-display {
-            font-family: 'Orbitron', sans-serif;
-        }
-
         body.light-mode { background: #f7f1e4 !important; color: #2a2118 !important; }
         body.light-mode::before {
             background:
@@ -100,6 +95,11 @@
             pointer-events: none;
         }
 
+        .font-display {
+            font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+            font-feature-settings: "ss02";
+        }
+
         .hero-brand { display: flex; align-items: center; gap: 1.2rem; }
         .hero-logo { width: min(180px, 42vw); height: min(180px, 42vw); object-fit: cover; border-radius: 50%; border: 3px solid #FFD700; box-shadow: 0 0 28px rgba(255,215,0,.35); }
         .hero-mascot { width: 88px; height: 88px; object-fit: cover; border-radius: 50%; border: 3px solid #FFE600; box-shadow: 0 0 18px rgba(255,230,0,.45); }
@@ -107,8 +107,6 @@
         .club-card { background: #171717; border: 1px solid rgba(255,215,0,.28); border-radius: 1.4rem; }
         .site-footer { background: #050505; border-top: 1px solid rgba(255,215,0,.28); }
         @media (max-width: 768px) { .hero-brand { flex-direction: column; } .hero-mascot { width: 64px; height: 64px; } }
-        
-        .section-header {
             font-size: 2.25rem;
             line-height: 2.5rem;
             font-weight: 700;
@@ -221,7 +219,7 @@
         }
 
         .countdown {
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
             font-feature-settings: "tnum";
         }
 
@@ -447,6 +445,7 @@
 }
 .showcase-3d .art svg { display: block; width: 100%; height: 100%; }
 
+/* NEW: image artwork — clips to circle, covers the face */
 .showcase-3d .art img {
     display: block;
     width: 100%;
@@ -901,120 +900,6 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
         .notify-highlight { animation: notifyPulse 1.6s ease-in-out infinite; box-shadow: 0 0 16px rgba(255,215,0,.45); background: rgba(255,215,0,.12); }
         @keyframes notifyPulse { 50% { box-shadow: 0 0 24px rgba(255,215,0,.8); transform: scale(1.04); } }
         #notify-float { position: fixed; right: 1rem; bottom: 5.5rem; z-index: 70; }
-
-        /* --- NEW DESIGN STYLES FROM PROMPT --- */
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(-12deg); }
-            50% { transform: translateY(-15px) rotate(-12deg); }
-        }
-        @keyframes float-delayed {
-            0%, 100% { transform: translateY(0) rotate(12deg); }
-            50% { transform: translateY(-15px) rotate(12deg); }
-        }
-        .animate-float { animation: float 4s ease-in-out infinite; }
-        .animate-float-delayed { animation: float-delayed 5s ease-in-out infinite; }
-        
-        .film-strip-element {
-            position: absolute;
-            width: 150vw;
-            height: 100px;
-            border-top: 10px solid rgba(255, 215, 0, 0.3);
-            border-bottom: 10px solid rgba(255, 215, 0, 0.3);
-            background-image: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255, 215, 0, 0.3) 40px, rgba(255, 215, 0, 0.3) 50px);
-            transform: rotate(-15deg);
-            pointer-events: none;
-        }
-
-        /* --- SCROLL ANIMATIONS --- */
-        .scroll-animate {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1), transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-            will-change: opacity, transform;
-        }
-        .scroll-animate-left {
-            opacity: 0;
-            transform: translateX(-40px);
-            transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1), transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-        .scroll-animate-right {
-            opacity: 0;
-            transform: translateX(40px);
-            transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1), transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-        .is-visible {
-            opacity: 1;
-            transform: translate(0, 0);
-        }
-        .delay-100 { transition-delay: 100ms; }
-        .delay-200 { transition-delay: 200ms; }
-        .delay-300 { transition-delay: 300ms; }
-
-        /* --- ABOUT SECTION STYLES --- */
-        .about-grid-bg {
-            background-image: 
-                linear-gradient(rgba(255,215,0,0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,215,0,0.04) 1px, transparent 1px);
-            background-size: 30px 30px;
-        }
-        .terminal-window {
-            background: rgba(10, 8, 3, 0.85);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.1), inset 0 0 20px rgba(255, 215, 0, 0.05);
-            border-radius: 12px;
-            font-family: 'Inter', monospace;
-            position: relative;
-            overflow: hidden;
-        }
-        .terminal-header {
-            background: rgba(255, 215, 0, 0.1);
-            padding: 8px 16px;
-            display: flex;
-            gap: 6px;
-            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
-        }
-        .terminal-dot {
-            width: 10px; height: 10px; border-radius: 50%;
-        }
-        .terminal-body {
-            padding: 24px;
-            color: #fffbea;
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-        .terminal-prompt {
-            color: #FFD700;
-            font-weight: bold;
-            margin-right: 8px;
-        }
-        .stat-card {
-            background: rgba(23, 23, 23, 0.8);
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            border-radius: 16px;
-            padding: 20px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        .stat-card:hover {
-            border-color: #FFD700;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
-            transform: translateY(-5px);
-        }
-        .stat-number {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: #FFD700;
-            line-height: 1;
-            margin-bottom: 8px;
-            text-shadow: 0 0 10px rgba(255,215,0,0.4);
-        }
-        .stat-label {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #C8C8C8;
-        }
 </style>
 
 
@@ -1122,190 +1007,238 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
         </div>
     </div>
 
-    <!-- NEW NAVIGATION -->
-    <nav class="fixed top-0 left-0 right-0 z-50 glass border-b border-[#FFD700]/30">
-        <div class="max-w-screen-2xl mx-auto px-4 sm:px-8">
-            <div class="flex items-center justify-between h-20">
-                <!-- Logo -->
-                <a href="#home" class="flex items-center gap-3">
-                    <div class="relative w-10 h-10 flex items-center justify-center">
-                        <span class="font-display text-4xl font-black italic text-[#FFD700] drop-shadow-[0_0_10px_rgba(255,215,0,0.8)]">M</span>
-                        <i class="fa-regular fa-face-laugh-wink absolute -right-3 -bottom-1 text-xl text-[#FFE600]"></i>
+    <!-- NAVIGATION -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass border-b border-white/10">
+        <div class="max-w-screen-2xl mx-auto">
+            <div class="px-4 sm:px-8 py-3 flex items-center justify-between gap-2">
+                <div class="flex items-center gap-x-3">
+                    <div class="w-11 h-11 flex items-center justify-center overflow-hidden rounded-full border border-[#FFD700]/40">
+                        <img src="images/logo.jpg" alt="Multimedia Club logo" class="w-11 h-11 object-cover">
+                        <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="22" cy="22" r="20" fill="#FFD700" fill-opacity="0.15"/>
+                            <circle cx="22" cy="22" r="17" fill="#1a1208" stroke="#FFD700" stroke-width="2.5"/>
+                            <circle cx="22" cy="22" r="11" fill="none" stroke="#FFD700" stroke-width="1.5"/>
+                            <g stroke="#FFD700" stroke-width="1.2" stroke-linecap="round">
+                                <line x1="22" y1="11" x2="22" y2="17"/>
+                                <line x1="30.5" y1="15.5" x2="26.5" y2="19.5"/>
+                                <line x1="30.5" y1="28.5" x2="26.5" y2="24.5"/>
+                                <line x1="22" y1="33" x2="22" y2="27"/>
+                                <line x1="13.5" y1="28.5" x2="17.5" y2="24.5"/>
+                                <line x1="13.5" y1="15.5" x2="17.5" y2="19.5"/>
+                            </g>
+                            <circle cx="22" cy="22" r="3.5" fill="#FFD700"/>
+                            <polygon points="19,18 19,26 26,22" fill="#0a0803"/>
+                        </svg>
                     </div>
-                    <div class="hidden sm:block text-left">
-                        <div class="font-display text-xl font-bold italic text-white tracking-wider leading-none">MULTIMEDIA</div>
-                        <div class="text-[10px] tracking-[0.3em] text-[#FFD700] leading-none mt-1">CLUB</div>
+                    <div>
+                        <span class="font-display text-3xl font-bold tracking-tighter">Multi</span>
+                        <span class="font-display text-3xl font-bold tracking-tighter bg-gradient-to-r from-[#FFD700] to-[#FFEA00] bg-clip-text text-transparent">Media</span>
                     </div>
-                </a>
-
-                <!-- Desktop Links -->
-                <div class="hidden lg:flex items-center gap-8 text-xs font-bold tracking-wider">
-                    <a href="#home" class="text-[#FFD700] hover:text-[#FFE600] flex items-center gap-2 transition"><i class="fa-solid fa-house"></i> HOME</a>
-                    <a href="#about" class="text-gray-300 hover:text-[#FFD700] flex items-center gap-2 transition"><i class="fa-solid fa-circle-info"></i> ABOUT</a>
-                    <a href="#projects" class="text-gray-300 hover:text-[#FFD700] flex items-center gap-2 transition"><i class="fa-solid fa-border-all"></i> PROJECTS</a>
-                    <a href="#events" class="text-gray-300 hover:text-[#FFD700] flex items-center gap-2 transition"><i class="fa-solid fa-calendar-days"></i> EVENTS</a>
-                    <a href="#contact" class="text-gray-300 hover:text-[#FFD700] flex items-center gap-2 transition"><i class="fa-solid fa-envelope"></i> CONTACT</a>
                 </div>
 
-                <!-- Actions -->
-                <div class="flex items-center gap-3">
-                    <div id="nav-user-section">
-                        <button onclick="showLoginModal()" class="text-xs font-bold px-4 py-2 rounded-full border border-[#FFD700]/50 text-[#FFD700] hover:bg-[#FFD700]/10 transition">Log in</button>
+                <div class="desktop-nav hidden md:flex items-center gap-x-8 text-sm font-medium">
+                    <a href="#home" onclick="document.getElementById('home').scrollIntoView({ behavior: 'smooth' })" class="hover:text-[#FFD700] transition-colors">Home</a>
+                    <a href="#events" onclick="document.getElementById('events').scrollIntoView({ behavior: 'smooth' })" class="hover:text-[#FFD700] transition-colors">Events</a>
+                    <a href="#announcements" onclick="document.getElementById('announcements').scrollIntoView({ behavior: 'smooth' })" class="hover:text-[#FFD700] transition-colors">Announcements</a>
+                    <a href="#" onclick="showVerityChat()" class="hover:text-[#FFD700] transition-colors flex items-center gap-x-1.5">
+                        <i class="fa-solid fa-robot"></i>
+                        <span>Verity</span>
+                    </a>
+                    <a href="#about" onclick="document.getElementById('about').scrollIntoView({ behavior: 'smooth' })" class="hover:text-[#FFD700] transition-colors">About Us</a>
+                    <a href="#" onclick="enableClubNotifications(); return false;" class="notify-highlight px-4 py-2 rounded-full border border-[#FFD700] text-[#FFD700] font-semibold">Notifications</a>
+                    <a href="#" onclick="openMembersOrSignup(); return false;" class="hover:text-[#FFD700] transition-colors" id="members-nav-link">Members</a>
+                </div>
+
+                <div class="flex items-center gap-x-2">
+                    <button type="button" id="mobile-menu-btn" onclick="document.getElementById('mobile-menu').classList.toggle('is-open')" class="w-10 h-10 items-center justify-center rounded-2xl glass text-[#FFD700]" style="display:none"><i class="fa-solid fa-bars"></i></button>
+                    <div class="relative group">
+                        <button onclick="toggleMusic()" id="music-btn"
+                                class="w-10 h-10 flex items-center justify-center rounded-2xl glass hover:bg-white/10 transition-all text-[#FFD700]">
+                            <i class="fa-solid fa-music text-lg"></i>
+                        </button>
+                        <div class="absolute hidden group-hover:block top-12 right-0 w-64 glass rounded-3xl p-4 text-sm z-50">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="font-semibold">Background Music</span>
+                                <button onclick="event.stopImmediatePropagation(); toggleMusic()" class="text-xs px-3 py-1 rounded-full bg-white/10">Close</button>
+                            </div>
+                            <select id="music-track" onchange="changeMusicTrack()" class="w-full bg-[#24180c] border border-white/20 rounded-2xl px-4 py-2 text-sm mb-3">
+                                <option value="welcome">Welcome Theme</option>
+                                <option value="creative">Creative Focus</option>
+                                <option value="digital">Digital Campus</option>
+                                <option value="solis">Verity Theme</option>
+                            </select>
+                            <div class="flex items-center gap-x-3">
+                                <button onclick="toggleMusic()" id="music-play-btn" 
+                                        class="flex-1 flex items-center justify-center gap-x-2 px-4 py-2 rounded-2xl bg-[#FFD700] text-[#0a0803] font-semibold text-sm">
+                                    <i class="fa-solid fa-play mr-1"></i> <span>Play</span>
+                                </button>
+                                <input type="range" id="music-volume" min="0" max="1" step="0.05" value="0.6" 
+                                       oninput="setMusicVolume(this.value)" class="w-24 accent-[#FFD700]">
+                            </div>
+                        </div>
                     </div>
-                    <button onclick="showRegisterModal()" class="btn-gold px-6 py-2.5 rounded-full text-xs font-bold flex items-center gap-2 hidden sm:flex">
-                        JOIN THE CLUB <i class="fa-solid fa-chevron-right text-[10px]"></i>
+
+                    <button onclick="toggleTheme()" 
+                            class="w-10 h-10 flex items-center justify-center rounded-2xl glass hover:bg-white/10 transition-all text-[#FFD700]">
+                        <i class="fa-solid fa-adjust text-lg" id="theme-icon"></i>
                     </button>
-                    
-                    <button type="button" id="mobile-menu-btn" onclick="document.getElementById('mobile-menu').classList.toggle('is-open')" class="w-10 h-10 items-center justify-center rounded-xl glass text-[#FFD700] lg:hidden flex"><i class="fa-solid fa-bars"></i></button>
-                    
-                    <div class="relative group hidden lg:block">
-                        <button onclick="toggleMusic()" class="w-10 h-10 flex items-center justify-center rounded-xl glass hover:bg-white/10 transition-all text-[#FFD700]"><i class="fa-solid fa-music text-lg"></i></button>
+
+                    <div id="nav-user-section">
+                        <button onclick="showLoginModal()" class="text-sm px-3 py-2 rounded-full border border-[#FFD700]/40">Log in</button>
                     </div>
-                    
-                    <button onclick="toggleTheme()" class="w-10 h-10 hidden lg:flex items-center justify-center rounded-xl glass hover:bg-white/10 transition-all text-[#FFD700]"><i class="fa-solid fa-adjust text-lg" id="theme-icon"></i></button>
                 </div>
             </div>
         </div>
     </nav>
-
-    <!-- Mobile Menu -->
     <div id="mobile-menu" class="fixed inset-0 z-[80] bg-[#0a0803] flex flex-col items-center justify-center text-center gap-2 px-6">
         <button type="button" class="absolute top-5 right-5 w-10 h-10 rounded-2xl glass text-[#FFD700]" onclick="document.getElementById('mobile-menu').classList.remove('is-open')"><i class="fa-solid fa-xmark"></i></button>
-        <a href="#home" class="block w-full max-w-xs py-3 text-xl font-bold" onclick="document.getElementById('mobile-menu').classList.remove('is-open')">Home</a>
-        <a href="#about" class="block w-full max-w-xs py-3 text-xl font-bold" onclick="document.getElementById('mobile-menu').classList.remove('is-open')">About</a>
-        <a href="#projects" class="block w-full max-w-xs py-3 text-xl font-bold" onclick="document.getElementById('mobile-menu').classList.remove('is-open')">Projects</a>
-        <a href="#events" class="block w-full max-w-xs py-3 text-xl font-bold" onclick="document.getElementById('mobile-menu').classList.remove('is-open')">Events</a>
-        <a href="#contact" class="block w-full max-w-xs py-3 text-xl font-bold" onclick="document.getElementById('mobile-menu').classList.remove('is-open')">Contact</a>
-        <button class="block w-full max-w-xs py-3 text-xl mt-4 rounded-full border border-[#FFD700] text-[#FFD700] font-bold" onclick="showRegisterModal(); document.getElementById('mobile-menu').classList.remove('is-open')">Join the Club</button>
+        <a href="#home" class="block w-full max-w-xs py-3 text-xl" onclick="document.getElementById('mobile-menu').classList.remove('is-open')">Home</a>
+        <a href="#events" class="block w-full max-w-xs py-3 text-xl" onclick="document.getElementById('mobile-menu').classList.remove('is-open')">Events</a>
+        <a href="#announcements" class="block w-full max-w-xs py-3 text-xl" onclick="document.getElementById('mobile-menu').classList.remove('is-open')">Announcements</a>
+        <button class="block w-full max-w-xs py-3 text-xl" onclick="showVerityChat(); document.getElementById('mobile-menu').classList.add('hidden')">Verity</button>
+        <button class="block w-full max-w-xs py-3 text-xl" onclick="showRequestsPage(); document.getElementById('mobile-menu').classList.add('hidden')">Requests</button>
+        <button class="block w-full max-w-xs py-3 text-xl" onclick="openMembersOrSignup(); document.getElementById('mobile-menu').classList.remove('is-open')">Members</button>
+        <a href="#about" class="block w-full max-w-xs py-3 text-xl" onclick="document.getElementById('mobile-menu').classList.remove('is-open')">About</a>
+        <button class="block w-full max-w-xs py-3 text-xl rounded-full border border-[#FFD700] text-[#FFD700]" onclick="enableClubNotifications(); document.getElementById('mobile-menu').classList.remove('is-open')">Notifications</button>
+        <button class="block w-full max-w-xs py-3 text-xl" onclick="showLoginModal(); document.getElementById('mobile-menu').classList.remove('is-open')">Sign in</button>
+        <button class="block w-full max-w-xs py-3 text-xl text-[#FFD700]" onclick="showRegisterModal(); document.getElementById('mobile-menu').classList.remove('is-open')">Sign up</button>
+        <button class="block w-full max-w-xs py-3 text-xl" onclick="showDashboard(); document.getElementById('mobile-menu').classList.remove('is-open')">My account</button>
+        <button id="mobile-admin-tools" class="hidden w-full max-w-xs py-3 text-xl text-[#FFD700]" onclick="showAdminPanel(); document.getElementById('mobile-menu').classList.add('hidden')">Admin tools</button>
     </div>
 
-    <!-- NEW HERO SECTION -->
-    <section id="home" class="relative min-h-[100dvh] flex flex-col items-center justify-center overflow-hidden pt-20 bg-black">
-        <!-- Background elements -->
-        <div class="absolute inset-0 pointer-events-none overflow-hidden">
-            <!-- Glow behind text -->
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#FFD700] rounded-full blur-[150px] opacity-[0.07]"></div>
-            
-            <!-- Film strips -->
-            <div class="film-strip-element top-[20%] -left-[20%] opacity-20"></div>
-            <div class="film-strip-element bottom-[20%] -right-[20%] opacity-20 transform rotate(15deg)"></div>
-            
-            <!-- Sparkles -->
-            <div class="absolute top-[15%] left-[20%] text-[#FFD700] animate-pulse"><i class="fa-solid fa-star text-xl"></i></div>
-            <div class="absolute top-[25%] right-[25%] text-[#FFD700] animate-pulse delay-150"><i class="fa-solid fa-star text-2xl"></i></div>
-            <div class="absolute bottom-[35%] left-[30%] text-[#FFD700] animate-pulse delay-300"><i class="fa-solid fa-star text-lg"></i></div>
-            <div class="absolute top-[40%] right-[15%] text-[#FFD700] animate-pulse delay-500"><i class="fa-solid fa-star text-sm"></i></div>
-        </div>
-
-        <!-- Main Content -->
-        <div class="relative z-10 text-center px-4 max-w-5xl mx-auto mt-10">
-            <!-- Logo Text -->
-            <h1 class="relative text-6xl md:text-8xl lg:text-[9rem] font-display font-black italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-[#FFD700] to-[#B8860B] leading-[0.9] mb-6 drop-shadow-[0_0_30px_rgba(255,215,0,0.3)]" style="transform: skewX(-5deg);">
-                MULTIMEDIA<br>
-                <span class="text-7xl md:text-9xl lg:text-[11rem]">CLUB</span>
-            </h1>
-
-            <!-- Tagline -->
-            <div class="flex items-center justify-center gap-3 md:gap-8 text-sm md:text-xl font-bold tracking-[0.2em] md:tracking-[0.4em] text-[#FFD700] mb-8 uppercase font-display">
-                <span>Create</span> <span class="text-white opacity-50">•</span>
-                <span>Capture</span> <span class="text-white opacity-50">•</span>
-                <span>Connect</span>
+    <!-- HERO SECTION -->
+    <section id="home" class="min-h-[100dvh] pt-24 relative flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 futuristic-grid opacity-30"></div>
+        <div class="max-w-screen-2xl mx-auto px-6 relative z-10 text-center">
+            <img src="images/banner.png" alt="Multimedia Club banner: Create, Capture, Connect" class="w-full rounded-3xl border border-[#FFD700]/40 shadow-[0_0_32px_rgba(255,215,0,.25)]">
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+                <button onclick="document.getElementById('events').scrollIntoView({ behavior: 'smooth' })" class="btn-gold px-8 py-4 rounded-2xl text-lg">Explore Our Work</button>
+                <button onclick="document.getElementById('about').scrollIntoView({ behavior: 'smooth' })" class="px-8 py-4 rounded-2xl text-lg border border-[#FFD700] text-[#FFD700]">Learn About Us</button>
             </div>
-
-            <!-- Description -->
-            <p class="text-gray-300 max-w-xl mx-auto text-sm md:text-base mb-10 leading-relaxed tracking-wide">
-                A community of creators, developers, and dreamers<br>united by the power of multimedia.
-            </p>
-
-            <!-- CTA Button -->
-            <button onclick="showRegisterModal()" class="btn-gold px-10 py-4 rounded-full text-base font-bold inline-flex items-center gap-3 tracking-[0.1em] shadow-[0_0_20px_rgba(255,215,0,0.4)] relative z-20">
-                JOIN THE CLUB <i class="fa-solid fa-chevron-right text-sm"></i>
-            </button>
-        </div>
-
-        <!-- Floating Icons -->
-        <div class="hidden xl:flex absolute left-[10%] top-[35%] w-24 h-24 bg-black/80 backdrop-blur-sm border-2 border-[#FFD700] rounded-2xl items-center justify-center shadow-[0_0_30px_rgba(255,215,0,0.3)] transform -rotate-12 animate-float">
-            <i class="fa-solid fa-camera text-4xl text-[#FFD700]"></i>
-        </div>
-        <div class="hidden xl:flex absolute right-[12%] top-[35%] w-24 h-24 bg-black/80 backdrop-blur-sm border-2 border-[#FFD700] rounded-2xl items-center justify-center shadow-[0_0_30px_rgba(255,215,0,0.3)] transform rotate-12 animate-float-delayed">
-            <i class="fa-solid fa-play text-4xl text-[#FFD700]"></i>
-        </div>
-        <div class="hidden xl:flex absolute right-[15%] bottom-[25%] w-24 h-24 bg-black/80 backdrop-blur-sm border-2 border-[#FFD700] rounded-2xl items-center justify-center shadow-[0_0_30px_rgba(255,215,0,0.3)] transform -rotate-6 animate-float">
-            <i class="fa-solid fa-code text-4xl text-[#FFD700]"></i>
         </div>
     </section>
 
-    <!-- NEW CARDS SECTION -->
-    <section class="relative z-20 max-w-7xl mx-auto px-6 -mt-16 pb-24">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <!-- Card 1 -->
-            <div class="glass rounded-3xl p-6 border-2 border-[#FFD700]/30 text-center hover:border-[#FFD700] hover:shadow-[0_0_30px_rgba(255,215,0,0.2)] transition-all duration-300 group bg-black/80 scroll-animate">
-                <div class="w-16 h-16 mx-auto bg-[#1a1208] rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(255,215,0,0.2)]">
-                    <i class="fa-solid fa-users text-3xl text-[#FFD700]"></i>
-                </div>
-                <h3 class="text-lg font-bold text-white mb-2 tracking-wide font-display">ABOUT US</h3>
-                <p class="text-xs text-gray-400 mb-6">Learn more about our club and community.</p>
-                <a href="#about" class="text-[#FFD700] text-sm font-semibold flex items-center justify-center gap-2 group-hover:gap-3 transition-all">Learn More <i class="fa-solid fa-arrow-right"></i></a>
+    <section class="max-w-screen-2xl mx-auto px-6 pt-16 pb-12">
+        <div class="grid lg:grid-cols-12 gap-8 items-center">
+            <div class="lg:col-span-7">
+                <div class="uppercase tracking-[3px] text-[#FFD700] text-sm font-semibold mb-3">EST. 2025 • CREATIVE MEDIA ARTS</div>
+                <h2 class="section-header mb-5">We turn moments into<br>memories that matter.</h2>
+                <p class="text-[#fffbea] max-w-prose text-[15px]">
+                    Multi Media is the beating heart of our school's creative ecosystem.
+                </p>
             </div>
 
-            <!-- Card 2 -->
-            <div class="glass rounded-3xl p-6 border-2 border-[#FFD700]/30 text-center hover:border-[#FFD700] hover:shadow-[0_0_30px_rgba(255,215,0,0.2)] transition-all duration-300 group bg-black/80 scroll-animate delay-100">
-                <div class="w-16 h-16 mx-auto bg-[#1a1208] rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(255,215,0,0.2)]">
-                    <i class="fa-solid fa-code text-3xl text-[#FFD700]"></i>
+            <div class="lg:col-span-5">
+                <div class="glass rounded-3xl p-8 border border-[#FFD700]/20">
+                    <div class="flex items-start gap-x-5">
+                        <div onclick="showVerityChat()" class="verity-orb verity-card-face flex-shrink-0 mt-1" role="button" aria-label="Open Verity chat">
+                            <img src="verity-faces/idle.jpg" class="verity-avatar-img" alt="Verity, Multimedia Club AI guide">
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center gap-x-2 mb-1">
+                                <span class="font-semibold text-xl">Verity</span>
+                                <span class="px-2.5 py-px text-[10px] font-mono tracking-widest bg-[#FFD700] text-[#0a0803] rounded">AI GUIDE</span>
+                            </div>
+                            <p class="text-[#fffbea] text-sm">Helloo im Verity your personal hover friend. Ask me anything. I know everything. Well except for everything. Hahaha.</p>
+                            <button onclick="showVerityChat()" class="mt-3 text-sm text-[#FFD700] hover:text-[#FFEA00] font-medium flex items-center gap-x-1">
+                                CHAT WITH ME <i class="fa-solid fa-arrow-right ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <h3 class="text-lg font-bold text-white mb-2 tracking-wide font-display">OUR PROJECTS</h3>
-                <p class="text-xs text-gray-400 mb-6">Explore our creative works and projects.</p>
-                <a href="#projects" class="text-[#FFD700] text-sm font-semibold flex items-center justify-center gap-2 group-hover:gap-3 transition-all">View Projects <i class="fa-solid fa-arrow-right"></i></a>
             </div>
+        </div>
+    </section>
 
-            <!-- Card 3 -->
-            <div class="glass rounded-3xl p-6 border-2 border-[#FFD700]/30 text-center hover:border-[#FFD700] hover:shadow-[0_0_30px_rgba(255,215,0,0.2)] transition-all duration-300 group bg-black/80 scroll-animate delay-200">
-                <div class="w-16 h-16 mx-auto bg-[#1a1208] rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(255,215,0,0.2)]">
-                    <i class="fa-solid fa-calendar-days text-3xl text-[#FFD700]"></i>
+    <section class="max-w-screen-2xl mx-auto px-6 pb-16">
+        <h3 class="text-3xl font-semibold tracking-tight mb-6 px-1">Jump right in</h3>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div onclick="document.getElementById('events').scrollIntoView({ behavior: 'smooth' })" class="nav-card cursor-pointer rounded-3xl p-6 border border-white/10">
+                <div class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#FFD700]/10 text-[#FFD700] mb-4">
+                    <i class="fa-solid fa-calendar text-3xl"></i>
                 </div>
-                <h3 class="text-lg font-bold text-white mb-2 tracking-wide font-display">UPCOMING EVENTS</h3>
-                <p class="text-xs text-gray-400 mb-6">Join our events and activities!</p>
-                <a href="#events" class="text-[#FFD700] text-sm font-semibold flex items-center justify-center gap-2 group-hover:gap-3 transition-all">View Events <i class="fa-solid fa-arrow-right"></i></a>
+                <div class="font-semibold text-xl mb-2">Upcoming Events</div>
+                <p class="text-sm text-[#fffbea]">Live countdowns and details</p>
             </div>
+            
+            <div onclick="document.getElementById('announcements').scrollIntoView({ behavior: 'smooth' })" class="nav-card cursor-pointer rounded-3xl p-6 border border-white/10">
+                <div class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#FFD700]/10 text-[#FFD700] mb-4">
+                    <i class="fa-solid fa-bullhorn text-3xl"></i>
+                </div>
+                <div class="font-semibold text-xl mb-2">Announcements</div>
+                <p class="text-sm text-[#fffbea]">Stay updated with the latest news</p>
+            </div>
+            
+            <div onclick="showVerityChat()" class="nav-card cursor-pointer rounded-3xl p-6 border border-white/10">
+                <div class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#FFD700]/10 text-[#FFD700] mb-4">
+                    <i class="fa-solid fa-robot text-3xl"></i>
+                </div>
+                <div class="font-semibold text-xl mb-2">Talk to Verity</div>
+                <p class="text-sm text-[#fffbea]">Your intelligent AI guide</p>
+            </div>
+            
+            <div onclick="if (currentUser) showDashboard(); else showLoginModal()" class="nav-card cursor-pointer rounded-3xl p-6 border border-white/10">
+                <div class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#FFD700]/10 text-[#FFD700] mb-4">
+                    <i class="fa-solid fa-user-astronaut text-3xl"></i>
+                </div>
+                <div class="font-semibold text-xl mb-2">Member Dashboard</div>
+                <p class="text-sm text-[#fffbea]">Your personal hub</p>
+            </div>
+        </div>
+    </section>
 
-            <!-- Card 4 -->
-            <div class="glass rounded-3xl p-6 border-2 border-[#FFD700]/30 text-center hover:border-[#FFD700] hover:shadow-[0_0_30px_rgba(255,215,0,0.2)] transition-all duration-300 group bg-black/80 scroll-animate delay-300">
-                <div class="w-16 h-16 mx-auto bg-[#1a1208] rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(255,215,0,0.2)]">
-                    <i class="fa-solid fa-envelope text-3xl text-[#FFD700]"></i>
+    <section id="join" class="max-w-screen-2xl mx-auto px-6 py-16 border-t border-white/10">
+        <div class="text-center mb-8">
+            <p class="uppercase tracking-[3px] text-[#FFD700] text-sm font-semibold">Official membership</p>
+            <h2 class="section-header">Join Multimedia Club</h2>
+            <p class="text-[#fffbea] max-w-2xl mx-auto">Sign up for a free digital member badge. Want the real button pin? Request the exclusive pin for 45 PHP.</p>
+        </div>
+        <div class="grid lg:grid-cols-2 gap-10 items-center">
+            <div class="flex flex-col items-center">
+                <div class="flex gap-2 mb-4">
+                    <button type="button" onclick="setJoinBadge('member')" class="px-4 py-2 rounded-full border border-[#FFD700]/40">Member</button>
+                    <button type="button" onclick="setJoinBadge('admin')" class="px-4 py-2 rounded-full border border-[#FFD700]/40">Admin</button>
+                    <button type="button" onclick="setJoinBadge('developer')" class="px-4 py-2 rounded-full border border-[#FFD700]/40">Developer</button>
                 </div>
-                <h3 class="text-lg font-bold text-white mb-2 tracking-wide font-display">GET IN TOUCH</h3>
-                <p class="text-xs text-gray-400 mb-6">Have questions? Reach out to us!</p>
-                <a href="#contact" class="text-[#FFD700] text-sm font-semibold flex items-center justify-center gap-2 group-hover:gap-3 transition-all">Contact Us <i class="fa-solid fa-arrow-right"></i></a>
+                <div id="join-stage" class="join-stage">
+                    <div class="join-pin" id="join-pin-3d">
+                        <img id="join-badge" class="join-face join-front" src="badges/Member.jpg" alt="Multimedia Club badge front">
+                        <img class="join-face join-back" src="badges/backpin.jpg" alt="Button pin back">
+                    </div>
+                </div>
+                <p id="join-badge-note" class="text-sm text-white/70 mt-4 text-center">Your digital badge appears here after you join.</p>
             </div>
+            <form id="join-form" class="glass rounded-3xl p-6" onsubmit="submitClubJoin(event)">
+                <label class="block text-sm mb-2">Name</label>
+                <input id="join-name" required class="input-gold w-full px-4 py-3 rounded-2xl mb-4" placeholder="Your name">
+                <label class="block text-sm mb-2">Email</label>
+                <input id="join-email" type="email" required class="input-gold w-full px-4 py-3 rounded-2xl mb-4" placeholder="you@school.edu">
+                <label class="flex items-center gap-2 mb-4 text-sm"><input id="join-pin" type="checkbox"> I want the exclusive button pin for 45 PHP</label>
+                <button class="btn-gold px-6 py-3 rounded-2xl font-semibold">Get my digital badge</button>
+                <p id="join-result" class="mt-4 text-sm"></p>
+            </form>
         </div>
     </section>
 
     <!-- EVENTS SECTION -->
-    <section id="events" class="max-w-screen-2xl mx-auto px-6 pb-20 border-t border-white/10 pt-10 scroll-animate">
+    <section id="events" class="max-w-screen-2xl mx-auto px-6 pb-20 border-t border-white/10 pt-10">
         <div class="section-row flex justify-between items-end mb-6">
-            <h2 class="section-header font-display text-3xl font-bold">Events Countdown</h2>
+            <h2 class="section-header">Events Countdown</h2>
             <button onclick="if (canEditPosts()) showCreateEventModal(); else showLoginModal()" 
-                    class="px-5 py-2 rounded-2xl border border-[#FFD700]/60 text-sm flex items-center gap-x-2 hover:bg-[#FFD700]/10 transition">
+                    class="px-5 py-2 rounded-2xl border border-[#FFD700]/60 text-sm flex items-center gap-x-2">
                 <i class="fa-solid fa-plus"></i> Add Event
             </button>
         </div>
-        
-        <!-- Empty State for Events -->
-        <div id="events-empty" class="hidden glass rounded-3xl p-12 text-center border border-white/10">
-            <i class="fa-solid fa-calendar-xmark text-5xl text-[#FFD700]/40 mb-4"></i>
-            <h3 class="text-xl font-semibold text-white mb-2 font-display">No Events Yet</h3>
-            <p class="text-gray-400">Check back soon for upcoming club activities and events!</p>
-        </div>
-        
         <div id="events-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </section>
 
     <!-- ANNOUNCEMENTS SECTION -->
-    <section id="announcements" class="max-w-screen-2xl mx-auto px-6 pb-20 border-t border-white/10 pt-10 scroll-animate">
+    <section id="announcements" class="max-w-screen-2xl mx-auto px-6 pb-20 border-t border-white/10 pt-10">
         <div class="section-row flex justify-between items-end mb-6">
-            <h2 class="section-header font-display text-3xl font-bold">School Announcements</h2>
+            <h2 class="section-header">School Announcements</h2>
             <button onclick="if (canEditPosts()) showCreateAnnouncementModal(); else showLoginModal()" 
-                    class="px-5 py-2 rounded-2xl bg-[#FFD700] text-[#0a0803] text-sm font-semibold flex items-center gap-x-2 hover:bg-[#FFE600] transition">
+                    class="px-5 py-2 rounded-2xl bg-[#FFD700] text-[#0a0803] text-sm font-semibold flex items-center gap-x-2">
                 <i class="fa-solid fa-plus"></i> Publish
             </button>
         </div>
@@ -1315,154 +1248,82 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
                    class="input-gold flex-1 px-5 py-3 rounded-3xl text-sm">
             <div id="announcement-filters" class="flex gap-2"></div>
         </div>
-
-        <!-- Empty State for Announcements -->
-        <div id="announcements-empty" class="hidden glass rounded-3xl p-12 text-center border border-white/10">
-            <i class="fa-solid fa-bullhorn text-5xl text-[#FFD700]/40 mb-4"></i>
-            <h3 class="text-xl font-semibold text-white mb-2 font-display">No Announcements</h3>
-            <p class="text-gray-400">There are no active announcements at this time.</p>
-        </div>
         
         <div id="announcements-list" class="space-y-4"></div>
     </section>
 
-    <!-- NEW PROJECTS SECTION -->
-    <section id="projects" class="max-w-screen-2xl mx-auto px-6 pb-20 border-t border-white/10 pt-10 scroll-animate">
-        <div class="section-row flex justify-between items-end mb-6">
-            <h2 class="section-header font-display text-3xl font-bold">Our Projects</h2>
-            <button onclick="if (canEditPosts()) showCreateProjectModal(); else showLoginModal()" 
-                    class="px-5 py-2 rounded-2xl border border-[#FFD700]/60 text-sm flex items-center gap-x-2 hover:bg-[#FFD700]/10 transition">
-                <i class="fa-solid fa-plus"></i> Add Project
-            </button>
+    <!-- SOCIAL MEDIA SECTION -->
+    <section class="max-w-screen-2xl mx-auto px-6 pb-16 border-t border-white/10 pt-10">
+        <div class="text-center mb-8">
+            <h2 class="section-header mb-2">Stay Connected</h2>
+            <p class="text-[#fffbea]">Follow us on our social media channels</p>
         </div>
         
-        <!-- Empty State for Projects -->
-        <div id="projects-empty" class="hidden glass rounded-3xl p-12 text-center border border-white/10">
-            <i class="fa-solid fa-photo-film text-5xl text-[#FFD700]/40 mb-4"></i>
-            <h3 class="text-xl font-semibold text-white mb-2 font-display">No Projects Uploaded</h3>
-            <p class="text-gray-400">Our creative works will be displayed here soon. Stay tuned!</p>
+        <div class="social-row flex justify-center gap-x-8">
+            <a href="https://facebook.com" target="_blank" class="flex flex-col items-center gap-y-3 group">
+                <div class="w-16 h-16 flex items-center justify-center rounded-3xl glass group-hover:bg-[#FFD700]/10 transition-all">
+                    <i class="fa-brands fa-facebook-f text-4xl text-[#FFD700]"></i>
+                </div>
+                <span class="text-sm font-medium">Facebook</span>
+            </a>
+            
+            <a href="https://tiktok.com" target="_blank" class="flex flex-col items-center gap-y-3 group">
+                <div class="w-16 h-16 flex items-center justify-center rounded-3xl glass group-hover:bg-[#FFD700]/10 transition-all">
+                    <i class="fa-brands fa-tiktok text-4xl text-[#FFD700]"></i>
+                </div>
+                <span class="text-sm font-medium">TikTok</span>
+            </a>
+            
+            <a href="https://instagram.com" target="_blank" class="flex flex-col items-center gap-y-3 group">
+                <div class="w-16 h-16 flex items-center justify-center rounded-3xl glass group-hover:bg-[#FFD700]/10 transition-all">
+                    <i class="fa-brands fa-instagram text-4xl text-[#FFD700]"></i>
+                </div>
+                <span class="text-sm font-medium">Instagram</span>
+            </a>
         </div>
-
-        <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </section>
 
-    <!-- UPDATED ABOUT THE DEVELOPER & CLUB SECTION -->
-    <section id="about" class="relative max-w-screen-2xl mx-auto px-6 py-24 border-t border-[#FFD700]/20 overflow-hidden about-grid-bg">
+    <!-- ABOUT THE DEVELOPER -->
+    <section id="about" class="max-w-screen-2xl mx-auto px-6 py-20 border-t border-[#FFD700]/20">
+        <p class="text-center text-xs tracking-[0.3em] text-[#FFD700] mb-3">ABOUT THE CLUB</p>
+        <h2 class="section-header text-center mb-4">Multimedia Club</h2>
+        <p class="text-center text-[#C8C8C8] max-w-2xl mx-auto mb-10">We create, capture, and connect through photography, video, design, and technology.</p>
+        <div class="grid md:grid-cols-3 gap-4 mb-12">
+            <div class="club-card p-6"><i class="fa-solid fa-camera text-[#FFD700] text-2xl"></i><h3 class="mt-3 font-semibold">Photography</h3><p class="text-[#C8C8C8] text-sm mt-2">Capture school moments and club projects.</p></div>
+            <div class="club-card p-6"><i class="fa-solid fa-film text-[#FFD700] text-2xl"></i><h3 class="mt-3 font-semibold">Video</h3><p class="text-[#C8C8C8] text-sm mt-2">Edit stories, events, and announcements.</p></div>
+            <div class="club-card p-6"><i class="fa-solid fa-code text-[#FFD700] text-2xl"></i><h3 class="mt-3 font-semibold">Technology</h3><p class="text-[#C8C8C8] text-sm mt-2">Build the club platform and digital tools.</p></div>
+        </div>
+        <h3 class="section-header text-center mb-8">About the Developer</h3>
         
-        <!-- Floating Elements -->
-        <div class="absolute top-10 left-10 w-32 h-32 bg-[#FFD700] rounded-full blur-[100px] opacity-20 pointer-events-none"></div>
-        <div class="absolute bottom-10 right-10 w-32 h-32 bg-[#FFD700] rounded-full blur-[100px] opacity-20 pointer-events-none"></div>
-
-        <div class="relative z-10 max-w-6xl mx-auto">
-            <!-- Header -->
-            <div class="text-center mb-16 scroll-animate">
-                <p class="text-center text-xs tracking-[0.3em] text-[#FFD700] mb-3 font-display font-bold uppercase">System.Data // About</p>
-                <h2 class="section-header font-display text-4xl md:text-5xl font-black mb-4 uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white to-[#FFD700]">Multimedia Club</h2>
-                <p class="text-center text-[#C8C8C8] max-w-2xl mx-auto font-light">We create, capture, and connect through photography, video, design, and technology.</p>
+        <div class="max-w-5xl mx-auto">
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-10 mb-10">
+                <figure class="text-center">
+                    <img id="developer-portrait" src="images/developer.jpg" alt="Ron Matthew Ferreras" class="portrait-frame mx-auto">
+                    <figcaption class="mt-3 font-semibold">Ron Matthew Ferreras</figcaption>
+                    <p class="text-xs text-[#fffbea]">Developer</p>
+                </figure>
+                <figure class="text-center">
+                    <img id="verity-portrait" src="verity-faces/idle.jpg" alt="Verity, Multimedia Club assistant" class="portrait-frame mx-auto">
+                    <figcaption class="mt-3 font-semibold">Verity</figcaption>
+                    <p class="text-xs text-[#fffbea]">Club assistant</p>
+                </figure>
             </div>
-
-            <!-- Stats Grid -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
-                <div class="stat-card scroll-animate delay-100">
-                    <div class="stat-number" data-target="150">0</div>
-                    <div class="stat-label">Projects</div>
-                </div>
-                <div class="stat-card scroll-animate delay-200">
-                    <div class="stat-number" data-target="50">0</div>
-                    <div class="stat-label">Members</div>
-                </div>
-                <div class="stat-card scroll-animate delay-300">
-                    <div class="stat-number" data-target="12">0</div>
-                    <div class="stat-label">Awards</div>
-                </div>
-                <div class="stat-card scroll-animate delay-300">
-                    <div class="stat-number">24/7</div>
-                    <div class="stat-label">Creativity</div>
-                </div>
-            </div>
-
-            <!-- Pillars / Features -->
-            <div class="grid md:grid-cols-3 gap-6 mb-20">
-                <div class="glass p-8 rounded-3xl border-t-4 border-t-[#FFD700] hover:shadow-[0_0_30px_rgba(255,215,0,0.15)] transition-all duration-300 scroll-animate-left delay-100 group">
-                    <div class="w-14 h-14 rounded-2xl bg-[#FFD700]/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-camera text-[#FFD700] text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 font-display">Photography</h3>
-                    <p class="text-[#C8C8C8] text-sm leading-relaxed">Capture school moments, club projects, and the raw emotion of campus life through our lenses.</p>
-                </div>
+            <div class="max-w-3xl mx-auto text-center sm:text-left">
+                <h3 class="font-display text-3xl font-semibold mb-3">Ron Matthew Ferreras</h3>
+                <p class="text-[#fffbea] mb-6">
+                    I made this website so that students can have a centralized hub for all multimedia activities. As a passionate developer and designer, I wanted to create an interactive and engaging platform that fosters creativity and collaboration among students. This project is a testament to the power of technology in enhancing educational experiences.
+                </p>
                 
-                <div class="glass p-8 rounded-3xl border-t-4 border-t-[#FFD700] hover:shadow-[0_0_30px_rgba(255,215,0,0.15)] transition-all duration-300 scroll-animate delay-200 group">
-                    <div class="w-14 h-14 rounded-2xl bg-[#FFD700]/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-film text-[#FFD700] text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 font-display">Video</h3>
-                    <p class="text-[#C8C8C8] text-sm leading-relaxed">Edit stories, events, and announcements that keep the student body informed and entertained.</p>
-                </div>
-                
-                <div class="glass p-8 rounded-3xl border-t-4 border-t-[#FFD700] hover:shadow-[0_0_30px_rgba(255,215,0,0.15)] transition-all duration-300 scroll-animate-right delay-300 group">
-                    <div class="w-14 h-14 rounded-2xl bg-[#FFD700]/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-code text-[#FFD700] text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 font-display">Technology</h3>
-                    <p class="text-[#C8C8C8] text-sm leading-relaxed">Build the club platform, digital tools, and interactive experiences that power our creative ecosystem.</p>
-                </div>
-            </div>
-
-            <!-- Developer Section -->
-            <div class="mt-20">
-                <h3 class="font-display text-2xl font-bold text-center mb-12 scroll-animate">SYSTEM // Developer Info</h3>
-                
-                <div class="grid md:grid-cols-2 gap-10 items-center">
-                    <!-- Developer Portraits -->
-                    <div class="flex flex-col sm:flex-row justify-center gap-8 scroll-animate-left">
-                        <figure class="text-center group">
-                            <div class="relative inline-block">
-                                <div class="absolute inset-0 rounded-full bg-[#FFD700] blur-md opacity-20 group-hover:opacity-60 transition-opacity duration-500"></div>
-                                <img id="developer-portrait" src="images/developer.jpg" alt="Ron Matthew Ferreras" class="portrait-frame mx-auto relative z-10 transition-transform duration-500 group-hover:scale-105">
-                                <div class="absolute -bottom-2 -right-2 bg-[#FFD700] text-[#0a0803] w-8 h-8 rounded-full flex items-center justify-center z-20 shadow-[0_0_10px_rgba(255,215,0,0.8)]"><i class="fa-solid fa-code"></i></div>
-                            </div>
-                            <figcaption class="mt-4 font-bold text-lg font-display">Ron Matthew</figcaption>
-                            <p class="text-xs text-[#FFD700] tracking-widest uppercase mt-1">Lead Developer</p>
-                        </figure>
-                        
-                        <figure class="text-center group">
-                            <div class="relative inline-block">
-                                <div class="absolute inset-0 rounded-full bg-[#FFD700] blur-md opacity-20 group-hover:opacity-60 transition-opacity duration-500"></div>
-                                <img id="verity-portrait" src="verity-faces/idle.jpg" alt="Verity" class="portrait-frame mx-auto relative z-10 transition-transform duration-500 group-hover:scale-105">
-                                <div class="absolute -bottom-2 -right-2 bg-[#FFD700] text-[#0a0803] w-8 h-8 rounded-full flex items-center justify-center z-20 shadow-[0_0_10px_rgba(255,215,0,0.8)]"><i class="fa-solid fa-robot"></i></div>
-                            </div>
-                            <figcaption class="mt-4 font-bold text-lg font-display">Verity</figcaption>
-                            <p class="text-xs text-[#FFD700] tracking-widest uppercase mt-1">AI Assistant</p>
-                        </figure>
-                    </div>
-
-                    <!-- Terminal / Bio -->
-                    <div class="scroll-animate-right delay-200">
-                        <div class="terminal-window">
-                            <div class="terminal-header">
-                                <div class="terminal-dot bg-red-500"></div>
-                                <div class="terminal-dot bg-yellow-500"></div>
-                                <div class="terminal-dot bg-green-500"></div>
-                                <span class="text-xs text-white/50 ml-2 font-mono">bio.sh</span>
-                            </div>
-                            <div class="terminal-body font-mono">
-                                <p><span class="terminal-prompt">></span> init developer_profile</p>
-                                <p class="mt-2 text-white/80">I made this website so that students can have a centralized hub for all multimedia activities. As a passionate developer and designer, I wanted to create an interactive and engaging platform that fosters creativity and collaboration among students.</p>
-                                <p class="mt-2 text-white/80">This project is a testament to the power of technology in enhancing educational experiences.</p>
-                                <p class="mt-4"><span class="terminal-prompt">></span> loading skills...</p>
-                                <div class="flex gap-2 mt-2 flex-wrap">
-                                    <span class="px-2 py-1 bg-[#FFD700]/10 border border-[#FFD700]/30 rounded text-xs text-[#FFD700]">HTML/CSS</span>
-                                    <span class="px-2 py-1 bg-[#FFD700]/10 border border-[#FFD700]/30 rounded text-xs text-[#FFD700]">JavaScript</span>
-                                    <span class="px-2 py-1 bg-[#FFD700]/10 border border-[#FFD700]/30 rounded text-xs text-[#FFD700]">UI/UX</span>
-                                    <span class="px-2 py-1 bg-[#FFD700]/10 border border-[#FFD700]/30 rounded text-xs text-[#FFD700]">AI Integration</span>
-                                </div>
-                                <div class="flex gap-3 mt-6">
-                                    <a href="#" class="px-4 py-2 bg-[#FFD700] text-[#0a0803] rounded font-bold text-sm hover:bg-white transition flex items-center gap-2"><i class="fa-solid fa-globe"></i> Portfolio</a>
-                                    <a href="#" class="px-4 py-2 border border-white/20 rounded text-sm hover:border-[#FFD700] transition flex items-center gap-2"><i class="fa-brands fa-github"></i> GitHub</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="flex gap-4 flex-wrap">
+                    <a href="#" class="glass px-5 py-2.5 rounded-2xl border border-white/10 hover:border-[#FFD700] transition-all inline-flex items-center">
+                        <i class="fa-solid fa-globe mr-2"></i> Portfolio
+                    </a>
+                    <a href="#" class="glass px-5 py-2.5 rounded-2xl border border-white/10 hover:border-[#FFD700] transition-all inline-flex items-center">
+                        <i class="fa-brands fa-github mr-2"></i> GitHub
+                    </a>
+                    <a href="#" class="glass px-5 py-2.5 rounded-2xl border border-white/10 hover:border-[#FFD700] transition-all inline-flex items-center">
+                        <i class="fa-solid fa-envelope mr-2"></i> Contact
+                    </a>
                 </div>
             </div>
         </div>
@@ -1596,33 +1457,24 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             </div>
         </div>
     </div>
-
-    <!-- NEW FOOTER -->
-    <footer id="contact" class="relative bg-[#0a0803] border-t border-[#FFD700]/20 pt-12 pb-8 px-6 overflow-hidden">
-        <!-- Decorative diagonal stripes -->
-        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, #FFD700 10px, #FFD700 20px);"></div>
-        
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 relative z-10">
-            <div class="flex items-center gap-6">
-                <span class="text-sm font-bold tracking-widest text-white font-display">FOLLOW US</span>
-                <div class="flex gap-3">
-                    <a href="#" class="w-10 h-10 rounded-full border border-[#FFD700]/50 flex items-center justify-center text-[#FFD700] hover:bg-[#FFD700] hover:text-black transition"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#" class="w-10 h-10 rounded-full border border-[#FFD700]/50 flex items-center justify-center text-[#FFD700] hover:bg-[#FFD700] hover:text-black transition"><i class="fa-brands fa-youtube"></i></a>
-                    <a href="#" class="w-10 h-10 rounded-full border border-[#FFD700]/50 flex items-center justify-center text-[#FFD700] hover:bg-[#FFD700] hover:text-black transition"><i class="fa-brands fa-tiktok"></i></a>
-                    <a href="#" class="w-10 h-10 rounded-full border border-[#FFD700]/50 flex items-center justify-center text-[#FFD700] hover:bg-[#FFD700] hover:text-black transition"><i class="fa-brands fa-github"></i></a>
-                </div>
+    <footer class="site-footer px-6 py-12">
+        <div class="max-w-screen-2xl mx-auto grid md:grid-cols-3 gap-8 items-center">
+            <div class="flex items-center gap-3">
+                <img src="images/logo.jpg" alt="Multimedia Club logo" class="w-14 h-14 rounded-full object-cover border border-[#FFD700]">
+                <div><div class="font-display text-2xl font-bold">MULTIMEDIA CLUB</div><div class="text-xs tracking-[0.2em] text-[#FFD700]">CREATE • CAPTURE • CONNECT</div></div>
             </div>
-            
-            <div class="text-sm text-gray-400 flex items-center gap-2 font-display">
-                Collaborated by <span class="text-[#FFD700] font-black italic text-xl tracking-tighter">VERITY</span>
+            <div class="flex flex-wrap gap-4 text-sm text-[#C8C8C8]">
+                <a href="#home" class="hover:text-[#FFD700]">Home</a>
+                <a href="#events" class="hover:text-[#FFD700]">Events</a>
+                <a href="#announcements" class="hover:text-[#FFD700]">Announcements</a>
+                <a href="#about" class="hover:text-[#FFD700]">About Us</a>
             </div>
-            
-            <div class="text-sm text-gray-300 italic tracking-wide">
-                "Together, we create more." <span class="text-gray-500 ml-2 not-italic text-xs font-display">· © <span id="footer-year"></span></span>
+            <div class="md:text-right text-sm text-[#C8C8C8]">
+                <div class="text-[#FFD700] tracking-[0.2em]">COLLABORATED BY VERITY</div>
+                <div class="mt-2">© <span id="footer-year"></span> Multimedia Club</div>
             </div>
         </div>
     </footer>
-
     <div id="floating-verity" class="fixed z-[60]">
         <div onclick="showVerityChat()" class="verity-orb" role="button" aria-label="Open Verity chat">
             <img src="verity-faces/idle.jpg" class="verity-avatar-img" alt="Verity, Multimedia Club AI guide">
@@ -1716,7 +1568,6 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             <h3 id="post-modal-title" class="font-display text-3xl font-semibold mb-4">New post</h3>
             <input id="post-title" class="input-gold w-full px-5 py-3 rounded-2xl mb-3" placeholder="Title">
             <input id="post-date" type="datetime-local" class="input-gold w-full px-5 py-3 rounded-2xl mb-3">
-            <input id="post-link" type="url" class="input-gold w-full px-5 py-3 rounded-2xl mb-3 hidden" placeholder="https://example.com (optional)">
             <textarea id="post-body" class="input-gold w-full px-5 py-3 rounded-2xl mb-3" rows="4" placeholder="Details"></textarea>
             <div id="post-drop" class="rounded-2xl border border-dashed border-[#FFD700]/50 p-5 text-center text-sm mb-3">Drag an image here or click to upload</div>
             <input id="post-file" type="file" accept="image/*" class="hidden">
@@ -2095,7 +1946,6 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
         let users = [];
         let events = [];
         let announcements = [];
-        let projects = [];
         let mediaItems = [];
         let activityLog = [];
         let verityChatHistory = [];
@@ -2601,7 +2451,6 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             users = JSON.parse(safeStorage.getItem('mm_users') || '[]').filter(u => !['alex.rivera@school.edu', 'maya.chen@school.edu', 'jake.morales@school.edu', 'kai.nakamura@school.edu'].includes(u.email));
             events = JSON.parse(safeStorage.getItem('mm_events') || '[]').filter(ev => !['Winter Showcase 2026', 'Spring Film Festival'].includes(ev.name));
             announcements = JSON.parse(safeStorage.getItem('mm_announcements') || '[]').filter(a => !['New Camera Equipment Arrived!', 'Call for Submissions: Spring Film Festival'].includes(a.title));
-            projects = JSON.parse(safeStorage.getItem('mm_projects') || '[]');
             mediaItems = JSON.parse(safeStorage.getItem('mm_media') || '[]').filter(item => item.caption !== 'Winter showcase');
             
             const sessionUser = readSessionUser();
@@ -2647,19 +2496,37 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             if (!res.ok) throw new Error(data.error || "Request failed");
             return data;
         }
+        function memberProfileUrl(number) {
+            return location.origin + "/verify.html?m=" + encodeURIComponent(number);
+        }
+        function drawQr(el, url) {
+            el.innerHTML = "";
+            if (typeof QRCode === "undefined") {
+                el.innerHTML = '<img alt="Membership QR" class="mx-auto rounded-2xl bg-white p-2" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(url) + '">';
+                return;
+            }
+            new QRCode(el, { text: url, width: 180, height: 180, correctLevel: QRCode.CorrectLevel.M });
+        }
         async function showMyMembershipQr() {
             const box = document.getElementById("member-qr");
             if (!box) return;
             const data = await memberApi("/api/members/mine", {}).catch(function (error) { box.textContent = error.message; return null; });
             if (!data || !data.member) return;
-            const saved = safeStorage.getItem("mm_qr_" + data.member.member_number) || data.verify_url;
-            if (data.verify_url) safeStorage.setItem("mm_qr_" + data.member.member_number, data.verify_url);
-            box.innerHTML = saved ? '<img alt="Membership QR" class="mx-auto rounded-2xl bg-white p-2" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(saved) + '"><p class="text-sm mt-2">' + data.member.member_number + '</p>' : '<p class="text-sm">Membership is ready. Ask an admin to rotate the QR if this one is missing.</p>';
+            const url = memberProfileUrl(data.member.member_number);
+            box.innerHTML = '<div id="member-qr-canvas" class="flex justify-center bg-white rounded-2xl p-2"></div><p class="text-sm mt-2">' + data.member.member_number + '</p><p class="text-xs text-white/60">Scan this to open the member profile and proof of membership.</p>';
+            drawQr(document.getElementById("member-qr-canvas"), url);
         }
         async function showMembershipAdmin() {
             document.getElementById("membership-admin").classList.remove("hidden");
             const data = await memberApi("/api/members");
-            document.getElementById("membership-list").innerHTML = (data.members || []).map(function (m) { return '<div class="glass rounded-2xl p-4"><strong>' + m.member_number + '</strong> · ' + m.display_name + ' · ' + m.club_role + ' · ' + m.status + '<div class="flex gap-2 mt-2"><button onclick="setMembershipStatus(\'' + m.member_number + '\',\'suspended\')">Suspend</button><button onclick="setMembershipStatus(\'' + m.member_number + '\',\'active\')">Activate</button><button onclick="setMembershipStatus(\'' + m.member_number + '\',\'revoked\')">Revoke</button><button onclick="rotateMembership(\'' + m.member_number + '\')">Rotate QR</button></div></div>'; }).join("") || "No memberships yet.";
+            document.getElementById("membership-list").innerHTML = (data.members || []).map(function (m) {
+                const url = memberProfileUrl(m.member_number);
+                return '<div class="glass rounded-2xl p-4"><strong>' + m.member_number + '</strong> · ' + m.display_name + ' · ' + m.club_role + ' · ' + m.status + '<div class="mt-3 flex justify-center bg-white rounded-2xl p-2" id="admin-qr-' + m.member_number + '"></div><div class="flex gap-2 mt-2"><button onclick="setMembershipStatus(\'' + m.member_number + '\',\'suspended\')">Suspend</button><button onclick="setMembershipStatus(\'' + m.member_number + '\',\'active\')">Activate</button><button onclick="setMembershipStatus(\'' + m.member_number + '\',\'revoked\')">Revoke</button><button onclick="rotateMembership(\'' + m.member_number + '\')">Rotate QR</button></div></div>';
+            }).join("") || "No memberships yet.";
+            (data.members || []).forEach(function (m) {
+                const el = document.getElementById("admin-qr-" + m.member_number);
+                if (el) drawQr(el, memberProfileUrl(m.member_number));
+            });
         }
         async function sendOneSignalNotice(event) {
             event.preventDefault();
@@ -2704,7 +2571,6 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             safeStorage.setItem('mm_users', JSON.stringify(users));
             safeStorage.setItem('mm_events', JSON.stringify(events));
             safeStorage.setItem('mm_announcements', JSON.stringify(announcements));
-            safeStorage.setItem('mm_projects', JSON.stringify(projects));
             safeStorage.setItem('mm_media', JSON.stringify(mediaItems));
         }
 
@@ -2718,11 +2584,13 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
         }
         function updateNavUser() {
             const el = document.getElementById('nav-user-section');
+            const membersLink = document.getElementById("members-nav-link");
+            if (membersLink) membersLink.textContent = currentUser ? "Members" : "Sign up";
             if (!currentUser) {
-                el.innerHTML = '<button onclick="showLoginModal()" class="text-xs font-bold px-4 py-2 rounded-full border border-[#FFD700]/50 text-[#FFD700] hover:bg-[#FFD700]/10 transition">Log in</button>';
+                el.innerHTML = '<button onclick="showLoginModal()" class="text-sm px-3 py-2 rounded-full border border-[#FFD700]/40">Log in</button>';
                 return;
             }
-            el.innerHTML = '<button onclick="showProfileWindow()" class="flex items-center gap-2 text-xs font-bold px-3 py-1.5 rounded-full border border-[#FFD700]/50 text-[#FFD700]"><img src="' + (currentUser.avatar || "verity-faces/idle.jpg") + '" class="w-6 h-6 rounded-full object-cover" alt=""><span>' + currentUser.username + '</span></button>';
+            el.innerHTML = '<button onclick="showProfileWindow()" class="flex items-center gap-2 text-sm px-3 py-1.5 rounded-full border border-[#FFD700]/40"><img src="' + (currentUser.avatar || "verity-faces/idle.jpg") + '" class="w-7 h-7 rounded-full object-cover" alt=""><span>' + currentUser.username + '</span></button>';
         }
         function showProfileWindow() {
             if (!currentUser) return showLoginModal();
@@ -2865,40 +2733,31 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
 
         function renderEvents() {
             const grid = document.getElementById('events-grid');
-            const emptyState = document.getElementById('events-empty');
             grid.innerHTML = '';
             
-            if (events.length === 0) {
-                emptyState.classList.remove('hidden');
-                grid.classList.add('hidden');
-            } else {
-                emptyState.classList.add('hidden');
-                grid.classList.remove('hidden');
-                
-                events.forEach(ev => {
-                    const remaining = getTimeRemaining(ev.date);
-                    const card = document.createElement('div');
-                    card.className = `card glass rounded-3xl overflow-hidden border border-white/10`;
-                    card.innerHTML = `
-                        <div class="h-36 flex items-center justify-center overflow-hidden" style="background:#1a1208">
-                            ${ev.image ? `<img src="${ev.image}" class="w-full h-full object-cover" alt="">` : `<i class="fa-solid fa-film text-5xl opacity-40 text-[#FFD700]"></i>`}
-                        </div>
-                        <div class="p-5">
-                            <div class="font-semibold text-xl mb-1 font-display">${ev.name}</div>
-                            <div class="text-xs text-white/50 mb-3">${new Date(ev.date).toLocaleDateString()}</div>
-                            <p class="text-sm text-[#fffbea] line-clamp-2 mb-4">${ev.description}</p>
-                            <div class="flex justify-between items-center">
-                                <div class="countdown text-sm font-mono">
-                                    ${remaining.expired ? 'ENDED' : `${remaining.days}d ${remaining.hours}h ${remaining.minutes}m`}
-                                </div>
-                                <button onclick="rsvpEvent(${ev.id}, this)" class="text-xs px-4 py-1.5 rounded-2xl border border-[#FFD700]/60">RSVP</button>
+            events.forEach(ev => {
+                const remaining = getTimeRemaining(ev.date);
+                const card = document.createElement('div');
+                card.className = `card glass rounded-3xl overflow-hidden border border-white/10`;
+                card.innerHTML = `
+                    <div class="h-36 flex items-center justify-center overflow-hidden" style="background:#1a1208">
+                        ${ev.image ? `<img src="${ev.image}" class="w-full h-full object-cover" alt="">` : `<i class="fa-solid fa-film text-5xl opacity-40 text-[#FFD700]"></i>`}
+                    </div>
+                    <div class="p-5">
+                        <div class="font-semibold text-xl mb-1">${ev.name}</div>
+                        <div class="text-xs text-white/50 mb-3">${new Date(ev.date).toLocaleDateString()}</div>
+                        <p class="text-sm text-[#fffbea] line-clamp-2 mb-4">${ev.description}</p>
+                        <div class="flex justify-between items-center">
+                            <div class="countdown text-sm font-mono">
+                                ${remaining.expired ? 'ENDED' : `${remaining.days}d ${remaining.hours}h ${remaining.minutes}m`}
                             </div>
-                            ${canEditPosts() ? `<div class="flex gap-2 mt-3"><button onclick="notifyAgain('event', '${(ev.name || "").replace(/'/g, "")}')" class="text-xs px-3 py-1 rounded-xl border border-[#FFD700]/50 text-[#FFD700]">Push again</button><button onclick="showPostModal('event', events.find(e => e.id === ${ev.id}))" class="text-xs px-3 py-1 rounded-xl border border-white/20">Edit</button><button onclick="deleteEvent(${ev.id})" class="text-xs px-3 py-1 rounded-xl border border-red-400/40 text-red-400">Delete</button></div>` : ""}
+                            <button onclick="rsvpEvent(${ev.id}, this)" class="text-xs px-4 py-1.5 rounded-2xl border border-[#FFD700]/60">RSVP</button>
                         </div>
-                    `;
-                    grid.appendChild(card);
-                });
-            }
+                        ${canEditPosts() ? `<div class="flex gap-2 mt-3"><button onclick="notifyAgain('event', '${(ev.name || "").replace(/'/g, "")}')" class="text-xs px-3 py-1 rounded-xl border border-[#FFD700]/50 text-[#FFD700]">Push again</button><button onclick="showPostModal('event', events.find(e => e.id === ${ev.id}))" class="text-xs px-3 py-1 rounded-xl border border-white/20">Edit</button><button onclick="deleteEvent(${ev.id})" class="text-xs px-3 py-1 rounded-xl border border-red-400/40 text-red-400">Delete</button></div>` : ""}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
             
             startCountdowns();
         }
@@ -3011,8 +2870,6 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             document.getElementById("post-title").value = item ? (item.name || item.title || "") : "";
             document.getElementById("post-date").value = item && item.date ? String(item.date).slice(0, 16) : "";
             document.getElementById("post-date").classList.toggle("hidden", type !== "event");
-            document.getElementById("post-link").value = item && item.link ? item.link : "";
-            document.getElementById("post-link").classList.toggle("hidden", type !== "project");
             document.getElementById("post-body").value = item ? (item.description || item.content || "") : "";
             const preview = document.getElementById("post-preview");
             if (postDraft.image) { preview.src = postDraft.image; preview.classList.remove("hidden"); }
@@ -3039,9 +2896,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
         function savePost() {
             const title = document.getElementById("post-title").value.trim();
             const body = document.getElementById("post-body").value.trim();
-            const link = document.getElementById("post-link").value.trim();
             if (!title) return showToast("Add a title.", "error");
-            
             if (postDraft.type === "event") {
                 const date = document.getElementById("post-date").value;
                 if (!date) return showToast("Add a date.", "error");
@@ -3051,12 +2906,6 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
                 saveData();
                 fetch("/api/events", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(item || events[events.length - 1]) });
                 renderEvents();
-            } else if (postDraft.type === "project") {
-                const item = postDraft.id ? projects.find(function (p) { return p.id === postDraft.id; }) : null;
-                if (item) { item.title = title; item.description = body; item.image = postDraft.image; item.link = link; }
-                else projects.unshift({ id: Date.now(), title: title, description: body, image: postDraft.image, link: link, category: "Creative Work", date: new Date().toISOString() });
-                saveData();
-                renderProjects();
             } else {
                 const item = postDraft.id ? announcements.find(function (a) { return a.id === postDraft.id; }) : null;
                 if (item) { item.title = title; item.content = body; item.image = postDraft.image; }
@@ -3067,7 +2916,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             }
             hidePostModal();
             showToast("Post saved.");
-            notifyClub(postDraft.type === "event" ? "New event" : postDraft.type === "project" ? "New project" : "New announcement", title);
+            notifyClub(postDraft.type === "event" ? "New event" : "New announcement", title);
         }
         async function enableClubNotifications() {
             if (!("Notification" in window)) return showToast("This browser does not support notifications.", "error");
@@ -3114,12 +2963,6 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             fetch("/api/events?id=" + encodeURIComponent(id), { method: "DELETE" }).then(function () { loadLiveData(); });
             renderEvents();
         }
-        function deleteProject(id) {
-            if (!canEditPosts() || !confirm("Delete this project?")) return;
-            projects = projects.filter(function (p) { return String(p.id) !== String(id); });
-            saveData();
-            renderProjects();
-        }
         function deleteAnnouncement(id) {
             if (!canEditPosts() || !confirm("Delete this announcement?")) return;
             announcements = announcements.filter(function (a) { return String(a.id) !== String(id); });
@@ -3148,7 +2991,6 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
         }
         function showCreateEventModal() { showPostModal("event"); }
         function showCreateAnnouncementModal() { showPostModal("announcement"); }
-        function showCreateProjectModal() { showPostModal("project"); }
         function askNotificationChoice() {
             if (!("Notification" in window) || Notification.permission !== "default") return;
             if (safeStorage.getItem("mm_notify_choice") === "later") return;
@@ -3168,20 +3010,10 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
         
         function renderAnnouncements(filtered = null) {
             const container = document.getElementById('announcements-list');
-            const emptyState = document.getElementById('announcements-empty');
             container.innerHTML = '';
             let list = filtered || announcements;
             
             list.sort((a,b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || new Date(b.date) - new Date(a.date));
-            
-            if (list.length === 0) {
-                emptyState.classList.remove('hidden');
-                container.classList.add('hidden');
-                return;
-            } else {
-                emptyState.classList.add('hidden');
-                container.classList.remove('hidden');
-            }
             
             list.forEach(ann => {
                 const div = document.createElement('div');
@@ -3192,7 +3024,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
                             <span class="px-3 py-px text-xs rounded-full bg-white/10">${ann.category}</span>
                             ${ann.pinned ? '<span class="ml-2 text-[#FFD700] text-xs">📌 PINNED</span>' : ''}
                             ${ann.image ? `<img src="${ann.image}" class="w-full h-36 object-cover rounded-2xl mt-3" alt="">` : ""}
-                            <h4 class="font-semibold text-xl mt-2 font-display">${ann.title}</h4>
+                            <h4 class="font-semibold text-xl mt-2">${ann.title}</h4>
                             <p class="text-xs text-white/50 mt-1">Posted ${new Date(ann.postedAt || ann.date).toLocaleString()}</p>
                             <p class="text-[#fffbea] mt-1">${ann.content}</p>
                         </div>
@@ -3205,41 +3037,6 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
                     </div>
                 `;
                 container.appendChild(div);
-            });
-        }
-
-        function renderProjects() {
-            const grid = document.getElementById('projects-grid');
-            const emptyState = document.getElementById('projects-empty');
-            grid.innerHTML = '';
-            
-            if (projects.length === 0) {
-                emptyState.classList.remove('hidden');
-                grid.classList.add('hidden');
-                return;
-            } else {
-                emptyState.classList.add('hidden');
-                grid.classList.remove('hidden');
-            }
-            
-            projects.forEach(proj => {
-                const card = document.createElement('div');
-                card.className = `card glass rounded-3xl overflow-hidden border border-white/10 flex flex-col`;
-                card.innerHTML = `
-                    <div class="h-48 flex items-center justify-center overflow-hidden bg-[#1a1208] shrink-0">
-                        ${proj.image ? `<img src="${proj.image}" class="w-full h-full object-cover" alt="">` : `<i class="fa-solid fa-photo-film text-5xl opacity-40 text-[#FFD700]"></i>`}
-                    </div>
-                    <div class="p-5 flex flex-col flex-1">
-                        <div class="font-semibold text-xl mb-1 font-display">${proj.title}</div>
-                        <div class="text-xs text-[#FFD700] mb-3">${proj.category || 'General'}</div>
-                        <p class="text-sm text-[#fffbea] line-clamp-2 mb-4 flex-1">${proj.description}</p>
-                        <div class="flex justify-between items-center mt-auto pt-4 border-t border-white/10">
-                            ${proj.link ? `<a href="${proj.link}" target="_blank" rel="noopener noreferrer" class="text-xs px-4 py-2 rounded-xl bg-[#FFD700] text-[#0a0803] font-semibold hover:bg-[#FFE600] transition shadow-[0_0_10px_rgba(255,215,0,0.3)] flex items-center gap-2"><i class="fa-solid fa-globe"></i> Visit Website</a>` : '<span></span>'}
-                            ${canEditPosts() ? `<div class="flex gap-2"><button onclick="deleteProject(${proj.id})" class="text-xs px-3 py-1.5 rounded-xl border border-red-400/40 text-red-400 hover:bg-red-400/10 transition">Delete</button></div>` : ""}
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(card);
             });
         }
 
@@ -3643,7 +3440,6 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             if (q.includes("😂") || q.includes("💀") || q.includes("lol") || q.includes("haha")) return pick(["Okay that got me.", "Ha. Fair.", "Alright, I'll allow it."]);
             if (q.includes("🙄")) return "Wait, was that sarcasm?";
             if (q.includes("event")) return "Events show up in the Events section once a member posts them.";
-            if (q.includes("project")) return "You can check out our creative works in the Projects section.";
             if (q.includes("announcement")) return "Announcements are in the School Announcements section.";
             if (q.includes("register") || q.includes("join")) return "The member join code is MMC-JOIN-4821. Admin and Developer still need their own private code.";
             if (q.includes("salamat")) return "Walang anuman.";
@@ -3680,7 +3476,6 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             const steps = [
                 { el: "events", text: "Here are the events. This is where club events show up once a member posts them." },
                 { el: "announcements", text: "And here are the announcements. This is where school events and suspensions are posted." },
-                { el: "projects", text: "And this is our projects section, showing the creative works the club has made." },
                 { el: "about", highlight: "developer-portrait", text: "And here is the about section. This is the developer who made our website." },
                 { el: "about", highlight: "verity-portrait", text: "And that is me, your assistant. Hehe. Lets go back to the homepage." },
                 { el: "home", text: "And this is the homepage. It is a simple welcome page for the club." },
@@ -3818,62 +3613,36 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             }
             
             if (tab === 'members') {
-                let html = `
-                    <div class="flex justify-between items-center mb-6">
-                        <div>
-                            <h3 class="text-2xl font-semibold">Member Directory</h3>
-                            <p class="text-sm text-white/50">All active members of Multi Media</p>
-                        </div>
-                        <div class="text-sm px-4 py-1.5 rounded-2xl bg-white/5">
-                            ${users.filter(u => u.active !== false).length} Members
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                `;
-                
-                const activeUsers = users.filter(u => u.active !== false);
-                
-                activeUsers.forEach(member => {
-                    const isOnline = member.online;
-                    const officerBadge = member.officerRole 
-                        ? `<span class="px-2.5 py-px text-[10px] rounded bg-[#FFD700] text-[#0a0803] font-bold">${member.officerRole}</span>` 
-                        : '';
-                    
-                    html += `
-                        <div class="glass p-5 rounded-3xl flex gap-x-4">
-                            <img src="${member.avatar || 'https://i.pravatar.cc/48?u=' + member.id}" class="w-12 h-12 rounded-2xl flex-shrink-0 ring-1 ring-white/20 object-cover">
-                            
-                            <div class="flex-1 min-w-0">
-                                <div class="flex items-center gap-x-2">
-                                    ${roleSymbol(member.role)}
-                                    <span class="font-semibold">${member.username}</span>
-                                    ${officerBadge}
-                                </div>
-                                <div class="text-sm text-white/60">${member.role}</div>
-                                
-                                <div class="mt-3 flex items-center gap-x-2">
-                                    <span class="inline-block w-2 h-2 rounded-full ${isOnline ? 'bg-emerald-400' : 'bg-gray-500'}"></span>
-                                    <span class="text-xs ${isOnline ? 'text-emerald-400' : 'text-gray-400'}">
-                                        ${isOnline ? 'Active Now' : 'Offline'}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                html += `</div>`;
-                content.innerHTML = html;
-                
-            } else if (tab === 'media') {
+                content.innerHTML = '<h3 class="text-2xl font-semibold mb-4">Member Directory</h3><div id="member-directory">Loading members…</div>';
+                loadMemberDirectory();
+                return;
+            }
                 content.innerHTML = `<h4 class="font-semibold mb-4">Media Gallery</h4><div class="text-sm text-white/60">Upload feature available in full version. (Demo)</div>`;
             } else {
                 content.innerHTML = `<div class="text-white/60">This section is available in the full dashboard.</div>`;
             }
         }
 
-        function setJoinBadge(kind) {
+        async function loadMemberDirectory() {
+            const box = document.getElementById("member-directory");
+            if (!box) return;
+            let memberships = [];
+            if (currentUser && (currentUser.role === "Developer" || currentUser.role === "Admin")) {
+                try { memberships = (await memberApi("/api/members")).members || []; } catch (e) { memberships = []; }
+            }
+            const activeUsers = users.filter(function (u) { return u.active !== false; });
+            box.innerHTML = '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">' + activeUsers.map(function (member) {
+                const record = memberships.find(function (m) { return m.display_name === member.username; });
+                const qr = record && (currentUser.role === "Developer" || currentUser.role === "Admin")
+                    ? '<div class="mt-3 bg-white rounded-2xl p-2 flex justify-center" id="dir-qr-' + record.member_number + '"></div><p class="text-xs text-white/60 mt-2">' + record.member_number + '</p>'
+                    : "";
+                return '<div class="glass p-5 rounded-3xl"><div class="font-semibold">' + member.username + '</div><div class="text-sm text-[#FFD700]">' + member.role + '</div>' + qr + '</div>';
+            }).join("") + '</div>';
+            memberships.forEach(function (m) {
+                const el = document.getElementById("dir-qr-" + m.member_number);
+                if (el) drawQr(el, memberProfileUrl(m.member_number));
+            });
+        }
             const showcase = document.getElementById('join-showcase');
             if (!showcase) return;
             if (!['member', 'admin', 'developer'].includes(kind)) kind = 'member';
@@ -4143,8 +3912,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             loadJoinShowcase();
             startPresence();
             startVerityStayMoments();
-            const footerYearEl = document.getElementById('footer-year');
-            if (footerYearEl) footerYearEl.textContent = new Date().getFullYear();
+            document.getElementById('footer-year').textContent = new Date().getFullYear();
             startBGM(currentMusicTrack || "welcome");
             const unlockMusic = function () { startBGM(currentMusicTrack || "welcome"); };
             window.addEventListener("pointerdown", unlockMusic, { once: true });
@@ -4152,7 +3920,6 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             updateNavUser();
             renderEvents();
             renderAnnouncements();
-            renderProjects();
             filterAnnouncementsInit();
             
             setTimeout(() => {
@@ -4381,23 +4148,6 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
   gate.addEventListener("click", begin);
   window.addEventListener("keydown", begin);
 })();
-
-// --- SCROLL ANIMATIONS OBSERVER ---
-document.addEventListener("DOMContentLoaded", function() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('is-visible');
-                // Optional: stop observing once animated in
-                // observer.unobserve(entry.target); 
-            }
-        });
-    }, { threshold: 0.15 });
-
-    document.querySelectorAll('.scroll-animate, .scroll-animate-left, .scroll-animate-right').forEach((el) => {
-        observer.observe(el);
-    });
-});
 </script>
 
 </body>

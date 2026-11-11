@@ -12,15 +12,17 @@ body { margin:0; font-family:Inter,system-ui,sans-serif; background:#0a0803; col
 <body>
 <main class="card" id="result"><h1>Checking membership…</h1></main>
 <script>
+const number = new URLSearchParams(location.search).get("m") || "";
 const token = new URLSearchParams(location.search).get("t") || "";
 const box = document.getElementById("result");
 function esc(value) { return String(value || "").replace(/[&<>"]/g, function (c) { return { "&":"&", "<":"<", ">":">", '"':""" }[c]; }); }
-fetch("/api/members/verify?t=" + encodeURIComponent(token))
+const endpoint = number ? "/api/members/profile?m=" + encodeURIComponent(number) : "/api/members/verify?t=" + encodeURIComponent(token);
+fetch(endpoint)
   .then(function (res) { return res.json(); })
   .then(function (data) {
     const result = data.result || "INVALID";
     const cls = result === "VALID" ? "valid" : result === "SUSPENDED" ? "warn" : "bad";
-    box.innerHTML = '<p>MULTIMEDIA CLUB</p><h1 class="' + cls + '">' + (result === "VALID" ? "OFFICIAL MEMBER — VERIFIED" : result) + '</h1><p>Member number: ' + esc(data.member_number || "Not found") + '</p><p>Name: ' + esc(data.display_name || "Not shown") + '</p><p>Role: ' + esc(data.club_role || "—") + '</p><p>Status: ' + esc(data.status || result) + '</p><p>This QR confirms the record. It does not prove the person holding it is the member.</p>';
+    box.innerHTML = '<p>MULTIMEDIA CLUB</p><h1 class="' + cls + '">' + (result === "VALID" ? "OFFICIAL MEMBER" : result) + '</h1><img src="badges/' + (data.club_role === "Admin" ? "Admin" : data.club_role === "Developer" ? "Developer" : "Member") + '.jpg" alt="" style="width:120px;height:120px;border-radius:50%;object-fit:cover;margin:12px auto;display:block"><p>' + esc(data.display_name || "Member") + '</p><p>Member number: ' + esc(data.member_number || "Not found") + '</p><p>Role: ' + esc(data.club_role || "—") + '</p><p>Status: ' + esc(data.status || result) + '</p><p>This page is the member profile and proof of membership.</p><a href="/" style="color:#FFD700">Back to Multimedia Club</a>';
   })
   .catch(function () { box.innerHTML = "<h1 class='bad'>INVALID</h1>"; });
 </script>

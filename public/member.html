@@ -25,35 +25,51 @@ a { color:#FFD700; }
 </main>
 <script>
 const params = new URLSearchParams(location.search);
-const publicId = params.get("id") || location.pathname.split("/").filter(Boolean).pop();
+const publicId = params.get("id") || "";
 const card = document.getElementById("card");
-function esc(value) { return String(value || "").replace(/[&<>"]/g, function (c) { return {"&":"&","<":"<",">":">","\"":"""}[c]; }); }
+function esc(value) {
+  return String(value || "").replace(/[&<>"]/g, function (c) {
+    return { "&": "&", "<": "<", ">": ">", '"': """ }[c];
+  });
+}
 function statusClass(status) {
   if (status === "ACTIVE") return "active";
   if (status === "REVOKED") return "revoked";
   return "inactive";
 }
-fetch("/api/public/members/" + encodeURIComponent(publicId))
-  .then(function (res) {
-    if (!res.ok) throw new Error(res.status === 404 ? "Member profile not found." : "Verification unavailable.");
-    return res.json();
-  })
-  .then(function (data) {
-    const member = data.member || {};
-    const projects = data.projects || [];
-    card.innerHTML = '<div class="brand"><img src="/images/logo.jpg" alt="Multimedia Club"><div><div class="label">MULTIMEDIA CLUB</div><h1>Official Digital Membership ID</h1></div></div>'
-      + '<h2>' + esc(member.displayName) + '</h2>'
-      + '<p>Public ID: ' + esc(member.publicId) + '</p>'
-      + '<p>Role: ' + esc(member.role) + '</p>'
-      + '<p><span class="status ' + statusClass(member.status) + '">' + esc(member.status) + '</span></p>'
-      + '<h3>Approved projects</h3>'
-      + (projects.length ? projects.map(function (p) { return '<div class="project"><strong>' + esc(p.title) + '</strong><p>' + esc(p.description) + '</p>' + (p.link ? '<a href="' + esc(p.link) + '">Project link</a>' : '') + '</div>'; }).join("") : '<p>No published projects yet.</p>')
-      + '<p class="label">Status retrieved from the official club registry. Last checked: ' + esc(data.verifiedAt) + '</p>'
-      + '<p>A copied QR only opens this public profile. It does not prove who is holding the pin.</p>';
-  })
-  .catch(function (error) {
-    card.innerHTML = '<h1>' + esc(error.message) + '</h1><p>No active membership is shown when the registry cannot be confirmed.</p>';
-  });
+function showError(message) {
+  card.innerHTML = "<h1>" + esc(message) + "</h1><p>No active membership is shown when the registry cannot be confirmed.</p>";
+}
+if (!publicId) {
+  showError("Member profile not found.");
+} else {
+  const controller = new AbortController();
+  const timer = setTimeout(function () { controller.abort(); }, 8000);
+  fetch("/api/public/members/" + encodeURIComponent(publicId), { signal: controller.signal })
+    .then(function (res) {
+      clearTimeout(timer);
+      if (!res.ok) throw new Error(res.status === 404 ? "Member profile not found." : "Verification unavailable.");
+      return res.json();
+    })
+    .then(function (data) {
+      const member = data.member || {};
+      const projects = data.projects || [];
+      card.innerHTML = '<div class="brand"><img src="/images/logo.jpg" alt="Multimedia Club"><div><div class="label">MULTIMEDIA CLUB</div><h1>Official Digital Membership ID</h1></div></div>'
+        + "<h2>" + esc(member.displayName) + "</h2>"
+        + "<p>Public ID: " + esc(member.publicId) + "</p>"
+        + "<p>Role: " + esc(member.role) + "</p>"
+        + '<p><span class="status ' + statusClass(member.status) + '">' + esc(member.status) + "</span></p>"
+        + "<h3>Approved projects</h3>"
+        + (projects.length ? projects.map(function (p) {
+            return '<div class="project"><strong>' + esc(p.title) + "</strong><p>" + esc(p.description) + "</p>" + (p.link ? '<a href="' + esc(p.link) + '">Project link</a>' : "") + "</div>";
+          }).join("") : "<p>No published projects yet.</p>")
+        + '<p class="label">Status retrieved from the official club registry. Last checked: ' + esc(data.verifiedAt) + "</p>";
+    })
+    .catch(function (error) {
+      clearTimeout(timer);
+      showError(error.name === "AbortError" ? "Verification took too long." : error.message);
+    });
+}
 </script>
 </body>
 </html>

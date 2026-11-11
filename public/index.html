@@ -2662,7 +2662,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             return data;
         }
         function memberProfileUrl(number) { return location.origin + "/verify.html?m=" + encodeURIComponent(number); }
-        function officialProfileUrl(data) { return data.profile_url || (data.member && data.member.public_id ? location.origin + "/member/" + data.member.public_id : memberProfileUrl(data.member.member_number)); }
+        function officialProfileUrl(data) { return data.profile_url || (data.member && data.member.public_id ? location.origin + "/member.html?id=" + encodeURIComponent(data.member.public_id) : memberProfileUrl(data.member.member_number)); }
         function drawQr(el, url) {
             el.innerHTML = "";
             if (typeof QRCode === "undefined") {
@@ -2681,7 +2681,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             drawQr(document.getElementById("member-qr-canvas"), url);
         }
         function qrUrlForMember(member) {
-            return member.profile_url || (member.public_id ? location.origin + "/member/" + member.public_id : memberProfileUrl(member.member_number));
+            return member.profile_url || (member.public_id ? location.origin + "/member.html?id=" + encodeURIComponent(member.public_id) : memberProfileUrl(member.member_number));
         }
         function downloadQr(id) {
             const box = document.getElementById("admin-qr-" + id);

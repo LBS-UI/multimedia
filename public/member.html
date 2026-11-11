@@ -24,7 +24,8 @@ a { color:#FFD700; }
   <div class="card" id="card">Checking membership…</div>
 </main>
 <script>
-const publicId = location.pathname.split("/").filter(Boolean).pop();
+const params = new URLSearchParams(location.search);
+const publicId = params.get("id") || location.pathname.split("/").filter(Boolean).pop();
 const card = document.getElementById("card");
 function esc(value) { return String(value || "").replace(/[&<>"]/g, function (c) { return {"&":"&","<":"<",">":">","\"":"""}[c]; }); }
 function statusClass(status) {

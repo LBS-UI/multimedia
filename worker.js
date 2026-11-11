@@ -372,7 +372,7 @@ async function handleMembers(request, env, url) {
         await env.DB.prepare("UPDATE memberships SET public_id = ?, visibility = COALESCE(visibility, 'public'), updated_at = ? WHERE member_number = ?").bind(pid, new Date().toISOString(), row.member_number).run();
         row.public_id = pid;
       }
-      return json(200, { member: row, profile_url: row.public_id ? locationOrigin(request) + "/member/" + row.public_id : "" });
+      return json(200, { member: row, profile_url: row.public_id ? locationOrigin(request) + "/member.html?id=" + encodeURIComponent(row.public_id) : "" });
     }
     const admin = await requireAdmin(request, env);
     if (admin.error) return json(401, { error: admin.error });
@@ -385,7 +385,7 @@ async function handleMembers(request, env, url) {
           await env.DB.prepare("UPDATE memberships SET public_id = ?, visibility = COALESCE(visibility, 'public'), updated_at = ? WHERE id = ?").bind(pid, new Date().toISOString(), row.id).run();
           row.public_id = pid;
         }
-        row.profile_url = locationOrigin(request) + "/member/" + row.public_id;
+        row.profile_url = locationOrigin(request) + "/member.html?id=" + encodeURIComponent(row.public_id);
         members.push(row);
       }
       const stats = {
@@ -407,7 +407,7 @@ async function handleMembers(request, env, url) {
       const pid = publicId();
       await env.DB.prepare("INSERT INTO memberships (member_number, display_name, club_role, status, token_hash, created_at, public_id, visibility, updated_at, activated_at) VALUES (?, ?, ?, 'active', ?, ?, ?, 'public', ?, ?)").bind(number, name, role, await sha256(token), new Date().toISOString(), pid, new Date().toISOString(), new Date().toISOString()).run();
       await writeMembershipAudit(env, admin.username, "create_member", null, name);
-      return json(200, { member_number: number, display_name: name, club_role: role, public_id: pid, profile_url: locationOrigin(request) + "/member/" + pid });
+      return json(200, { member_number: number, display_name: name, club_role: role, public_id: pid, profile_url: locationOrigin(request) + "/member.html?id=" + encodeURIComponent(pid) });
     }
     if (url.pathname === "/api/members/update") {
       const name = String(body.display_name || "").trim().slice(0, 80);

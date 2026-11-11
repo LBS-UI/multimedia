@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Multimedia Club Digital ID</title>
+<style>
+body { margin:0; font-family: Inter, system-ui, sans-serif; background:#050505; color:#fff; }
+.wrap { max-width:720px; margin:0 auto; padding:24px; }
+.card { background:#171717; border:1px solid rgba(255,215,0,.35); border-radius:28px; padding:24px; }
+.brand { display:flex; align-items:center; gap:12px; }
+.brand img { width:56px; height:56px; border-radius:50%; object-fit:cover; border:2px solid #FFD700; }
+.label { letter-spacing:.18em; color:#FFD700; font-size:12px; }
+.status { display:inline-block; padding:6px 12px; border-radius:999px; font-weight:700; }
+.active { background:#16a34a; color:#fff; }
+.inactive { background:#b45309; color:#fff; }
+.revoked { background:#991b1b; color:#fff; }
+.project { border:1px solid rgba(255,215,0,.2); border-radius:18px; padding:14px; margin-top:10px; }
+a { color:#FFD700; }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="card" id="card">Checking membership…</div>
+</main>
+<script>
+const publicId = location.pathname.split("/").filter(Boolean).pop();
+const card = document.getElementById("card");
+function esc(value) { return String(value || "").replace(/[&<>"]/g, function (c) { return {"&":"&","<":"<",">":">","\"":"""}[c]; }); }
+function statusClass(status) {
+  if (status === "ACTIVE") return "active";
+  if (status === "REVOKED") return "revoked";
+  return "inactive";
+}
+fetch("/api/public/members/" + encodeURIComponent(publicId))
+  .then(function (res) {
+    if (!res.ok) throw new Error(res.status === 404 ? "Member profile not found." : "Verification unavailable.");
+    return res.json();
+  })
+  .then(function (data) {
+    const member = data.member || {};
+    const projects = data.projects || [];
+    card.innerHTML = '<div class="brand"><img src="/images/logo.jpg" alt="Multimedia Club"><div><div class="label">MULTIMEDIA CLUB</div><h1>Official Digital Membership ID</h1></div></div>'
+      + '<h2>' + esc(member.displayName) + '</h2>'
+      + '<p>Public ID: ' + esc(member.publicId) + '</p>'
+      + '<p>Role: ' + esc(member.role) + '</p>'
+      + '<p><span class="status ' + statusClass(member.status) + '">' + esc(member.status) + '</span></p>'
+      + '<h3>Approved projects</h3>'
+      + (projects.length ? projects.map(function (p) { return '<div class="project"><strong>' + esc(p.title) + '</strong><p>' + esc(p.description) + '</p>' + (p.link ? '<a href="' + esc(p.link) + '">Project link</a>' : '') + '</div>'; }).join("") : '<p>No published projects yet.</p>')
+      + '<p class="label">Status retrieved from the official club registry. Last checked: ' + esc(data.verifiedAt) + '</p>'
+      + '<p>A copied QR only opens this public profile. It does not prove who is holding the pin.</p>';
+  })
+  .catch(function (error) {
+    card.innerHTML = '<h1>' + esc(error.message) + '</h1><p>No active membership is shown when the registry cannot be confirmed.</p>';
+  });
+</script>
+</body>
+</html>

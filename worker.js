@@ -315,6 +315,22 @@ async function sha256(value) {
 function randomToken() {
   return btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(24)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
 }
+function publicId() {
+  return crypto.randomUUID();
+}
+async function writeMembershipAudit(env, actor, action, memberId, detail) {
+  await env.DB.prepare("INSERT INTO membership_audit_logs (actor, action, member_id, detail, created_at) VALUES (?, ?, ?, ?, ?)").bind(actor || "system", action, memberId || null, detail || "", new Date().toISOString()).run();
+}
+async function getPublicMember(env, publicIdValue) {
+  const row = await env.DB.prepare("SELECT id, public_id, display_name, club_role, status, visibility FROM memberships WHERE public_id = ?").bind(publicIdValue).first();
+  if (!row) return null;
+  const projects = await env.DB.prepare("SELECT title, description, link, display_order FROM member_projects WHERE member_id = ? AND publication_status = 'published' ORDER BY display_order ASC, id ASC").bind(row.id).all();
+  return {
+    member: { publicId: row.public_id, displayName: row.display_name, role: row.club_role, status: String(row.status || "").toUpperCase() },
+    projects: row.visibility === "hidden" || row.status !== "active" ? [] : (projects.results || []).map(function (p) { return { title: p.title, description: p.description || "", link: p.link || "" }; }),
+    verifiedAt: new Date().toISOString()
+  };
+}
 function memberNumber() {
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   const bytes = crypto.getRandomValues(new Uint8Array(6));
@@ -343,21 +359,43 @@ async function handleMembers(request, env, url) {
       const session = header.replace("Bearer ", "").trim();
       const user = session ? await env.DB.prepare("SELECT username, role FROM users WHERE session_token = ?").bind(session).first() : null;
       if (!user) return json(401, { error: "Log in again to get your QR." });
-      let row = await env.DB.prepare("SELECT member_number, display_name, club_role, status FROM memberships WHERE display_name = ?").bind(user.username).first();
+      let row = await env.DB.prepare("SELECT member_number, display_name, club_role, status, public_id FROM memberships WHERE display_name = ?").bind(user.username).first();
       let token = "";
       if (!row) {
         token = randomToken();
         const number = memberNumber();
-        await env.DB.prepare("INSERT INTO memberships (member_number, display_name, club_role, status, token_hash, created_at) VALUES (?, ?, ?, 'active', ?, ?)").bind(number, user.username, user.role || "Member", await sha256(token), new Date().toISOString()).run();
-        row = { member_number: number, display_name: user.username, club_role: user.role || "Member", status: "active" };
+        const pid = publicId();
+        await env.DB.prepare("INSERT INTO memberships (member_number, display_name, club_role, status, token_hash, created_at, public_id, visibility, updated_at, activated_at) VALUES (?, ?, ?, 'active', ?, ?, ?, 'public', ?, ?)").bind(number, user.username, user.role || "Member", await sha256(token), new Date().toISOString(), pid, new Date().toISOString(), new Date().toISOString()).run();
+        row = { member_number: number, display_name: user.username, club_role: user.role || "Member", status: "active", public_id: pid };
+      } else if (!row.public_id) {
+        const pid = publicId();
+        await env.DB.prepare("UPDATE memberships SET public_id = ?, visibility = COALESCE(visibility, 'public'), updated_at = ? WHERE member_number = ?").bind(pid, new Date().toISOString(), row.member_number).run();
+        row.public_id = pid;
       }
-      return json(200, { member: row, verify_url: token ? "https://multimedia.lumiberstudio.workers.dev/verify.html?t=" + token : "" });
+      return json(200, { member: row, profile_url: row.public_id ? locationOrigin(request) + "/member/" + row.public_id : "" });
     }
     const admin = await requireAdmin(request, env);
     if (admin.error) return json(401, { error: admin.error });
     if (request.method === "GET") {
-      const rows = await env.DB.prepare("SELECT id, member_number, display_name, club_role, status, created_at FROM memberships ORDER BY id DESC").all();
-      return json(200, { members: rows.results || [] });
+      const rows = await env.DB.prepare("SELECT id, member_number, display_name, club_role, status, created_at, public_id, visibility FROM memberships ORDER BY id DESC").all();
+      const members = [];
+      for (const row of rows.results || []) {
+        if (!row.public_id) {
+          const pid = publicId();
+          await env.DB.prepare("UPDATE memberships SET public_id = ?, visibility = COALESCE(visibility, 'public'), updated_at = ? WHERE id = ?").bind(pid, new Date().toISOString(), row.id).run();
+          row.public_id = pid;
+        }
+        row.profile_url = locationOrigin(request) + "/member/" + row.public_id;
+        members.push(row);
+      }
+      const stats = {
+        total: members.length,
+        active: members.filter(function (m) { return m.status === "active"; }).length,
+        inactive: members.filter(function (m) { return m.status !== "active" && m.status !== "revoked"; }).length,
+        revoked: members.filter(function (m) { return m.status === "revoked"; }).length
+      };
+      const audit = await env.DB.prepare("SELECT actor, action, member_id, detail, created_at FROM membership_audit_logs ORDER BY id DESC LIMIT 12").all().catch(function () { return { results: [] }; });
+      return json(200, { members: members, stats: stats, audit: audit.results || [] });
     }
     const body = await request.json().catch(function () { return {}; });
     if (url.pathname === "/api/members/register") {
@@ -366,12 +404,39 @@ async function handleMembers(request, env, url) {
       if (name.length < 2) return json(400, { error: "Name is required" });
       const number = memberNumber();
       const token = randomToken();
-      await env.DB.prepare("INSERT INTO memberships (member_number, display_name, club_role, status, token_hash, created_at) VALUES (?, ?, ?, 'active', ?, ?)").bind(number, name, role, await sha256(token), new Date().toISOString()).run();
-      return json(200, { member_number: number, display_name: name, club_role: role, token: token, verify_url: "https://multimedia.lumiberstudio.workers.dev/verify.html?t=" + token });
+      const pid = publicId();
+      await env.DB.prepare("INSERT INTO memberships (member_number, display_name, club_role, status, token_hash, created_at, public_id, visibility, updated_at, activated_at) VALUES (?, ?, ?, 'active', ?, ?, ?, 'public', ?, ?)").bind(number, name, role, await sha256(token), new Date().toISOString(), pid, new Date().toISOString(), new Date().toISOString()).run();
+      await writeMembershipAudit(env, admin.username, "create_member", null, name);
+      return json(200, { member_number: number, display_name: name, club_role: role, public_id: pid, profile_url: locationOrigin(request) + "/member/" + pid });
+    }
+    if (url.pathname === "/api/members/update") {
+      const name = String(body.display_name || "").trim().slice(0, 80);
+      const role = ["Member", "Developer", "Moderator", "Admin"].includes(body.club_role) ? body.club_role : "";
+      if (!body.member_number || name.length < 2 || !role) return json(400, { error: "Name, role, and member number are required" });
+      await env.DB.prepare("UPDATE memberships SET display_name = ?, club_role = ?, updated_at = ? WHERE member_number = ?").bind(name, role, new Date().toISOString(), body.member_number).run();
+      await writeMembershipAudit(env, admin.username, "update_member", null, body.member_number + " -> " + role);
+      return json(200, { ok: true });
+    }
+    if (url.pathname === "/api/members/visibility") {
+      if (!["public", "hidden"].includes(body.visibility)) return json(400, { error: "Invalid visibility" });
+      await env.DB.prepare("UPDATE memberships SET visibility = ?, updated_at = ? WHERE member_number = ?").bind(body.visibility, new Date().toISOString(), body.member_number).run();
+      await writeMembershipAudit(env, admin.username, "visibility", null, body.member_number + " " + body.visibility);
+      return json(200, { ok: true });
+    }
+    if (url.pathname === "/api/members/projects") {
+      const title = String(body.title || "").trim().slice(0, 120);
+      if (!body.member_number || title.length < 2) return json(400, { error: "Project title is required" });
+      const member = await env.DB.prepare("SELECT id FROM memberships WHERE member_number = ?").bind(body.member_number).first();
+      if (!member) return json(404, { error: "Member not found" });
+      const now = new Date().toISOString();
+      await env.DB.prepare("INSERT INTO member_projects (member_id, title, description, link, publication_status, display_order, created_at, updated_at) VALUES (?, ?, ?, ?, ?, 0, ?, ?)").bind(member.id, title, String(body.description || "").slice(0, 500), String(body.link || "").slice(0, 300), body.publication_status === "published" ? "published" : "draft", now, now).run();
+      await writeMembershipAudit(env, admin.username, "project", member.id, title);
+      return json(200, { ok: true });
     }
     if (url.pathname === "/api/members/status") {
       if (!["active", "suspended", "revoked"].includes(body.status)) return json(400, { error: "Invalid status" });
-      await env.DB.prepare("UPDATE memberships SET status = ? WHERE member_number = ?").bind(body.status, body.member_number).run();
+      await env.DB.prepare("UPDATE memberships SET status = ?, updated_at = ?, revoked_at = ? WHERE member_number = ?").bind(body.status, new Date().toISOString(), body.status === "revoked" ? new Date().toISOString() : null, body.member_number).run();
+      await writeMembershipAudit(env, admin.username, "status", null, body.member_number + " " + body.status);
       return json(200, { ok: true });
     }
     if (url.pathname === "/api/members/rotate-token") {
@@ -389,6 +454,8 @@ async function handleAccounts(request, env) {
   if (!env.DB) return json(503, { error: "D1 database is not bound" });
   const body = await request.json();
   if (body.action === "list") {
+    const admin = await requireAdmin(request, env);
+    if (admin.error) return json(401, { error: admin.error });
     const rows = await env.DB.prepare("SELECT id, username, email, role, created_at FROM users ORDER BY created_at DESC").all();
     return json(200, { users: rows.results || [] });
   }
@@ -399,21 +466,20 @@ async function handleAccounts(request, env) {
   if (body.action === "session") {
     const username = String(body.username || "").trim();
     const email = String(body.email || username).trim();
-    const role = ["Admin", "Developer", "Member", "Editor", "Photographer"].includes(body.role) ? body.role : "Member";
     if (!username || !body.passwordHash) return json(400, { error: "Missing account" });
-    const existing = await env.DB.prepare("SELECT id FROM users WHERE username = ? OR email = ?").bind(username, email).first();
+    const existing = await env.DB.prepare("SELECT id, role FROM users WHERE username = ? OR email = ?").bind(username, email).first();
     const token = crypto.randomUUID();
     if (existing) {
-      await env.DB.prepare("UPDATE users SET role = ?, password_hash = ?, session_token = ? WHERE id = ?").bind(role, body.passwordHash, token, existing.id).run();
-    } else {
-      await env.DB.prepare("INSERT INTO users (id, username, email, password_hash, role, session_token, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)").bind(String(body.id || Date.now()), username, email, body.passwordHash, role, token, new Date().toISOString()).run();
+      await env.DB.prepare("UPDATE users SET password_hash = ?, session_token = ? WHERE id = ?").bind(body.passwordHash, token, existing.id).run();
+      return json(200, { ok: true, token, user: { username: username, email: email, role: existing.role } });
     }
-    return json(200, { ok: true, token, user: { username: username, email: email, role: role } });
+    await env.DB.prepare("INSERT INTO users (id, username, email, password_hash, role, session_token, created_at) VALUES (?, ?, ?, ?, 'Member', ?, ?)").bind(String(body.id || Date.now()), username, email, body.passwordHash, token, new Date().toISOString()).run();
+    return json(200, { ok: true, token, user: { username: username, email: email, role: "Member" } });
   }
   if (body.action === "register") {
     const id = String(body.id || Date.now());
-    await env.DB.prepare("INSERT INTO users (id, username, email, password_hash, role, created_at) VALUES (?, ?, ?, ?, ?, ?)").bind(id, body.username, body.email, body.passwordHash, body.role || "Member", new Date().toISOString()).run();
-    return json(200, { ok: true, id });
+    await env.DB.prepare("INSERT INTO users (id, username, email, password_hash, role, created_at) VALUES (?, ?, ?, ?, 'Member', ?)").bind(id, body.username, body.email, body.passwordHash, new Date().toISOString()).run();
+    return json(200, { ok: true, id, role: "Member" });
   }
   const row = await env.DB.prepare("SELECT * FROM users WHERE username = ? OR email = ?").bind(body.username, body.username).first();
   if (!row || row.password_hash !== body.passwordHash) return json(401, { error: "Invalid username/email or password" });
@@ -452,6 +518,22 @@ async function handlePresence(request, env) {
     return json(200, { active: 0, visitors: [], error: error.message || "Presence unavailable" });
   }
 }
+async function handleBootstrapAdmin(request, env) {
+  if (request.method !== "POST") return json(405, { error: "Method not allowed" });
+  if (!env.DB) return json(503, { error: "D1 database is not bound" });
+  if (!env.FIRST_ADMIN_SECRET) return json(503, { error: "FIRST_ADMIN_SECRET is not set" });
+  const body = await request.json().catch(function () { return {}; });
+  if (body.secret !== env.FIRST_ADMIN_SECRET) return json(401, { error: "Invalid setup secret" });
+  const existing = await env.DB.prepare("SELECT id FROM users WHERE role = 'Admin' LIMIT 1").first();
+  if (existing) return json(409, { error: "An admin already exists" });
+  const username = String(body.username || "").trim().slice(0, 80);
+  const email = String(body.email || "").trim().slice(0, 120);
+  if (username.length < 2 || !email.includes("@") || !body.passwordHash) return json(400, { error: "Username, email, and password hash are required" });
+  const id = "admin-" + Date.now();
+  await env.DB.prepare("INSERT INTO users (id, username, email, password_hash, role, created_at) VALUES (?, ?, ?, ?, 'Admin', ?)").bind(id, username, email, body.passwordHash, new Date().toISOString()).run();
+  await writeMembershipAudit(env, username, "bootstrap_admin", null, "First admin created");
+  return json(200, { ok: true, username: username, role: "Admin" });
+}
 async function handleJoin(request, env) {
   if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders });
   if (!env.DB) return json(503, { error: "D1 database is not bound" });
@@ -472,6 +554,25 @@ async function handleJoin(request, env) {
     return json(500, { error: error.message || "Join save failed" });
   }
 }
+function locationOrigin(request) {
+  return new URL(request.url).origin;
+}
+async function handlePublicMember(request, env, url) {
+  if (request.method !== "GET") return json(405, { error: "Method not allowed" });
+  if (!env.DB) return json(503, { error: "Verification unavailable" });
+  const publicIdValue = decodeURIComponent(url.pathname.split("/").pop() || "").trim();
+  if (!/^[A-Za-z0-9-]{8,80}$/.test(publicIdValue)) return json(404, { error: "Member profile not found" });
+  try {
+    const profile = await getPublicMember(env, publicIdValue);
+    if (!profile || profile.member.visibility === "hidden") return json(404, { error: "Member profile not found" });
+    return new Response(JSON.stringify(profile), {
+      status: 200,
+      headers: { "Content-Type": "application/json", "Cache-Control": "no-store", "Access-Control-Allow-Origin": "*" }
+    });
+  } catch (error) {
+    return json(503, { error: "Verification unavailable" });
+  }
+}
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -486,12 +587,17 @@ export default {
     if (url.pathname === "/api/member-chat") return handleMemberChat(request, env);
     if (url.pathname === "/api/latest-alert") return handleLatestAlert(request, env);
     if (url.pathname === "/api/push-key") return json(200, { publicKey: env.VAPID_PUBLIC_KEY || "" });
+    if (url.pathname.startsWith("/api/public/members/")) return handlePublicMember(request, env, url);
+    if (url.pathname === "/api/bootstrap-admin") return handleBootstrapAdmin(request, env);
     if (url.pathname === "/api/join") return handleJoin(request, env);
     if (url.pathname === "/api/accounts") return handleAccounts(request, env);
     if (url.pathname === "/api/requests") return handleRequests(request, env);
     if (url.pathname === "/api/presence") return handlePresence(request, env);
     if (url.pathname.startsWith("/api/members")) return handleMembers(request, env, url);
     if (url.pathname.startsWith("/api/")) return json(request.method === "GET" ? 200 : 404, { error: "Unknown API route" });
+    if (url.pathname.startsWith("/member/") && env.ASSETS) {
+      return env.ASSETS.fetch(new Request(new URL("/member.html", request.url), request));
+    }
     if (env.ASSETS) return env.ASSETS.fetch(request);
     return json(404, { error: "Not found" });
   },

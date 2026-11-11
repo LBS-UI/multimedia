@@ -1480,13 +1480,21 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
                 <input id="notice-url" placeholder="Optional link" class="input-gold w-full px-4 py-3 rounded-2xl mb-2">
                 <button class="btn-gold px-4 py-2 rounded-2xl">Send to subscribers</button>
             </form>
+            <form onsubmit="registerMembership(event)" class="glass rounded-3xl p-4 mb-4">
                 <div class="grid md:grid-cols-3 gap-2">
                     <input id="member-name" placeholder="Display name" class="input-gold px-4 py-3 rounded-2xl" required>
                     <select id="member-role" class="input-gold px-4 py-3 rounded-2xl"><option>Member</option><option>Developer</option><option>Moderator</option><option>Admin</option></select>
                     <button class="btn-gold rounded-2xl">Issue membership</button>
                 </div>
             </form>
+            <div id="membership-stats" class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4"></div>
+            <input id="member-search" oninput="renderMembershipAdmin()" placeholder="Search members" class="input-gold w-full px-4 py-3 rounded-2xl mb-4">
+                <button onclick="printSelectedQr(true)" class="btn-gold px-4 py-2 rounded-2xl">Print selected badges</button>
+                <button onclick="printSelectedQr(false)" class="px-4 py-2 rounded-2xl border border-white/20">Print QR only</button>
+            </div>
             <div id="membership-list" class="space-y-3"></div>
+            <h3 class="text-xl font-semibold mt-6 mb-2">Audit history</h3>
+            <div id="membership-audit" class="glass rounded-3xl p-4"></div>
         </div>
     </div>
     <div id="profile-window" class="hidden fixed inset-0 z-[80] flex items-start justify-center bg-black/70 p-4 overflow-y-auto">
@@ -2654,6 +2662,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             return data;
         }
         function memberProfileUrl(number) { return location.origin + "/verify.html?m=" + encodeURIComponent(number); }
+        function officialProfileUrl(data) { return data.profile_url || (data.member && data.member.public_id ? location.origin + "/member/" + data.member.public_id : memberProfileUrl(data.member.member_number)); }
         function drawQr(el, url) {
             el.innerHTML = "";
             if (typeof QRCode === "undefined") {
@@ -2667,14 +2676,79 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             if (!box) return;
             const data = await memberApi("/api/members/mine", {}).catch(function (error) { box.textContent = error.message; return null; });
             if (!data || !data.member) return;
-            const url = memberProfileUrl(data.member.member_number);
+            const url = officialProfileUrl(data);
             box.innerHTML = '<div id="member-qr-canvas" class="flex justify-center bg-white rounded-2xl p-2"></div><p class="text-sm mt-2">' + data.member.member_number + '</p><p class="text-xs text-white/60">Scan this to open the member profile.</p>';
             drawQr(document.getElementById("member-qr-canvas"), url);
         }
+        function qrUrlForMember(member) {
+            return member.profile_url || (member.public_id ? location.origin + "/member/" + member.public_id : memberProfileUrl(member.member_number));
+        }
+        function downloadQr(id) {
+            const box = document.getElementById("admin-qr-" + id);
+            const canvas = box && box.querySelector("canvas");
+            const img = box && box.querySelector("img");
+            const src = canvas ? canvas.toDataURL("image/png") : (img ? img.src : "");
+            if (!src) return showToast("QR is not ready yet.", "error");
+            const link = document.createElement("a");
+            link.href = src;
+            link.download = "membership-qr-" + id + ".png";
+            link.click();
+        }
+        function printSelectedQr(withLabel) {
+            const selected = Array.from(document.querySelectorAll(".qr-select:checked")).map(function (el) { return JSON.parse(el.dataset.member); });
+            if (!selected.length) return showToast("Select at least one member.", "error");
+            const page = window.open("", "_blank");
+            page.document.write("<html><head><title>Membership QR</title><style>body{font-family:sans-serif;background:#fff;color:#111}.badge{width:280px;height:280px;border:2px solid #111;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex-direction:column;margin:16px}.qr{width:180px;height:180px;background:#fff}</style></head><body>" + selected.map(function (m) {
+                const url = qrUrlForMember(m);
+                const label = withLabel ? "<div style='margin-top:8px;font-weight:700'>" + m.display_name + "</div><div>" + m.club_role + "</div>" : "";
+                return "<div class='badge'><img class='qr' src='https://api.qrserver.com/v1/create-qr-code/?size=360x360&margin=16&data=" + encodeURIComponent(url) + "' alt='QR'>" + label + "</div>";
+            }).join("") + "</body></html>");
+            page.document.close();
+            setTimeout(function () { page.print(); }, 500);
+        }
+        let membershipCache = { members: [], stats: {}, audit: [] };
+        function renderMembershipAdmin() {
+            const query = (document.getElementById("member-search").value || "").toLowerCase();
+            const stats = membershipCache.stats || {};
+            document.getElementById("membership-stats").innerHTML = ["total", "active", "inactive", "revoked"].map(function (key) {
+                return '<div class="glass rounded-2xl p-3"><div class="text-xs text-white/60">' + key.toUpperCase() + '</div><div class="text-2xl font-bold">' + (stats[key] || 0) + '</div></div>';
+            }).join("");
+            document.getElementById("membership-list").innerHTML = (membershipCache.members || []).filter(function (m) {
+                return (m.display_name + " " + m.member_number + " " + m.club_role).toLowerCase().includes(query);
+            }).map(function (m) {
+                const url = qrUrlForMember(m);
+                return '<div class="glass rounded-2xl p-4"><label class="flex items-center gap-2 mb-2"><input class="qr-select" type="checkbox" data-member=\'' + JSON.stringify(m).replace(/'/g, "&#39;") + '\'> Select for print</label><strong>' + m.member_number + '</strong> · ' + m.display_name + ' · ' + m.club_role + ' · ' + m.status + ' · ' + (m.visibility || "public") + '<div class="mt-3 flex justify-center bg-white rounded-2xl p-3" id="admin-qr-' + m.member_number + '"></div><p class="text-xs text-white/60 mt-2 break-all">' + url + '</p><div class="flex flex-wrap gap-2 mt-2"><button onclick="downloadQr(\'' + m.member_number + '\')">Download QR</button><a class="underline" href="' + url + '" target="_blank">Preview ID</a><button onclick="setMembershipStatus(\'' + m.member_number + '\',\'active\')">Activate</button><button onclick="setMembershipStatus(\'' + m.member_number + '\',\'suspended\')">Suspend</button><button onclick="setMembershipStatus(\'' + m.member_number + '\',\'revoked\')">Revoke</button><button onclick="setVisibility(\'' + m.member_number + '\',\'' + (m.visibility === "hidden" ? "public" : "hidden") + '\')">' + (m.visibility === "hidden" ? "Show profile" : "Hide profile") + '</button></div><form onsubmit="updateMember(event, \'' + m.member_number + '\')" class="grid md:grid-cols-3 gap-2 mt-3"><input name="name" value="' + m.display_name + '" class="input-gold px-3 py-2 rounded-2xl"><select name="role" class="input-gold px-3 py-2 rounded-2xl"><option' + (m.club_role === "Member" ? " selected" : "") + '>Member</option><option' + (m.club_role === "Developer" ? " selected" : "") + '>Developer</option><option' + (m.club_role === "Moderator" ? " selected" : "") + '>Moderator</option><option' + (m.club_role === "Admin" ? " selected" : "") + '>Admin</option></select><button class="btn-gold rounded-2xl">Save</button></form><form onsubmit="addMemberProject(event, \'' + m.member_number + '\')" class="grid md:grid-cols-3 gap-2 mt-2"><input name="title" placeholder="Project title" class="input-gold px-3 py-2 rounded-2xl" required><input name="link" placeholder="Optional link" class="input-gold px-3 py-2 rounded-2xl"><button class="px-3 py-2 rounded-2xl border border-white/20">Add project</button></form></div>';
+            }).join("") || "No memberships yet.";
+            (membershipCache.members || []).forEach(function (m) {
+                const el = document.getElementById("admin-qr-" + m.member_number);
+                if (el) drawQr(el, qrUrlForMember(m));
+            });
+            const audit = document.getElementById("membership-audit");
+            if (audit) audit.innerHTML = (membershipCache.audit || []).map(function (row) { return '<div class="text-sm py-1 border-b border-white/10">' + row.created_at + ' · ' + row.actor + ' · ' + row.action + ' · ' + row.detail + '</div>'; }).join("") || "No audit records yet.";
+        }
         async function showMembershipAdmin() {
             document.getElementById("membership-admin").classList.remove("hidden");
-            const data = await memberApi("/api/members");
-            document.getElementById("membership-list").innerHTML = (data.members || []).map(function (m) { return '<div class="glass rounded-2xl p-4"><strong>' + m.member_number + '</strong> · ' + m.display_name + ' · ' + m.club_role + ' · ' + m.status + '<div class="flex gap-2 mt-2"><button onclick="setMembershipStatus(\'' + m.member_number + '\',\'suspended\')">Suspend</button><button onclick="setMembershipStatus(\'' + m.member_number + '\',\'active\')">Activate</button><button onclick="setMembershipStatus(\'' + m.member_number + '\',\'revoked\')">Revoke</button><button onclick="rotateMembership(\'' + m.member_number + '\')">Rotate QR</button></div></div>'; }).join("") || "No memberships yet.";
+            membershipCache = await memberApi("/api/members");
+            renderMembershipAdmin();
+        }
+        async function updateMember(event, number) {
+            event.preventDefault();
+            const form = event.target;
+            await memberApi("/api/members/update", { member_number: number, display_name: form.name.value, club_role: form.role.value });
+            showToast("Member updated.");
+            showMembershipAdmin();
+        }
+        async function setVisibility(number, visibility) {
+            await memberApi("/api/members/visibility", { member_number: number, visibility: visibility });
+            showToast("Profile visibility updated.");
+            showMembershipAdmin();
+        }
+        async function addMemberProject(event, number) {
+            event.preventDefault();
+            const form = event.target;
+            await memberApi("/api/members/projects", { member_number: number, title: form.title.value, link: form.link.value, publication_status: "published" });
+            showToast("Project added.");
+            showMembershipAdmin();
         }
         async function sendOneSignalNotice(event) {
             event.preventDefault();

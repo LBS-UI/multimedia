@@ -13,6 +13,7 @@
 
     <!-- Tailwind CSS via CDN (Demo only) -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
@@ -2041,12 +2042,16 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
         }
         function selectUpload(file) {
             if (!file) return;
-            if (!fileAllowed(file)) { showToast("Unsupported file type.", "error"); document.getElementById("file-input").value = ""; return; }
-            if (file.size > 5 * 1024 * 1024) { showToast("File is too large.", "error"); document.getElementById("file-input").value = ""; return; }
+            const preview = document.getElementById("file-preview");
+            const input = document.getElementById("file-input");
+            if (!preview) return;
+            if (!currentUser) { showToast("Log in first to upload a file.", "error"); if (input) input.value = ""; return; }
+            if (!fileAllowed(file)) { showToast("Use PDF, JPG, PNG, DOC, or DOCX.", "error"); if (input) input.value = ""; return; }
+            if (file.size > 5 * 1024 * 1024) { showToast("File is too large. The limit is 5 MB.", "error"); if (input) input.value = ""; return; }
             pendingFile = file;
             const ext = (file.name.split(".").pop() || "").toUpperCase();
-            document.getElementById("file-preview").classList.remove("hidden");
-            document.getElementById("file-preview").innerHTML = "<div class='flex items-center justify-between gap-3'><div><div class='text-[#FFD700] font-bold'>" + ext + "</div><div class='font-semibold'>" + file.name + "</div><div class='text-sm text-[#fffbea]'>" + ext + " · " + readableSize(file.size) + "</div></div><div class='flex gap-2'><button onclick='uploadSelectedFile()' class='btn-gold px-4 py-2 rounded-2xl'>Upload File</button><button onclick='cancelSelectedFile()' class='px-4 py-2 rounded-2xl border border-white/20'>Cancel</button></div></div>";
+            preview.classList.remove("hidden");
+            preview.innerHTML = "<div class='flex items-center justify-between gap-3'><div><div class='text-[#FFD700] font-bold'>" + ext + "</div><div class='font-semibold'>" + file.name + "</div><div class='text-sm text-[#fffbea]'>" + ext + " · " + readableSize(file.size) + "</div></div><div class='flex gap-2'><button onclick='uploadSelectedFile()' class='btn-gold px-4 py-2 rounded-2xl'>Upload File</button><button onclick='cancelSelectedFile()' class='px-4 py-2 rounded-2xl border border-white/20'>Cancel</button></div></div>";
         }
         function cancelSelectedFile() {
             pendingFile = null;
@@ -2054,7 +2059,8 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             document.getElementById("file-preview").classList.add("hidden");
         }
         function uploadSelectedFile() {
-            if (!pendingFile || !currentUser) return;
+            if (!currentUser) { showToast("Log in first to upload a file.", "error"); return; }
+            if (!pendingFile) { showToast("Choose a file first.", "error"); return; }
             const ext = (pendingFile.name.split(".").pop() || "").toUpperCase();
             const list = myFiles();
             list.unshift({ id: Date.now(), name: pendingFile.name, type: ext, size: pendingFile.size, date: new Date().toISOString(), userId: currentUser.id });
@@ -2647,14 +2653,23 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             if (!res.ok) throw new Error(data.error || "Request failed");
             return data;
         }
+        function memberProfileUrl(number) { return location.origin + "/verify.html?m=" + encodeURIComponent(number); }
+        function drawQr(el, url) {
+            el.innerHTML = "";
+            if (typeof QRCode === "undefined") {
+                el.innerHTML = '<img alt="Membership QR" class="mx-auto rounded-2xl bg-white p-2" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(url) + '">';
+                return;
+            }
+            new QRCode(el, { text: url, width: 180, height: 180, correctLevel: QRCode.CorrectLevel.M });
+        }
         async function showMyMembershipQr() {
             const box = document.getElementById("member-qr");
             if (!box) return;
             const data = await memberApi("/api/members/mine", {}).catch(function (error) { box.textContent = error.message; return null; });
             if (!data || !data.member) return;
-            const saved = safeStorage.getItem("mm_qr_" + data.member.member_number) || data.verify_url;
-            if (data.verify_url) safeStorage.setItem("mm_qr_" + data.member.member_number, data.verify_url);
-            box.innerHTML = saved ? '<img alt="Membership QR" class="mx-auto rounded-2xl bg-white p-2" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(saved) + '"><p class="text-sm mt-2">' + data.member.member_number + '</p>' : '<p class="text-sm">Membership is ready. Ask an admin to rotate the QR if this one is missing.</p>';
+            const url = memberProfileUrl(data.member.member_number);
+            box.innerHTML = '<div id="member-qr-canvas" class="flex justify-center bg-white rounded-2xl p-2"></div><p class="text-sm mt-2">' + data.member.member_number + '</p><p class="text-xs text-white/60">Scan this to open the member profile.</p>';
+            drawQr(document.getElementById("member-qr-canvas"), url);
         }
         async function showMembershipAdmin() {
             document.getElementById("membership-admin").classList.remove("hidden");
@@ -3026,7 +3041,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
         }
         function setPostImage(file) {
             if (!file || !file.type.startsWith("image/")) return showToast("Please choose an image.", "error");
-            if (file.size > 1500000) return showToast("Image is too large.", "error");
+            if (file.size > 2500000) return showToast("Image is too large. Use a picture under 2.5 MB.", "error");
             const reader = new FileReader();
             reader.onload = function () {
                 postDraft.image = reader.result;
@@ -4227,13 +4242,17 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
         });
         document.addEventListener('dragover', function (event) {
             const zone = document.getElementById('drop-zone');
-            if (!zone) return;
+            const page = document.getElementById('uploads-page');
+            if (!zone || !page || page.classList.contains('hidden')) return;
+            if (!zone.contains(event.target)) return;
             event.preventDefault();
             zone.classList.add('is-over');
         });
         document.addEventListener('drop', function (event) {
             const zone = document.getElementById('drop-zone');
-            if (!zone) return;
+            const page = document.getElementById('uploads-page');
+            if (!zone || !page || page.classList.contains('hidden')) return;
+            if (!zone.contains(event.target)) return;
             event.preventDefault();
             zone.classList.remove('is-over');
             if (event.dataTransfer && event.dataTransfer.files[0]) selectUpload(event.dataTransfer.files[0]);

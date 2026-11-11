@@ -3616,7 +3616,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
                 content.innerHTML = '<h3 class="text-2xl font-semibold mb-4">Member Directory</h3><div id="member-directory">Loading members…</div>';
                 loadMemberDirectory();
                 return;
-            }
+            } else if (tab === 'media') {
                 content.innerHTML = `<h4 class="font-semibold mb-4">Media Gallery</h4><div class="text-sm text-white/60">Upload feature available in full version. (Demo)</div>`;
             } else {
                 content.innerHTML = `<div class="text-white/60">This section is available in the full dashboard.</div>`;
@@ -3643,6 +3643,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
                 if (el) drawQr(el, memberProfileUrl(m.member_number));
             });
         }
+        function setJoinBadge(kind) {
             const showcase = document.getElementById('join-showcase');
             if (!showcase) return;
             if (!['member', 'admin', 'developer'].includes(kind)) kind = 'member';

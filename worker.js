@@ -323,13 +323,6 @@ function memberNumber() {
 async function handleMembers(request, env, url) {
   if (!env.DB) return json(503, { error: "D1 database is not bound" });
   try {
-    if (url.pathname === "/api/members/profile") {
-      const number = (url.searchParams.get("m") || "").trim();
-      if (!number) return json(200, { result: "INVALID" });
-      const row = await env.DB.prepare("SELECT member_number, display_name, club_role, status FROM memberships WHERE member_number = ?").bind(number).first();
-      if (!row) return json(200, { result: "INVALID" });
-      return json(200, { result: row.status === "active" ? "VALID" : row.status.toUpperCase(), member_number: row.member_number, display_name: row.display_name, club_role: row.club_role, status: row.status });
-    }
     if (url.pathname === "/api/members/verify") {
       const token = (url.searchParams.get("t") || "").trim();
       if (!/^[A-Za-z0-9_-]{20,80}$/.test(token)) return json(200, { result: "INVALID" });

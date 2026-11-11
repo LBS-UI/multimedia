@@ -12,7 +12,7 @@
     <link rel="preload" as="image" href="badges/backpin.jpg">
 
     <!-- Tailwind CSS via CDN (Demo only) -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
@@ -2496,37 +2496,19 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             if (!res.ok) throw new Error(data.error || "Request failed");
             return data;
         }
-        function memberProfileUrl(number) {
-            return location.origin + "/verify.html?m=" + encodeURIComponent(number);
-        }
-        function drawQr(el, url) {
-            el.innerHTML = "";
-            if (typeof QRCode === "undefined") {
-                el.innerHTML = '<img alt="Membership QR" class="mx-auto rounded-2xl bg-white p-2" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(url) + '">';
-                return;
-            }
-            new QRCode(el, { text: url, width: 180, height: 180, correctLevel: QRCode.CorrectLevel.M });
-        }
         async function showMyMembershipQr() {
             const box = document.getElementById("member-qr");
             if (!box) return;
             const data = await memberApi("/api/members/mine", {}).catch(function (error) { box.textContent = error.message; return null; });
             if (!data || !data.member) return;
-            const url = memberProfileUrl(data.member.member_number);
-            box.innerHTML = '<div id="member-qr-canvas" class="flex justify-center bg-white rounded-2xl p-2"></div><p class="text-sm mt-2">' + data.member.member_number + '</p><p class="text-xs text-white/60">Scan this to open the member profile and proof of membership.</p>';
-            drawQr(document.getElementById("member-qr-canvas"), url);
+            const saved = safeStorage.getItem("mm_qr_" + data.member.member_number) || data.verify_url;
+            if (data.verify_url) safeStorage.setItem("mm_qr_" + data.member.member_number, data.verify_url);
+            box.innerHTML = saved ? '<img alt="Membership QR" class="mx-auto rounded-2xl bg-white p-2" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(saved) + '"><p class="text-sm mt-2">' + data.member.member_number + '</p>' : '<p class="text-sm">Membership is ready. Ask an admin to rotate the QR if this one is missing.</p>';
         }
         async function showMembershipAdmin() {
             document.getElementById("membership-admin").classList.remove("hidden");
             const data = await memberApi("/api/members");
-            document.getElementById("membership-list").innerHTML = (data.members || []).map(function (m) {
-                const url = memberProfileUrl(m.member_number);
-                return '<div class="glass rounded-2xl p-4"><strong>' + m.member_number + '</strong> · ' + m.display_name + ' · ' + m.club_role + ' · ' + m.status + '<div class="mt-3 flex justify-center bg-white rounded-2xl p-2" id="admin-qr-' + m.member_number + '"></div><div class="flex gap-2 mt-2"><button onclick="setMembershipStatus(\'' + m.member_number + '\',\'suspended\')">Suspend</button><button onclick="setMembershipStatus(\'' + m.member_number + '\',\'active\')">Activate</button><button onclick="setMembershipStatus(\'' + m.member_number + '\',\'revoked\')">Revoke</button><button onclick="rotateMembership(\'' + m.member_number + '\')">Rotate QR</button></div></div>';
-            }).join("") || "No memberships yet.";
-            (data.members || []).forEach(function (m) {
-                const el = document.getElementById("admin-qr-" + m.member_number);
-                if (el) drawQr(el, memberProfileUrl(m.member_number));
-            });
+            document.getElementById("membership-list").innerHTML = (data.members || []).map(function (m) { return '<div class="glass rounded-2xl p-4"><strong>' + m.member_number + '</strong> · ' + m.display_name + ' · ' + m.club_role + ' · ' + m.status + '<div class="flex gap-2 mt-2"><button onclick="setMembershipStatus(\'' + m.member_number + '\',\'suspended\')">Suspend</button><button onclick="setMembershipStatus(\'' + m.member_number + '\',\'active\')">Activate</button><button onclick="setMembershipStatus(\'' + m.member_number + '\',\'revoked\')">Revoke</button><button onclick="rotateMembership(\'' + m.member_number + '\')">Rotate QR</button></div></div>'; }).join("") || "No memberships yet.";
         }
         async function sendOneSignalNotice(event) {
             event.preventDefault();
@@ -3613,9 +3595,54 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             }
             
             if (tab === 'members') {
-                content.innerHTML = '<h3 class="text-2xl font-semibold mb-4">Member Directory</h3><div id="member-directory">Loading members…</div>';
-                loadMemberDirectory();
-                return;
+                let html = `
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h3 class="text-2xl font-semibold">Member Directory</h3>
+                            <p class="text-sm text-white/50">All active members of Multi Media</p>
+                        </div>
+                        <div class="text-sm px-4 py-1.5 rounded-2xl bg-white/5">
+                            ${users.filter(u => u.active !== false).length} Members
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                `;
+                
+                const activeUsers = users.filter(u => u.active !== false);
+                
+                activeUsers.forEach(member => {
+                    const isOnline = member.online;
+                    const officerBadge = member.officerRole 
+                        ? `<span class="px-2.5 py-px text-[10px] rounded bg-[#FFD700] text-[#0a0803] font-bold">${member.officerRole}</span>` 
+                        : '';
+                    
+                    html += `
+                        <div class="glass p-5 rounded-3xl flex gap-x-4">
+                            <img src="${member.avatar || 'https://i.pravatar.cc/48?u=' + member.id}" class="w-12 h-12 rounded-2xl flex-shrink-0 ring-1 ring-white/20 object-cover">
+                            
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-x-2">
+                                    ${roleSymbol(member.role)}
+                                    <span class="font-semibold">${member.username}</span>
+                                    ${officerBadge}
+                                </div>
+                                <div class="text-sm text-white/60">${member.role}</div>
+                                
+                                <div class="mt-3 flex items-center gap-x-2">
+                                    <span class="inline-block w-2 h-2 rounded-full ${isOnline ? 'bg-emerald-400' : 'bg-gray-500'}"></span>
+                                    <span class="text-xs ${isOnline ? 'text-emerald-400' : 'text-gray-400'}">
+                                        ${isOnline ? 'Active Now' : 'Offline'}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `</div>`;
+                content.innerHTML = html;
+                
             } else if (tab === 'media') {
                 content.innerHTML = `<h4 class="font-semibold mb-4">Media Gallery</h4><div class="text-sm text-white/60">Upload feature available in full version. (Demo)</div>`;
             } else {
@@ -3623,26 +3650,6 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             }
         }
 
-        async function loadMemberDirectory() {
-            const box = document.getElementById("member-directory");
-            if (!box) return;
-            let memberships = [];
-            if (currentUser && (currentUser.role === "Developer" || currentUser.role === "Admin")) {
-                try { memberships = (await memberApi("/api/members")).members || []; } catch (e) { memberships = []; }
-            }
-            const activeUsers = users.filter(function (u) { return u.active !== false; });
-            box.innerHTML = '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">' + activeUsers.map(function (member) {
-                const record = memberships.find(function (m) { return m.display_name === member.username; });
-                const qr = record && (currentUser.role === "Developer" || currentUser.role === "Admin")
-                    ? '<div class="mt-3 bg-white rounded-2xl p-2 flex justify-center" id="dir-qr-' + record.member_number + '"></div><p class="text-xs text-white/60 mt-2">' + record.member_number + '</p>'
-                    : "";
-                return '<div class="glass p-5 rounded-3xl"><div class="font-semibold">' + member.username + '</div><div class="text-sm text-[#FFD700]">' + member.role + '</div>' + qr + '</div>';
-            }).join("") + '</div>';
-            memberships.forEach(function (m) {
-                const el = document.getElementById("dir-qr-" + m.member_number);
-                if (el) drawQr(el, memberProfileUrl(m.member_number));
-            });
-        }
         function setJoinBadge(kind) {
             const showcase = document.getElementById('join-showcase');
             if (!showcase) return;

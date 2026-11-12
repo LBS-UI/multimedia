@@ -91,42 +91,10 @@ CREATE TABLE IF NOT EXISTS memberships (
   club_role TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'active',
   token_hash TEXT UNIQUE NOT NULL,
-  created_at TEXT NOT NULL,
-  public_id TEXT UNIQUE,
-  visibility TEXT DEFAULT 'public',
-  updated_at TEXT,
-  activated_at TEXT,
-  revoked_at TEXT
+  created_at TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS memberships_status_idx ON memberships(status);
 CREATE INDEX IF NOT EXISTS memberships_token_idx ON memberships(token_hash);
-CREATE UNIQUE INDEX IF NOT EXISTS memberships_public_id_idx ON memberships(public_id);
-
-CREATE TABLE IF NOT EXISTS member_projects (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  member_id INTEGER NOT NULL,
-  title TEXT NOT NULL,
-  description TEXT,
-  link TEXT,
-  publication_status TEXT NOT NULL DEFAULT 'draft',
-  display_order INTEGER NOT NULL DEFAULT 0,
-  created_at TEXT NOT NULL,
-  updated_at TEXT NOT NULL,
-  FOREIGN KEY (member_id) REFERENCES memberships(id)
-);
-CREATE INDEX IF NOT EXISTS member_projects_member_idx ON member_projects(member_id);
-CREATE INDEX IF NOT EXISTS member_projects_status_idx ON member_projects(publication_status);
-
-CREATE TABLE IF NOT EXISTS membership_audit_logs (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  actor TEXT NOT NULL,
-  action TEXT NOT NULL,
-  member_id INTEGER,
-  detail TEXT,
-  created_at TEXT NOT NULL
-);
-CREATE INDEX IF NOT EXISTS membership_audit_member_idx ON membership_audit_logs(member_id);
-CREATE INDEX IF NOT EXISTS membership_audit_created_idx ON membership_audit_logs(created_at);
 
 CREATE INDEX IF NOT EXISTS announcements_posted_idx ON announcements(posted_at);
 CREATE INDEX IF NOT EXISTS member_messages_id_idx ON member_messages(id);

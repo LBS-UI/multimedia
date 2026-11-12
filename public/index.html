@@ -1214,14 +1214,25 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             </div>
 
             <!-- Description -->
-            <p class="text-gray-300 max-w-xl mx-auto text-sm md:text-base mb-10 leading-relaxed tracking-wide">
+            <p class="text-gray-300 max-w-xl mx-auto text-sm md:text-base mb-6 leading-relaxed tracking-wide">
                 A community of creators, developers, and dreamers<br>united by the power of multimedia.
             </p>
 
+            <!-- Live Stats Pill -->
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/50 border border-[#FFD700]/30 mb-8 backdrop-blur-sm shadow-[0_0_15px_rgba(255,215,0,0.15)]">
+                <span class="relative flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FFD700] opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-[#FFD700]"></span>
+                </span>
+                <span class="text-sm text-gray-300"><strong id="hero-member-count" class="text-[#FFD700] font-bold font-display">0</strong> Active Members</span>
+            </div>
+
             <!-- CTA Button -->
-            <button onclick="document.getElementById('join').scrollIntoView({ behavior: 'smooth' })" class="btn-gold px-10 py-4 rounded-full text-base font-bold inline-flex items-center gap-3 tracking-[0.1em] shadow-[0_0_20px_rgba(255,215,0,0.4)] relative z-20">
-                JOIN THE CLUB <i class="fa-solid fa-chevron-right text-sm"></i>
-            </button>
+            <div>
+                <button onclick="document.getElementById('join').scrollIntoView({ behavior: 'smooth' })" class="btn-gold px-10 py-4 rounded-full text-base font-bold inline-flex items-center gap-3 tracking-[0.1em] shadow-[0_0_20px_rgba(255,215,0,0.4)] relative z-20">
+                    JOIN THE CLUB <i class="fa-solid fa-chevron-right text-sm"></i>
+                </button>
+            </div>
         </div>
 
         <!-- Floating Icons -->
@@ -1479,7 +1490,8 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
                     <div class="stat-label">Projects</div>
                 </div>
                 <div class="stat-card scroll-animate delay-200">
-                    <div class="stat-number" data-target="50">0</div>
+                    <!-- Changed to dynamically show actual member count -->
+                    <div class="stat-number" id="about-member-count">0</div>
                     <div class="stat-label">Members</div>
                 </div>
                 <div class="stat-card scroll-animate delay-300">
@@ -2977,6 +2989,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             
             users.push(newUser);
             saveData();
+            updateMemberCountUI(); // Update the live count here
             fetch("/api/accounts", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "register", id: newUser.id, username: username, email: email, passwordHash: btoa(pass), role: role }) });
             currentUser = newUser;
             safeStorage.setItem('mm_currentUser', JSON.stringify(currentUser));
@@ -4254,6 +4267,14 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             }
         }
 
+        function updateMemberCountUI() {
+            const count = users.length;
+            const heroCount = document.getElementById('hero-member-count');
+            const aboutCount = document.getElementById('about-member-count');
+            if (heroCount) heroCount.textContent = count;
+            if (aboutCount) aboutCount.textContent = count;
+        }
+
         function initEverything() {
             const loadingScreen = document.getElementById('loading-screen');
             if (loadingScreen) {
@@ -4273,6 +4294,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             loadVerityVoicePreference();
             askNotificationChoice();
             loadData();
+            updateMemberCountUI(); // Update count after data loads
             refreshClubToken();
             loadLiveData();
             loadJoinShowcase();

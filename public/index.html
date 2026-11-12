@@ -101,7 +101,7 @@
         }
 
         .hero-brand { display: flex; align-items: center; gap: 1.2rem; }
-        .hero-logo { width: min(180px, 42vw); height: min(180px, 42vw); object-fit: cover; border-radius: 50%; border: 3px solid #FFD700; box-shadow: 0 0 28px rgba(255,215,0,.35); }
+        .hero-logo { width: min(280px, 70vw); height: auto; object-fit: contain; border-radius: 0; border: 0; box-shadow: none; }
         .hero-mascot { width: 88px; height: 88px; object-fit: cover; border-radius: 50%; border: 3px solid #FFE600; box-shadow: 0 0 18px rgba(255,230,0,.45); }
         .gold-line { height: 1px; background: linear-gradient(90deg, transparent, #FFD700, transparent); margin: 1rem 0; }
         .club-card { background: #171717; border: 1px solid rgba(255,215,0,.28); border-radius: 1.4rem; }
@@ -1062,7 +1062,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
   <div class="intro__logo" id="introLogo"><div class="intro__logo-inner" id="introLogoInner"><img src="verity-faces/idle.jpg" alt="Verity"></div></div>
   <div class="intro__text">
     <p class="intro__welcome">Welcome to the Multimedia Club.</p>
-    <p class="intro__name"><img src="images/logo.jpg" alt="Multimedia logo"><span>Multimedia</span></p>
+    <p class="intro__name"><img src="images/logo.jpg" alt="Multimedia Club logo" style="width:min(280px,72vw);height:auto;object-fit:contain;border-radius:0;border:0"><span>Multimedia</span></p>
     <p class="intro__tagline">CREATE • CAPTURE • CONNECT • Collaborated by Verity</p>
     <button id="introEnter" type="button" class="intro__gate-label" style="display:none;margin-top:1.2rem;pointer-events:auto;border:1px solid rgba(253,224,71,.4);border-radius:999px;padding:12px 22px;background:#fbbf24;color:#0a0803;">Click to enter multimedia</button>
   </div>
@@ -2763,9 +2763,9 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             if (!box) return;
             const data = await memberApi("/api/members/mine", {}).catch(function (error) { box.textContent = error.message; return null; });
             if (!data || !data.member) return;
-            const saved = safeStorage.getItem("mm_qr_" + data.member.member_number) || data.verify_url;
-            if (data.verify_url) safeStorage.setItem("mm_qr_" + data.member.member_number, data.verify_url);
-            box.innerHTML = saved ? '<img alt="Membership QR" class="mx-auto rounded-2xl bg-white p-2" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(saved) + '"><p class="text-sm mt-2">' + data.member.member_number + '</p>' : '<p class="text-sm">Membership is ready. Ask an admin to rotate the QR if this one is missing.</p>';
+            const url = data.profile_url || (data.member.public_id ? location.origin + "/member.html?id=" + encodeURIComponent(data.member.public_id) : data.verify_url);
+            if (!url) { box.textContent = "Membership is ready, but the profile link is missing. Log out and log in again."; return; }
+            box.innerHTML = '<img alt="Membership QR" class="mx-auto rounded-2xl bg-white p-2" width="220" height="220" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=12&data=' + encodeURIComponent(url) + '"><p class="text-sm mt-2">' + data.member.member_number + '</p><p class="text-xs text-white/60 break-all">' + url + '</p>';
         }
         async function showMembershipAdmin() {
             document.getElementById("membership-admin").classList.remove("hidden");
@@ -2780,7 +2780,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
         async function registerMembership(event) {
             event.preventDefault();
             const data = await memberApi("/api/members/register", { display_name: document.getElementById("member-name").value, club_role: document.getElementById("member-role").value });
-            alert("Membership issued. QR link: " + data.verify_url);
+            alert("Membership issued. Profile: " + (data.profile_url || data.verify_url || data.member_number));
             showMembershipAdmin();
         }
         async function setMembershipStatus(number, status) {

@@ -372,7 +372,13 @@ async function handleMembers(request, env, url) {
         await env.DB.prepare("UPDATE memberships SET public_id = ?, visibility = COALESCE(visibility, 'public'), updated_at = ? WHERE member_number = ?").bind(pid, new Date().toISOString(), row.member_number).run();
         row.public_id = pid;
       }
-      return json(200, { member: row, profile_url: row.public_id ? locationOrigin(request) + "/member.html?id=" + encodeURIComponent(row.public_id) : "" });
+      return json(200, { member: row, profile_url: locationOrigin(request) + "/?verify=" + encodeURIComponent(row.member_number), verify_url: locationOrigin(request) + "/?verify=" + encodeURIComponent(row.member_number) });
+    }
+    if (url.pathname.startsWith("/api/members/public/")) {
+      const key = decodeURIComponent(url.pathname.split("/").pop() || "").trim();
+      const row = await env.DB.prepare("SELECT member_number, display_name, club_role, status, visibility FROM memberships WHERE member_number = ? OR public_id = ?").bind(key, key).first();
+      if (!row || row.visibility === "hidden") return json(404, { error: "Member not found" });
+      return json(200, { username: row.display_name, display_name: row.display_name, role: row.club_role, club_role: row.club_role, status: row.status, member_number: row.member_number, avatar: "images/logo.jpg" });
     }
     const admin = await requireAdmin(request, env);
     if (admin.error) return json(401, { error: admin.error });

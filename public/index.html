@@ -1026,7 +1026,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
 .intro__aurora { position: absolute; inset: -30%; background: radial-gradient(closest-side at 32% 26%, rgba(251,191,36,.5), transparent 70%), radial-gradient(closest-side at 72% 66%, rgba(253,224,71,.3), transparent 72%); filter: blur(60px); animation: aurora-drift 22s ease-in-out infinite alternate; }
 @keyframes aurora-drift { to { transform: translate3d(4%, -2%, 0) scale(1.04); } }
 .intro__grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(253,224,71,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(253,224,71,.05) 1px, transparent 1px); background-size: 46px 46px; pointer-events: none; }
-.intro__logo { position: absolute; left: 50%; top: 58vh; width: clamp(96px, 22vw, 152px); height: clamp(96px, 22vw, 152px); transform: translate(-50%, -100%); z-index: 2; opacity: 0; filter: drop-shadow(0 12px 28px rgba(245,158,11,.42)); }
+.intro__logo { position: absolute; left: 50%; top: 58vh; width: clamp(72px, 16vw, 112px); height: clamp(72px, 16vw, 112px); transform: translate(-50%, -100%); z-index: 2; opacity: 0; filter: drop-shadow(0 12px 28px rgba(245,158,11,.42)); }
 .intro__logo-inner { width: 100%; height: 100%; transform-origin: 50% 100%; }
 .intro__logo img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 3px solid #fbbf24; display: block; }
 .intro__shadow { position: absolute; left: 50%; top: calc(58vh + 4px); width: 140px; height: 24px; border-radius: 50%; background: radial-gradient(ellipse, rgba(120,70,5,.7), transparent 72%); filter: blur(7px); transform: translate(-50%, -50%) scale(.35); opacity: 0; z-index: 1; }
@@ -1044,7 +1044,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
 .intro--text .intro__text > * { opacity: 1; transform: none; }
 .intro__welcome { margin: 0 0 .5rem; color: rgba(255,251,234,.65); }
 .intro__name { margin: 0; display: flex; align-items: center; justify-content: center; gap: .6rem; font-size: clamp(1.85rem, 7vw, 2.75rem); font-weight: 700; background: linear-gradient(100deg, #fffbea, #fde047 48%, #f59e0b); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.intro__name img { width: 52px; height: 52px; object-fit: cover; border-radius: 14px; -webkit-text-fill-color: initial; }
+.intro__name img { width: 36px; height: 36px; object-fit: contain; border-radius: 8px; -webkit-text-fill-color: initial; }
 .intro__tagline { margin: .5rem 0 0; letter-spacing: .2em; text-transform: uppercase; font-size: .75rem; color: rgba(255,251,234,.65); }
 </style>
 
@@ -1369,7 +1369,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             <div class="text-center mb-12">
                 <p class="text-center text-xs tracking-[0.3em] text-[#FFD700] mb-3 font-display font-bold uppercase">Official Membership</p>
                 <h2 class="section-header font-display text-4xl md:text-5xl font-black mb-4 uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white to-[#FFD700]">Join the Club</h2>
-                <p class="text-center text-[#C8C8C8] max-w-2xl mx-auto font-light">Sign up for a free digital member badge. Want the real button pin? Request the exclusive pin for 45 PHP.</p>
+                <p class="text-center text-[#C8C8C8] max-w-2xl mx-auto font-light">Sign up to join the Multimedia Club. You can optionally generate a digital member badge or request the exclusive button pin for 45 PHP.</p>
             </div>
 
             <div class="grid lg:grid-cols-2 gap-12 items-center">
@@ -1440,26 +1440,33 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
                             </div>
                         </div>
                     </div>
-                    <p id="join-badge-note" class="text-sm text-[#C8C8C8] mt-6 text-center font-mono">Select a badge to preview</p>
+                    <p id="join-badge-note" class="text-sm text-[#C8C8C8] mt-6 text-center font-mono">Preview of optional digital badge</p>
                 </div>
 
                 <!-- Right Side: Join Form -->
                 <div class="scroll-animate-right delay-200">
                     <form id="join-form" class="glass rounded-3xl p-8 border border-[#FFD700]/30 shadow-[0_0_30px_rgba(255,215,0,0.1)]" onsubmit="submitClubJoin(event)">
-                        <h3 class="text-2xl font-display font-bold mb-6 text-white text-center">Get Your Badge</h3>
+                        <h3 class="text-2xl font-display font-bold mb-6 text-white text-center">Membership Registration</h3>
                         
                         <label class="block text-sm mb-2 text-gray-300">Name</label>
                         <input id="join-name" required class="input-gold w-full px-5 py-4 rounded-2xl mb-4" placeholder="Your name">
                         
                         <label class="block text-sm mb-2 text-gray-300">Email</label>
-                        <input id="join-email" type="email" required class="input-gold w-full px-5 py-4 rounded-2xl mb-4" placeholder="you@school.edu">
+                        <input id="join-email" type="email" required class="input-gold w-full px-5 py-4 rounded-2xl mb-6" placeholder="you@school.edu">
                         
-                        <label class="flex items-center gap-3 mb-6 text-sm text-gray-300 cursor-pointer">
-                            <input id="join-pin" type="checkbox" class="w-5 h-5 accent-[#FFD700] bg-transparent border border-[#FFD700] rounded focus:ring-0 cursor-pointer"> 
-                            I want the exclusive button pin for 45 PHP
-                        </label>
+                        <!-- OPTIONAL BADGE & PIN CHECKBOXES -->
+                        <div class="mb-6 space-y-3">
+                            <label class="flex items-center gap-3 text-sm text-gray-300 cursor-pointer">
+                                <input id="join-want-badge" type="checkbox" class="w-5 h-5 accent-[#FFD700] bg-transparent border border-[#FFD700] rounded focus:ring-0 cursor-pointer"> 
+                                Generate my digital member badge (Optional)
+                            </label>
+                            <label class="flex items-center gap-3 text-sm text-gray-300 cursor-pointer">
+                                <input id="join-pin" type="checkbox" class="w-5 h-5 accent-[#FFD700] bg-transparent border border-[#FFD700] rounded focus:ring-0 cursor-pointer"> 
+                                I want the exclusive button pin for 45 PHP (Optional)
+                            </label>
+                        </div>
                         
-                        <button type="submit" class="btn-gold w-full py-4 rounded-2xl font-bold text-lg">GET MY DIGITAL BADGE</button>
+                        <button type="submit" class="btn-gold w-full py-4 rounded-2xl font-bold text-lg">JOIN THE CLUB</button>
                         
                         <p id="join-result" class="mt-4 text-sm text-center text-[#FFD700] font-semibold"></p>
                     </form>
@@ -1490,7 +1497,7 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
                     <div class="stat-label">Projects</div>
                 </div>
                 <div class="stat-card scroll-animate delay-200">
-                    <!-- Changed to dynamically show actual member count -->
+                    <!-- Dynamically shows actual member count -->
                     <div class="stat-number" id="about-member-count">0</div>
                     <div class="stat-label">Members</div>
                 </div>
@@ -2776,16 +2783,8 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             const data = await memberApi("/api/members/mine", {}).catch(function (error) { box.textContent = error.message; return null; });
             if (!data || !data.member) return;
             
-            let qrData = data.verify_url || safeStorage.getItem("mm_qr_" + data.member.member_number);
-            
-            // Ensure it's a full URL for the QR code to work when scanned
-            if (!qrData || !qrData.startsWith('http')) {
-                qrData = window.location.origin + window.location.pathname + "?verify=" + data.member.member_number;
-            }
-            
-            if (data.verify_url) safeStorage.setItem("mm_qr_" + data.member.member_number, qrData);
-            
-            box.innerHTML = qrData ? '<img alt="Membership QR" class="mx-auto rounded-2xl bg-white p-2" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(qrData) + '"><p class="text-sm mt-2">' + data.member.member_number + '</p>' : '<p class="text-sm">Membership is ready.</p>';
+            const qrData = window.location.origin + "/?verify=" + encodeURIComponent(data.member.member_number);
+            box.innerHTML = '<img alt="Membership QR" class="mx-auto rounded-2xl bg-white p-2" width="220" height="220" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=12&data=' + encodeURIComponent(qrData) + '"><p class="text-sm mt-2">' + data.member.member_number + '</p>';
         }
         
         async function showMembershipAdmin() {
@@ -4201,21 +4200,30 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
             const name = document.getElementById("join-name").value.trim();
             const email = document.getElementById("join-email").value.trim();
             const pin = document.getElementById("join-pin").checked;
+            const wantBadge = document.getElementById("join-want-badge").checked;
             const response = await fetch("/api/join", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ display_name: name, email: email, pin_requested: pin })
+                body: JSON.stringify({ display_name: name, email: email, pin_requested: pin, want_badge: wantBadge })
             });
             const data = await response.json().catch(function () { return {}; });
             if (!response.ok) {
                 document.getElementById("join-result").textContent = data.error || "Could not save the join request.";
                 return;
             }
-            setJoinBadge("member");
-            document.getElementById("join-badge-note").textContent = data.display_name + " · " + data.membership_id;
-            document.getElementById("join-result").textContent = pin
-                ? "Saved live. Digital badge ready. Pay 45 PHP to a club officer for the pin."
-                : "Saved live. Your digital badge is ready.";
+            
+            if (wantBadge) {
+                setJoinBadge("member");
+                document.getElementById("join-badge-note").textContent = data.display_name + " · " + data.membership_id;
+                document.getElementById("join-result").textContent = pin
+                    ? "Saved live. Digital badge ready. Pay 45 PHP to a club officer for the pin."
+                    : "Saved live. Your digital badge is ready.";
+            } else {
+                document.getElementById("join-badge-note").textContent = "Welcome to the club!";
+                document.getElementById("join-result").textContent = pin
+                    ? "Saved live. Pay 45 PHP to a club officer for the pin."
+                    : "Saved live. Welcome to the Multimedia Club!";
+            }
             showToast("Join request saved.");
             loadJoinShowcase();
         }
@@ -4580,13 +4588,14 @@ async function checkForPublicVerification() {
         user = users.find(u => String(u.id) === verifyToken || u.memberNumber === verifyToken || u.email === verifyToken);
     }
 
-    // Final fallback: mock data for the demo to work
     if (!user) {
-        user = {
-            username: "Multimedia Member",
-            role: "Verified Club Member",
-            avatar: "verity-faces/idle.jpg"
-        };
+        document.getElementById("verify-name").textContent = "Member not found";
+        document.getElementById("verify-role").textContent = "This QR is not an active club member.";
+        document.getElementById("verify-id").textContent = verifyToken;
+        const modal = document.getElementById("public-verify-modal");
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+        return;
     }
 
     const modal = document.getElementById("public-verify-modal");

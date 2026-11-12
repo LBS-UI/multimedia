@@ -258,8 +258,7 @@
                 0 0 20px rgba(255, 215, 0, 0.7),
                 0 0 40px rgba(255, 215, 0, 0.4);
             cursor: pointer;
-            transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
-                        box-shadow 0.4s ease;
+            transition: box-shadow 0.4s ease;
             animation: verity-float 3s ease-in-out infinite;
             overflow: hidden;
         }
@@ -270,6 +269,7 @@
             object-position: center 20%;
             border-radius: 50%;
             display: block;
+            transition: transform 0.1s linear;
         }
         .verity-card-face { width: 84px; height: 84px; min-width: 84px; min-height: 84px; animation: none; }
         .portrait-frame {
@@ -1059,6 +1059,13 @@ body.light-mode .showcase-3d .contact-shadow { opacity: .4; }
         .leadership-card:hover {
             border-color: rgba(255, 215, 0, 0.5);
             background: rgba(255, 215, 0, 0.05);
+        }
+
+        /* --- VERITY TRACKING OVERRIDES --- */
+        #floating-verity .verity-orb {
+            animation: none !important;
+            transition: box-shadow 0.4s ease !important; /* Remove transform transition to let JS handle it */
+            transform-origin: 50% 100%;
         }
 </style>
 
@@ -4743,6 +4750,114 @@ function closePublicPage() {
          document.getElementById('intro').style.display = 'block';
     }
 }
+
+// --- VERITY CURSOR TRACKING LOGIC ---
+(() => {
+  const orb = document.querySelector('#floating-verity .verity-orb');
+  const img = orb ? orb.querySelector('img') : null;
+  if (!orb || !img) return;
+
+  /* ---------------- tuning ---------------- */
+  const MAX_OFFSET  = 4;      // px the image shifts inside the orb (simulate looking)
+  const IMG_EASE    = 0.20;   // image smoothing
+  const AIM_EASE    = 0.15;   // how fast the "attention point" chases the finger
+  const IDLE_EASE   = 0.03;   // slower drift while idling
+  const IDLE_AFTER  = 3000;   // ms of no input before it starts looking around
+
+  /* ---------------- state ---------------- */
+  const lastPointer  = { x: window.innerWidth / 2, y: window.innerHeight / 2 }; // raw input
+  const focus        = { x: window.innerWidth / 2, y: window.innerHeight / 2 }; // smoothed aim point
+  let   lastInputTime = performance.now() - 4000; // Start in idle mode
+
+  let imgX = 0, imgY = 0;
+  let tilt = 0, lift = 0;
+  let isHovered = false;
+  let currentScale = 1;
+
+  /* ---------------- input: pointer events cover mouse + touch + pen ---------------- */
+  function onPointer(e) {
+    lastPointer.x = e.clientX;
+    lastPointer.y = e.clientY;
+    lastInputTime = performance.now();
+  }
+
+  window.addEventListener('pointerdown', onPointer, { passive: true });
+  window.addEventListener('pointermove', onPointer, { passive: true });
+
+  orb.addEventListener('mouseenter', () => isHovered = true);
+  orb.addEventListener('mouseleave', () => isHovered = false);
+
+  // keep the layout sane when the phone is rotated / URL bar shows & hides
+  window.addEventListener('resize', () => {
+    focus.x = Math.min(focus.x, window.innerWidth);
+    focus.y = Math.min(focus.y, window.innerHeight);
+  });
+
+  /* ---------------- main loop ---------------- */
+  function frame(now) {
+    /* 1. where should it be looking right now? */
+    const idling = now - lastInputTime > IDLE_AFTER;
+
+    let aimX, aimY;
+    if (idling) {
+      // slow lissajous wander around the centre — feels like it's looking around
+      const k = now / 1000;
+      aimX = window.innerWidth  * 0.5 + Math.sin(k * 0.65) * window.innerWidth  * 0.22;
+      aimY = window.innerHeight * 0.5 + Math.cos(k * 0.47) * window.innerHeight * 0.18;
+    } else {
+      aimX = lastPointer.x;
+      aimY = lastPointer.y;
+    }
+
+    const aimEase = idling ? IDLE_EASE : AIM_EASE;
+    focus.x += (aimX - focus.x) * aimEase;
+    focus.y += (aimY - focus.y) * aimEase;
+
+    /* 2. image aims at the focus point (simulate eyes tracking) */
+    const r  = orb.getBoundingClientRect();
+    const cx = r.left + r.width  / 2;
+    const cy = r.top  + r.height / 2;
+
+    const dx = focus.x - cx;
+    const dy = focus.y - cy;
+    const dist = Math.hypot(dx, dy) || 1;
+
+    const reach = Math.min(1, dist / 200);   // fully deflected at ~200px away
+    const targetX = (dx / dist) * MAX_OFFSET * reach;
+    const targetY = (dy / dist) * MAX_OFFSET * reach;
+
+    imgX += (targetX - imgX) * IMG_EASE;
+    imgY += (targetY - imgY) * IMG_EASE;
+
+    // Scale slightly to prevent black borders when moving
+    img.style.transform = `translate3d(${imgX.toFixed(2)}px, ${imgY.toFixed(2)}px, 0) scale(1.15)`;
+
+    /* 3. whole body leans + tilts toward the focus point */
+    const nx = (focus.x / window.innerWidth  - 0.5) * 2;   // -1 … 1
+    const ny = (focus.y / window.innerHeight - 0.5) * 2;
+
+    tilt += (nx * 10 - tilt) * 0.08;
+    lift += (ny * 8 - lift) * 0.08;
+
+    const bob = Math.sin(now / 900) * 3;          // idle breathing
+
+    // Smooth hover scale
+    const targetScale = isHovered ? 1.1 : 1;
+    currentScale += (targetScale - currentScale) * 0.1;
+
+    orb.style.transform = `translateY(${(lift + bob).toFixed(2)}px) rotate(${tilt.toFixed(2)}deg) scale(${currentScale.toFixed(3)})`;
+
+    // Since JS overrides transition for transform, we manage box-shadow here
+    if (isHovered) {
+        orb.style.boxShadow = '0 0 35px rgba(255, 215, 0, 0.9), 0 0 60px rgba(255, 215, 0, 0.5)';
+    } else {
+        orb.style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.7), 0 0 40px rgba(255, 215, 0, 0.4)';
+    }
+
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
 </script>
 
 </body>
